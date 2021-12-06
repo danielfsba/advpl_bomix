@@ -40,6 +40,7 @@ User Function SD3250I()
 	Local m_data       := ""
 	Local m_lote       := ""	
 	Local m_produto    := ""
+	Local nSaldo	   := 0
 
 	c_CRLF             := chr(13) + chr(10)
 
@@ -123,8 +124,9 @@ User Function SD3250I()
 		eNDIF
 
 		dbSelectArea("SC2")
+		nSaldo := SH6->H6_QTDPROD
 		RecLock("SC2", .F.)
-		SC2->C2_FSSALDO := SC2->C2_FSSALDO-SH6->H6_QTDPROD
+			SC2->C2_FSSALDO := SC2->C2_FSSALDO - nSaldo
 		MsUnlock()
 
 		// U_ATUAD3D5()
