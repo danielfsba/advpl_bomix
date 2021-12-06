@@ -498,6 +498,8 @@ WSMETHOD mtdGrvSC WSRECEIVE o_Empresa, o_Seguranca, o_SC WSSEND o_Retorno WSSERV
 
 	::o_Retorno	:= WSCLASSNEW("strRetorno")
 
+	RpcClearEnv()
+
 	RpcSetType(3)
 	RpcSetEnv(::o_Empresa:c_Empresa,::o_Empresa:c_Filial)
 
@@ -1149,6 +1151,8 @@ WSMETHOD mtdGrvSA WSRECEIVE o_Empresa, o_Seguranca, o_SA WSSEND o_Retorno WSSERV
 	Private lMsErroAuto	:= .F. //necessario a criacao
 
 	::o_Retorno	:= WSCLASSNEW("strRetorno")
+	
+	RpcClearEnv()
 
 	RpcSetType(3)
 	RpcSetEnv(::o_Empresa:c_Empresa,::o_Empresa:c_Filial)

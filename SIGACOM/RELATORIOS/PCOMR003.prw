@@ -212,7 +212,7 @@ User Function PCOMR003(l_AdicCamp,c_TempFile)
 		c_UData	:=	DTOC(CTOD("  /  /  "))
 		c_UPrc	:=	Transform( 0, "@E 999,999,999.99" )
 		If SB1->(dbSeek(xFilial("SB1")+SC7->C7_PRODUTO,.T.))
-			c_UData	:=	SB1->(DTOC(B1_UCOM))
+			c_UData	:=	SB1->(DTOC( ))
 			
 			n_UltPrec:= SB1->B1_UPRC + (SB1->B1_UPRC*SB1->B1_IPI/100)
 			c_UPrc	:=	Transform( n_UltPrec, "@E 9,999,999.999999" )
@@ -243,7 +243,7 @@ User Function PCOMR003(l_AdicCamp,c_TempFile)
 		Endif
 		c_TxtPed	+= "				</tr>"
 
-		n_Total		+= SC7->C7_TOTAL + SC7->C7_VALFRE + SC7->C7_VALIPI
+		n_Total		+= SC7->C7_TOTAL + SC7->C7_VALFRE + SC7->C7_VALIPI 
 		n_TotIPI	+= SC7->C7_VALIPI
 		n_TotIcms	+= SC7->C7_VALICM
 		n_VlDesc	+= SC7->C7_VLDESC
@@ -252,10 +252,12 @@ User Function PCOMR003(l_AdicCamp,c_TempFile)
 		SC7->(dbSkip())
 
 	EndDo
+	
+	n_Total := n_Total - n_VlDesc
 
 	c_TxtPed	+= "				<tr><td>&nbsp;</td></tr>"
 	c_TxtPed	+= "				<tr class=Label>"
-	c_TxtPed	+= "					<td colspan=7>TOTAL ( Frete + IPI )</td>"
+	c_TxtPed	+= "					<td colspan=7>TOTAL ( Frete + IPI - Desconto )</td>"
 	c_TxtPed	+= "					<td align='right'>" + Transform( n_Total, "@E 9,999,999.999999" ) + "</td>"
 	c_TxtPed	+= "					<td align='right'>&nbsp;</td>"
 	c_TxtPed	+= "					<td align='right'>" + Transform( n_TotFret, "@E 999,999,999.99" ) + "</td>"
