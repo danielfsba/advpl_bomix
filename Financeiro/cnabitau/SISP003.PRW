@@ -1,7 +1,5 @@
 #include "rwmake.ch"
 
-User Function SISP003()
-
 /*/
 ‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
@@ -15,11 +13,9 @@ User Function SISP003()
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂ
 */
+User Function SISP003()
 
-dbSelectArea("SX6")
-dbSeek(cFilAnt+"MV_LOTESIS")
-nProx := Strzero(Val(X6_CONTEUD)+1,4)
-RecLock("SX6",.f.)
-   Replace X6_CONTEUD With nProx
-MsUnLock()
+   nProx := Strzero(Val(GetMv("MV_LOTESIS"))+1,4)
+   SetMV("MV_LOTESIS",nProx)
+
 Return(nProx)

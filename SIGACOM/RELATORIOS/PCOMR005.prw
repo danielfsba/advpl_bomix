@@ -674,13 +674,13 @@ While !SC7->(Eof()) .And. SC7->C7_FILIAL == xFilial("SC7") .And. SC7->C7_NUM >= 
 		If !Empty(SCR->CR_APROV) .Or. (Empty(SCR->CR_APROV) .And. SCR->CR_TIPO == "IP")
 
 			l_NewAlc := .T.
-			c_Comprador := UsrFullName(SC7->C7_USER)
+			c_Comprador := GetNome(SC7->C7_USER)
 			If SC7->C7_CONAPRO != "B"
 				l_Liber := .T.
 			EndIf
 
 			While !Eof() .And. SCR->CR_FILIAL+Alltrim(SCR->CR_NUM) == xFilial("SCR")+Alltrim(SC7->C7_NUM) .And. SCR->CR_TIPO $ "PC|AE|IP"
-				c_Aprov += AllTrim(UsrFullName(SCR->CR_USER))+" ["
+				c_Aprov += AllTrim(GetNome(SCR->CR_USER))+" ["
 				Do Case
 					Case SCR->CR_STATUS=="02" //Pendente
 					c_Aprov += "BLQ"
@@ -709,7 +709,7 @@ While !SC7->(Eof()) .And. SC7->C7_FILIAL == xFilial("SC7") .And. SC7->C7_NUM >= 
 								LOOP
 							EndIf
 						EndIf
-						c_Alter += AllTrim(UsrFullName(SAJ->AJ_USER))+"/"
+						c_Alter += AllTrim(GetNome(SAJ->AJ_USER))+"/"
 					EndIf
 					dbSelectArea("SAJ")
 					dbSkip()
@@ -1383,3 +1383,19 @@ Static Function printPage()
 Return
 
 
+/*/{Protheus.doc} nomeStaticFunction
+	(long_description)
+	@type  Static Function
+	@author user
+	@since 18/12/2021
+	@version version
+	@param param_name, param_type, param_descr
+	@return return_var, return_type, return_description
+	@example
+	(examples)
+	@see (links_or_references)
+/*/
+Static Function GetNome(cCodUser)
+	Local cNome := ''
+	cNome := UsrFullName(cCodUser)
+Return cNome

@@ -1,7 +1,5 @@
 #include "rwmake.ch"
 
-User Function SISP006()
-
 /*/
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
@@ -15,10 +13,8 @@ User Function SISP006()
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
-dbSelectArea("SX6")
-dbSeek(cFilAnt+"MV_TOTREG")
-nTotReg := M->NSEQ+2 +Val(X6_CONTEUD)
-RecLock("SX6",.f.)
-   Replace X6_CONTEUD With Strzero(nTotReg,6)
-MsUnLock()
+
+User Function SISP006()
+   nTotReg := M->NSEQ + 2 + Val(GetMv("MV_TOTREG"))
+   SetMV("MV_TOTREG",Strzero(nTotReg,6))
 Return('')

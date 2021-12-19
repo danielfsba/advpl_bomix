@@ -3,18 +3,18 @@
 #include "TbiConn.ch"
 #include "Report.ch"
 #INCLUDE "APVT100.CH"
-#INCLUDE "TOPCONN.CH" 
+#INCLUDE "TOPCONN.CH"
 
-User Function LO_56 
+User Function LO_56
 
 	Local c_Usuario  := SubStr(UsrRetName(__CUSERID), 1, TamSX3("ZW_USUARIO")[1])
-    Local c_Op       := Space(13)
-    Local c_Produto  := Space(TamSX3("B1_COD")[1])
+	Local c_Op       := Space(13)
+	Local c_Produto  := Space(TamSX3("B1_COD")[1])
 	Local c_Lote     := Space(TamSX3("D3_LOTECTL")[1] + 1)
 	Local c_LocDest  := "56"
-    Local n_Quant    := 0
-    Local n_ConfQtd  := 0
-    Local c_Opcao    := Space(1)
+	Local n_Quant    := 0
+	Local n_ConfQtd  := 0
+	Local c_Opcao    := Space(1)
 	Local a_Area     := GetArea()
 	Local l_Ret      := .T.
 	Local a_Tela     := VTSave(0, 0, 4, 10)
@@ -22,80 +22,80 @@ User Function LO_56
 	Local lOk	     := .T.
 	Local aItem	     := {}
 	Local a_Itens    := {}
-	Local nOpcAuto   := 3 
+	Local nOpcAuto   := 3
 	Local l_Continua := .T.
 
 	Private lMsHelpAuto := .T.
 	Private lMsErroAuto := .F.
-    Private INCLUI      := .T.
+	Private INCLUI      := .T.
 
 	While l_Continua
 		VTClear Screen
-	    c_Produto  := Space(TamSX3("B1_COD")[1])
+		c_Produto  := Space(TamSX3("B1_COD")[1])
 		c_Lote     := Space(TamSX3("D3_LOTECTL")[1] + 1)
 		c_LocDest  := "56"
-	    n_Quant    := 0
-	    n_ConfQtd  := 0
+		n_Quant    := 0
+		n_ConfQtd  := 0
 		aItem	   := {}
 		l_Produto  := .F.
-	
+
 		While l_Produto == .F.
 			@ 0, 0 VTSAY "Produto: " VTGET c_Produto Pict "@!"
-		    VTRead
-	
+			VTRead
+
 			If VtLastKey() == 27
 				RestArea(a_Area)
-				VTClear Screen			
+				VTClear Screen
 				VTRestore(0, 0, 4, 10, a_Tela)
 				Return .F.
 			Endif
-	
-		   	dbSelectArea("SB1")
-	   		dbSetOrder(1)
+
+			dbSelectArea("SB1")
+			dbSetOrder(1)
 			If dbSeek(xFilial("SB1") + c_Produto)
-			   	l_Rastro := IIF(SB1->B1_RASTRO == "L", .T., .F.)
+				l_Rastro := IIF(SB1->B1_RASTRO == "L", .T., .F.)
 				l_Produto := .T.
 			Else
 				VTAlert("Produto " + AllTrim(c_Produto) + " não foi encontrado no Cadastro de Produtos. Por favor verifique se o código do produto foi digitado corretamente.", "Aviso")
 			Endif
-	   	End
-	
+		End
+
 		If l_Rastro
 			l_Lote := .F.
 			a_Lote := {}
-		
+
 			c_Qry := " SELECT B8_LOTECTL, B8_DTVALID FROM " + RetSqlName("SB8") + " SB8 " + chr(13)
-		  	c_Qry += " WHERE B8_FILIAL='" + XFILIAL("SB8") + "' AND B8_SALDO > 0 AND B8_DTVALID >= '" + DTOS(DDATABASE) + "' AND B8_LOCAL = 'LO' AND B8_PRODUTO = '" + c_Produto + "' AND SB8.D_E_L_E_T_<>'*' " + chr(13)
-	
+			c_Qry += " WHERE B8_FILIAL='" + XFILIAL("SB8") + "' AND B8_SALDO > 0 AND B8_DTVALID >= '" + DTOS(DDATABASE) + "' AND B8_LOCAL = 'LO' AND B8_PRODUTO = '" + c_Produto + "' AND SB8.D_E_L_E_T_<>'*' " + chr(13)
+
 			TCQUERY c_Qry NEW ALIAS QRY
-	
+
 			dbSelectArea("QRY")
 			dbGoTop()
 			While QRY->(!EoF())
-//				If aScan(a_Lote, c_Lote) == 0
+				//				If aScan(a_Lote, c_Lote) == 0
 				If aScan(a_Lote, {|x| x[1] == QRY->B8_LOTECTL}) == 0
 					AADD(a_Lote, {QRY->B8_LOTECTL, Stod(QRY->B8_DTVALID)})
 				Endif
 
 				QRY->(dbSkip())
 			End
-	
+
 			QRY->(dbCloseArea())
-	
+
 			While l_Lote == .F.
 				@ 1, 0 VTSAY "Lote: " VTGET c_Lote Pict "@!"
-			    VTRead
-			    
-			    c_Lote := Padr(c_Lote, TamSX3("D3_LOTECTL")[1])
-	
+				VTRead
+
+				c_Lote := Padr(c_Lote, TamSX3("D3_LOTECTL")[1])
+
 				If VtLastKey() == 27
 					RestArea(a_Area)
-					VTClear Screen			
+					VTClear Screen
 					VTRestore(0, 0, 4, 10, a_Tela)
 					Return .F.
 				Endif
-	
-//				If aScan(a_Lote, c_Lote) == 0
+
+				//				If aScan(a_Lote, c_Lote) == 0
 				If aScan(a_Lote, {|x| x[1] == c_Lote}) == 0
 					VTAlert("Lote " + AllTrim(c_Lote) + " inválido ou vencido. Por favor verificar se o lote foi preenchido corretamente.", "Aviso")
 				Else
@@ -106,7 +106,7 @@ User Function LO_56
 			If !Empty(c_Lote)
 				d_DtValid := a_Lote[aScan(a_Lote, {|x| x[1] == c_Lote})][2]
 
-/*
+				/*
 				dbSelectArea("SB8")
 				dbSetOrder(5)
 				dbSeek(xFilial("SB8") + c_Produto + c_Lote)
@@ -114,25 +114,25 @@ User Function LO_56
 				d_DtValid := SB8->B8_DTVALID
 
 			   	SB8->(dbCloseArea())
-*/
+				*/
 			Endif
 		Else
 			@ 1, 0 VTSAY "Lote: S/ CONTROLE"
 		Endif
-	
+
 		l_Quant := .F.
-	
+
 		While l_Quant == .F.
 			@ 2, 0 VTSAY "Quantidade: " VTGET n_Quant
-		    VTRead
-	
+			VTRead
+
 			If VtLastKey() == 27
 				RestArea(a_Area)
-				VTClear Screen			
+				VTClear Screen
 				VTRestore(0, 0, 4, 10, a_Tela)
 				Return .F.
 			Endif
-	
+
 			If SuperGetMV('MV_ESTNEG')=='N'
 				dbSelectArea("SB2")
 				SB2->(dbSetOrder(1))
@@ -148,7 +148,7 @@ User Function LO_56
 					Endif
 				Endif
 
-			   	SB2->(dbCloseArea())
+				SB2->(dbCloseArea())
 			Else
 				If n_Quant > 0
 					l_Quant := .T.
@@ -157,44 +157,44 @@ User Function LO_56
 				Endif
 			Endif
 		End
-		
+
 		@ 2, 0 VTSAY "Quantidade:" + Transform(n_Quant, "@E 99,999.99") + Space(25)
-	
+
 		l_ConfQtd := .F.
-	
+
 		While l_ConfQtd == .F.
 			@ 3, 0 VTSAY "Confirme: " VTGET n_ConfQtd
-		    VTRead
-	
+			VTRead
+
 			If VtLastKey() == 27
 				RestArea(a_Area)
-				VTClear Screen			
+				VTClear Screen
 				VTRestore(0, 0, 4, 10, a_Tela)
 				Return .F.
 			Endif
-	
+
 			If n_Quant == n_ConfQtd
 				l_ConfQtd := .T.
 			Else
 				VTAlert("Confirmação da quantidade está divergente da quantidade digitada anteriormente. Por favor verificar se a confirmação da quantidade foi preenchida corretamente.", "Aviso")
 			Endif
 		End
-	
+
 		@ 3, 0 VTSAY "Confirme: " + Transform(n_ConfQtd, "@E 99,999.99") + Space(25)
-	
+
 		l_LocDest := .F.
-	
+
 		While l_LocDest == .F.
 			@ 4, 0 VTSAY "Local Destino: " VTGET c_LocDest Pict "@!"
-		    VTRead
-	
+			VTRead
+
 			If VtLastKey() == 27
 				RestArea(a_Area)
-				VTClear Screen			
+				VTClear Screen
 				VTRestore(0, 0, 4, 10, a_Tela)
 				Return .F.
 			Endif
-	
+
 			dbSelectArea("NNR")
 			dbSetOrder(1)
 			If dbSeek(xFilial("NNR") + c_LocDest) .And. c_LocDest $ "56"
@@ -203,35 +203,35 @@ User Function LO_56
 				VTAlert("Armazem de destino inválido para esta operação. Por favor verificar se o código do armazém foi preenchido corretamente.", "Aviso")
 			Endif
 		End
-	
-		aadd(aItem, c_Produto, Nil)  	//D3_COD		
-		aadd(aItem, SB1->B1_DESC, Nil)  	//D3_DESCRI				
-		aadd(aItem, SB1->B1_UM, Nil)		//D3_UM		
-		aadd(aItem, "LO", Nil)      		//D3_LOCAL		
-		aadd(aItem, Space(TamSX3("D3_LOCALIZ")[1]), Nil)				//D3_LOCALIZ		
-		aadd(aItem, c_Produto, Nil)  	//D3_COD		
-		aadd(aItem, SB1->B1_DESC, Nil)   //D3_DESCRI				
-		aadd(aItem, SB1->B1_UM, Nil)		//D3_UM		
-		aadd(aItem, c_LocDest, Nil) 		//D3_LOCAL		
-		aadd(aItem, Space(TamSX3("D3_LOCALIZ")[1]), Nil)				//D3_LOCALIZ		
-		aadd(aItem, Space(TamSX3("D3_NUMSERI")[1]), Nil)          	//D3_NUMSERI		
-		aadd(aItem, c_Lote, Nil)			//D3_LOTECTL  		
-		aadd(aItem, Space(TamSX3("D3_NUMLOTE")[1]), Nil)        		//D3_NUMLOTE		
+
+		aadd(aItem, c_Produto, Nil)  	//D3_COD
+		aadd(aItem, SB1->B1_DESC, Nil)  	//D3_DESCRI
+		aadd(aItem, SB1->B1_UM, Nil)		//D3_UM
+		aadd(aItem, "LO", Nil)      		//D3_LOCAL
+		aadd(aItem, Space(TamSX3("D3_LOCALIZ")[1]), Nil)				//D3_LOCALIZ
+		aadd(aItem, c_Produto, Nil)  	//D3_COD
+		aadd(aItem, SB1->B1_DESC, Nil)   //D3_DESCRI
+		aadd(aItem, SB1->B1_UM, Nil)		//D3_UM
+		aadd(aItem, c_LocDest, Nil) 		//D3_LOCAL
+		aadd(aItem, Space(TamSX3("D3_LOCALIZ")[1]), Nil)				//D3_LOCALIZ
+		aadd(aItem, Space(TamSX3("D3_NUMSERI")[1]), Nil)          	//D3_NUMSERI
+		aadd(aItem, c_Lote, Nil)			//D3_LOTECTL
+		aadd(aItem, Space(TamSX3("D3_NUMLOTE")[1]), Nil)        		//D3_NUMLOTE
 		aadd(aItem, d_DtValid, Nil)		//D3_DTVALID
-		aadd(aItem, CriaVar("D3_POTENCI"), Nil)				//D3_POTENCI		
-		aadd(aItem, n_Quant, Nil)		//D3_QUANT		
-		aadd(aItem, CriaVar("D3_QTSEGUM"), Nil)				//D3_QTSEGUM		
-		aadd(aItem, CriaVar("D3_ESTORNO"), Nil)   			//D3_ESTORNO		
-		aadd(aItem, CriaVar("D3_NUMSEQ"), Nil)        		//D3_NUMSEQ 		
-		aadd(aItem, c_Lote, Nil)			//D3_LOTECTL		
+		aadd(aItem, CriaVar("D3_POTENCI"), Nil)				//D3_POTENCI
+		aadd(aItem, n_Quant, Nil)		//D3_QUANT
+		aadd(aItem, CriaVar("D3_QTSEGUM"), Nil)				//D3_QTSEGUM
+		aadd(aItem, CriaVar("D3_ESTORNO"), Nil)   			//D3_ESTORNO
+		aadd(aItem, CriaVar("D3_NUMSEQ"), Nil)        		//D3_NUMSEQ
+		aadd(aItem, c_Lote, Nil)			//D3_LOTECTL
 		aadd(aItem, d_DtValid, Nil)		//D3_DTVALID
-//			aadd(aItem, Space(TamSX3("D3_SERVIC")[1]), Nil)				//D3_SERVIC
+		//			aadd(aItem, Space(TamSX3("D3_SERVIC")[1]), Nil)				//D3_SERVIC
 		aadd(aItem, Space(TamSX3("D3_ITEMGRD")[1]), Nil)				//D3_ITEMGRD
 
 		aadd(a_Itens, aItem)
 
 		@ 5, 0 VTSAY Replicate("-", 30)
-/*
+		/*
 		While (c_Opcao $ "SN") == .F.
 			@ 6, 0 VTSAY "Continuar (S/N)? " VTGET c_Opcao Pict "@!"
 	    	VTRead
@@ -240,22 +240,22 @@ User Function LO_56
 	    If Upper(c_Opcao) == "N"
 			l_Continua := .F.
 	    Endif
-*/
+		*/
 		l_Continua := .F.
 		c_Opcao    := Space(1)
 	End
 
-//	VTClear Screen
-//	@ 0, 0 VTSAY "Transferir (S/N)? " VTGET c_Opcao Pict "@!"
+	//	VTClear Screen
+	//	@ 0, 0 VTSAY "Transferir (S/N)? " VTGET c_Opcao Pict "@!"
 
 	While (c_Opcao $ "SN") == .F.
 		@ 6, 0 VTSAY "Transferir (S/N)? " VTGET c_Opcao Pict "@!"
-    	VTRead
-    End
+		VTRead
+	End
 
 	VTClear Screen
 
-    If Upper(c_Opcao) == "S"
+	If Upper(c_Opcao) == "S"
 		c_NumSeq := Space(TamSX3("D3_NUMSEQ")[1])
 
 		VTMsg("Aguarde...")
@@ -310,11 +310,12 @@ User Function LO_56
 
 				VTClear Screen
 				VTRestore(0, 0, 4, 10, a_Tela)
-			  	Return
+				
+				Break
 			EndIf
 		End Transaction
 
-        l_Update := .F.
+		l_Update := .F.
 
 		dbSelectArea("SD3")
 		dbSetOrder(2)
@@ -324,27 +325,27 @@ User Function LO_56
 					dbSelectArea("SZW")
 					dbSetOrder(4)
 					If !dbSeek(xFilial("SZW") + SD3->D3_DOC + SD3->D3_NUMSEQ)
-			            l_Update := .T.
+						l_Update := .T.
 						c_Doc    := SD3->D3_DOC
 						c_NumSeq := SD3->D3_NUMSEQ
 						Exit
-			   		Endif
+					Endif
 				Endif
 
 				SD3->(dbSkip())
 			End
 		Else
 			//Gravou a transferência com outro número de documento
-		  	c_Qry := " SELECT * FROM " + RetSqlName("SD3") + " SD3 WITH(NOLOCK) " + chr(13)
-		  	c_Qry += " WHERE SD3.D_E_L_E_T_<>'*' AND D3_FILIAL = '" + xFilial("SD3") + "' "  + chr(13)
-		  	c_Qry += " AND D3_COD = '" + c_Produto + "' AND D3_LOCAL = 'LO' " + chr(13)
-		  	c_Qry += " AND D3_TM = '999' AND D3_CF = 'RE4' AND D3_LOTECTL = '" + c_Lote + "' AND D3_EMISSAO = '" + Dtos(DDATABASE) + "' " + chr(13)
-		  	c_Qry += " AND D3_CHAVE = 'E0' AND D3_QUANT = " + cValToChar(n_Quant) + " AND D3_NUMSEQ NOT IN ( " + chr(13)
-		  	c_Qry += " 	SELECT ZW_NUMSEQ FROM " + RetSqlName("SZW") + " SZW WITH(NOLOCK) " + chr(13)
-		  	c_Qry += " 	WHERE SZW.D_E_L_E_T_<>'*' AND ZW_FILIAL = '" + xFilial("SZW") + "' "  + chr(13)
-		  	c_Qry += " 	AND ZW_PRODUTO = '" + c_Produto + "' AND ZW_LOCORIG = 'LO' " + chr(13)
-		  	c_Qry += " 	AND ZW_LOTECTL = '" + c_Lote + "' " + chr(13)
-		  	c_Qry += " ) AND D3_USUARIO = '" + SubStr(cUserName, 1, TamSX3("D3_USUARIO")[1]) + "' ORDER BY R_E_C_N_O_ DESC "
+			c_Qry := " SELECT * FROM " + RetSqlName("SD3") + " SD3 WITH(NOLOCK) " + chr(13)
+			c_Qry += " WHERE SD3.D_E_L_E_T_<>'*' AND D3_FILIAL = '" + xFilial("SD3") + "' "  + chr(13)
+			c_Qry += " AND D3_COD = '" + c_Produto + "' AND D3_LOCAL = 'LO' " + chr(13)
+			c_Qry += " AND D3_TM = '999' AND D3_CF = 'RE4' AND D3_LOTECTL = '" + c_Lote + "' AND D3_EMISSAO = '" + Dtos(DDATABASE) + "' " + chr(13)
+			c_Qry += " AND D3_CHAVE = 'E0' AND D3_QUANT = " + cValToChar(n_Quant) + " AND D3_NUMSEQ NOT IN ( " + chr(13)
+			c_Qry += " 	SELECT ZW_NUMSEQ FROM " + RetSqlName("SZW") + " SZW WITH(NOLOCK) " + chr(13)
+			c_Qry += " 	WHERE SZW.D_E_L_E_T_<>'*' AND ZW_FILIAL = '" + xFilial("SZW") + "' "  + chr(13)
+			c_Qry += " 	AND ZW_PRODUTO = '" + c_Produto + "' AND ZW_LOCORIG = 'LO' " + chr(13)
+			c_Qry += " 	AND ZW_LOTECTL = '" + c_Lote + "' " + chr(13)
+			c_Qry += " ) AND D3_USUARIO = '" + SubStr(cUserName, 1, TamSX3("D3_USUARIO")[1]) + "' ORDER BY R_E_C_N_O_ DESC "
 
 			TCQUERY c_Qry NEW ALIAS QRY
 
@@ -355,17 +356,17 @@ User Function LO_56
 					dbSelectArea("SZW")
 					dbSetOrder(4)
 					If !dbSeek(xFilial("SZW") + QRY->D3_DOC + QRY->D3_NUMSEQ)
-			            l_Update := .T.
+						l_Update := .T.
 						c_Doc    := QRY->D3_DOC
 						c_NumSeq := QRY->D3_NUMSEQ
 						Exit
-			   		Endif
+					Endif
 
-		            QRY->(dbSkip())
-		   		End
+					QRY->(dbSkip())
+				End
 			Endif
 
-		  	QRY->(dbCloseArea())
+			QRY->(dbCloseArea())
 		Endif
 
 		If l_Update
@@ -378,7 +379,7 @@ User Function LO_56
 					While !dbSeek(xFilial("SZW") + c_Doc + c_NumSeq)
 						RecLock("SZW", .T.)
 						SZW->ZW_FILIAL  := XFILIAL("SZW")
-						SZW->ZW_DOC     := c_Doc  
+						SZW->ZW_DOC     := c_Doc
 						SZW->ZW_EMISSAO := DDATABASE
 						SZW->ZW_OP      := c_Op
 						SZW->ZW_PRODUTO := a_Itens[i][1]
@@ -399,7 +400,7 @@ User Function LO_56
 
 			VTClear Screen
 			VTRestore(0, 0, 4, 10, a_Tela)
-		  	Return
+			Return
 		Endif
 
 		dbSelectArea("SZW")

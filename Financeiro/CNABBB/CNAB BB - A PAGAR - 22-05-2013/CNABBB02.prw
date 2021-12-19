@@ -33,24 +33,18 @@ else
    Endif
 Endif
 nProx := Val(xCont)+1
-dbSelectArea("SX6")
-
 
 If FUNNAME() == "FINA150"
-  dbSeek(xFilial()+"MV_CNABCR")
+  SetMV("MV_CNABCR",StrZero(nProx,5))
 else
    If FUNNAME() == "FINA420"  .or. FUNNAME() == "FINA750"
-      dbSeek(xFilial()+"MV_CNABCP")
+      SetMV("MV_CNABCP",StrZero(nProx,5))
    else
       If FUNNAME() == "GPEM410"
-         dbSeek(xFilial()+"MV_CNABFOL")
+         SetMV("MV_CNABFOL",StrZero(nProx,5))
       Endif
    Endif
 Endif
-
-RecLock("SX6",.f.)
-   Replace X6_CONTEUD With StrZero(nProx,5)
-MsUnLock()
 
 dbSelectArea(cAlias)
 dbSetOrder(nOrd)

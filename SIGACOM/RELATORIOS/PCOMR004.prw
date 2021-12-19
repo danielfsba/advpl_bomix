@@ -819,13 +819,13 @@ Static Function ReportPrint(oReport,nReg,nOpcX)
 			If !Empty(SC7->C7_APROV) .Or. (Empty(SC7->C7_APROV) .And. SCR->CR_TIPO == "IP")
 
 				lNewAlc := .T.
-				cComprador := UsrFullName(SC7->C7_USER)
+				cComprador := GetNome(SC7->C7_USER)
 				If SC7->C7_CONAPRO != "B"
 					lLiber := .T.
 				EndIf
 
 				While !Eof() .And. SCR->CR_FILIAL+Alltrim(SCR->CR_NUM) == xFilial("SCR")+Alltrim(SC7->C7_NUM) .And. SCR->CR_TIPO $ "PC|AE|IP"
-					cAprov += AllTrim(UsrFullName(SCR->CR_USER))+" ["
+					cAprov += AllTrim(GetNome(SCR->CR_USER))+" ["
 					Do Case
 						Case SCR->CR_STATUS=="02" //Pendente
 						cAprov += "BLQ"
@@ -854,7 +854,7 @@ Static Function ReportPrint(oReport,nReg,nOpcX)
 									LOOP
 								EndIf
 							EndIf
-							cAlter += AllTrim(UsrFullName(SAJ->AJ_USER))+"/"
+							cAlter += AllTrim(GetNome(SAJ->AJ_USER))+"/"
 						EndIf
 						dbSelectArea("SAJ")
 						dbSkip()
@@ -2382,7 +2382,7 @@ Static Function FinalPed(nDescProd)
 	dbSelectArea("SC7")
 	If !Empty(SC7->C7_APROV) .Or. (Empty(SC7->C7_APROV) .And. SCR->CR_TIPO == "IP")
 		lNewAlc := .T.
-		cComprador := UsrFullName(SC7->C7_USER)
+		cComprador := GetNome(SC7->C7_USER)
 		If C7_CONAPRO != "B"
 			lLiber := .T.
 		EndIf
@@ -2390,7 +2390,7 @@ Static Function FinalPed(nDescProd)
 		dbSetOrder(1)
 		dbSeek(xFilial("SCR")+"PC"+SC7->C7_NUM)
 		While !Eof() .And. SCR->CR_FILIAL+Alltrim(SCR->CR_NUM)==xFilial("SCR")+Alltrim(SC7->C7_NUM) .And. SCR->CR_TIPO $ "PC|AE|IP"
-			cAprov += AllTrim(UsrFullName(SCR->CR_USER))+" ["
+			cAprov += AllTrim(GetNome(SCR->CR_USER))+" ["
 			Do Case
 				Case SCR->CR_STATUS=="02" //Pendente
 				cAprov += "BLQ"
@@ -2419,7 +2419,7 @@ Static Function FinalPed(nDescProd)
 							LOOP
 						EndIf
 					EndIf
-					cAlter += AllTrim(UsrFullName(SAJ->AJ_USER))+"/"
+					cAlter += AllTrim(GetNome(SAJ->AJ_USER))+"/"
 				EndIf
 				dbSelectArea("SAJ")
 				dbSkip()
@@ -2810,7 +2810,7 @@ Static Function FinalAE(nDescProd)
 	lNewAlc := .F.
 	If !Empty(C7_APROV)
 		lNewAlc := .T.
-		cComprador := UsrFullName(SC7->C7_USER)
+		cComprador := GetNome(SC7->C7_USER)
 		If C7_CONAPRO != "B"
 			lLiber := .T.
 		EndIf
@@ -2818,7 +2818,7 @@ Static Function FinalAE(nDescProd)
 		dbSetOrder(1)
 		dbSeek(xFilial("SCR")+"AE"+SC7->C7_NUM)
 		While !Eof() .And. SCR->CR_FILIAL+Alltrim(SCR->CR_NUM)==xFilial("SCR")+Alltrim(SC7->C7_NUM) .And. SCR->CR_TIPO == "AE"
-			cAprov += AllTrim(UsrFullName(SCR->CR_USER))+" ["
+			cAprov += AllTrim(GetNome(SCR->CR_USER))+" ["
 			Do Case
 				Case SCR->CR_STATUS=="03" //Liberado
 				cAprov += "Ok"
@@ -2845,7 +2845,7 @@ Static Function FinalAE(nDescProd)
 							LOOP
 						EndIf
 					EndIf
-					cAlter += AllTrim(UsrFullName(SAJ->AJ_USER))+"/"
+					cAlter += AllTrim(GetNome(SAJ->AJ_USER))+"/"
 				EndIf
 				dbSelectArea("SAJ")
 				dbSkip()
@@ -3298,3 +3298,20 @@ Static Function R110Logo()
 	EndIf
 
 Return cBitmap
+
+/*/{Protheus.doc} nomeStaticFunction
+	(long_description)
+	@type  Static Function
+	@author user
+	@since 18/12/2021
+	@version version
+	@param param_name, param_type, param_descr
+	@return return_var, return_type, return_description
+	@example
+	(examples)
+	@see (links_or_references)
+/*/
+Static Function GetNome(cCodUser)
+	Local cNome := ''
+	cNome := UsrFullName(cCodUser)
+Return cNome

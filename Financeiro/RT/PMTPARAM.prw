@@ -108,35 +108,12 @@ cPar1 := dDataBase - GetMv("MV_BLQMES1")
 cPar2 := dDataBase - GetMv("MV_BLQMES2")
 cPar3 := "2"
 
-DbSelectArea("SX6")
-DbSeek(xFilial()+"MV_DATAFIN")
-RecLock('SX6',.F.)
-	SX6->X6_CONTEUD := Dtoc(cPar1)
-MsUnLock()
 
-DbSelectArea("SX6")
-DbSeek(xFilial()+"MV_BXDTFIN")
-RecLock('SX6',.F.)
-	SX6->X6_CONTEUD := cPar3 //Dtoc(cPar1) **** Alterado por Victor Sousa *****  Parametro MV_BXDTFIN-Permitir baixa menor que parametro MV_DATAFIN **** 1=Permite/2=Nao ?      
-MsUnLock()
-
-DbSelectArea("SX6")
-DbSeek(xFilial()+"MV_DBLQMOV")
-RecLock('SX6',.F.)
-	SX6->X6_CONTEUD := Dtoc(cPar1)
-MsUnLock()
-
-DbSelectArea("SX6")
-DbSeek(xFilial()+"MV_DATAFIS")
-RecLock('SX6',.F.)
-	SX6->X6_CONTEUD := Dtoc(cPar1)
-MsUnLock()
-
-DbSelectArea("SX6")
-DbSeek(xFilial()+"MV_DATAREC")
-RecLock('SX6',.F.)
-	SX6->X6_CONTEUD := Dtoc(cPar2)
-MsUnLock()
+SetMV("MV_DATAFIN",Dtoc(cPar1))
+SetMV("MV_BXDTFIN",cPar3)
+SetMV("MV_DBLQMOV",Dtoc(cPar1))
+SetMV("MV_DATAFIS",Dtoc(cPar1))
+SetMV("MV_DATAREC",Dtoc(cPar2))
 
 MsgBox("ATUALIZADO COM SUCESSO !!!")
 

@@ -1,7 +1,5 @@
 #include "rwmake.ch"
 
-User Function SISP005()
-
 /*/
 ‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
@@ -15,10 +13,10 @@ User Function SISP005()
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂ
 */
-dbSelectArea("SX6")
-dbSeek(cFilAnt+"MV_LOTESIS")
-nLote := "00"+Alltrim(X6_CONTEUD)
-RecLock("SX6",.f.)
-   Replace X6_CONTEUD With '0000'
-MsUnLock()
+
+User Function SISP005()
+
+   nLote := "00" + GetMv("MV_LOTESIS")
+   SetMV("MV_LOTESIS","0000")
+
 Return(nLote)

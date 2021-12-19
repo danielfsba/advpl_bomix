@@ -225,7 +225,7 @@ Private	oBrush		:= TBrush():New(,4),;
 		cCompr := TRA->C7_USER
 		
 		cTipoSC7	:= IIF((SC7->C7_TIPO == 1 .OR. SC7->C7_TIPO == 3),"PC","AE")
-		cComprador 	:= UsrFullName(SC7->C7_USER)
+		cComprador 	:= GetNome(SC7->C7_USER)
 		cAlter	 	:= ''
 		cAprov	 	:= ''
 
@@ -235,7 +235,7 @@ Private	oBrush		:= TBrush():New(,4),;
 			dbSeek(xFilial("SAJ")+SC7->C7_GRUPCOM)
 			While !Eof() .And. SAJ->AJ_FILIAL+SAJ->AJ_GRCOM == xFilial("SAJ")+SC7->C7_GRUPCOM
 				If SAJ->AJ_USER != SC7->C7_USER
-					cAlter += AllTrim(UsrFullName(SAJ->AJ_USER))+"/"
+					cAlter += AllTrim(GetNome(SAJ->AJ_USER))+"/"
 				EndIf
 				dbSelectArea("SAJ")
 				dbSkip()
@@ -248,7 +248,7 @@ Private	oBrush		:= TBrush():New(,4),;
 		dbSetOrder(1)
 		dbSeek(xFilial("SCR")+cTipoSC7+SC7->C7_NUM)
 		While !Eof() .And. SCR->CR_FILIAL+Alltrim(SCR->CR_NUM) == xFilial("SCR")+Alltrim(SC7->C7_NUM) .And. SCR->CR_TIPO == cTipoSC7
-			cAprov += AllTrim(UsrFullName(SCR->CR_USER))+" ["
+			cAprov += AllTrim(GetNome(SCR->CR_USER))+" ["
 			Do Case
 				Case SCR->CR_STATUS=="03" //Liberado
 					cAprov += "Ok"
@@ -950,3 +950,20 @@ If !lConectou .Or. !lEnviado
 Endif          
 FERASE(cAnexos)
 Return                      
+
+/*/{Protheus.doc} nomeStaticFunction
+	(long_description)
+	@type  Static Function
+	@author user
+	@since 18/12/2021
+	@version version
+	@param param_name, param_type, param_descr
+	@return return_var, return_type, return_description
+	@example
+	(examples)
+	@see (links_or_references)
+/*/
+Static Function GetNome(cCodUser)
+	Local cNome := ''
+	cNome := UsrFullName(cCodUser)
+Return cNome

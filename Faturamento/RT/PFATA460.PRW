@@ -789,7 +789,7 @@ Static Function f_ImpNotas(c_Marc1)
 							If !l_CondPag
 								If !msgYesNo("Documento No.[ "+TRB->TB_NUM+"] não foi processado porque a condição de pagamento código ["+c_CondPag+"] não está cadastrada nesta filial. Deseja Continuar o processo de importação ? ")
 									msgInfo("Xml atual não importado, processo de importação será encerrado.")
-									Return//Exit
+									break//Exit
 								Else
 									msgInfo("Xml atual não importado, processo de importação continuará com o próximo da lista.")
 								Endif

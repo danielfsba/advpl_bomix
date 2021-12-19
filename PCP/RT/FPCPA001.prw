@@ -409,7 +409,7 @@ Static Function jbmt200()
 		If lMsErroAuto
 			MostraErro()
 			DisarmTransaction()
-			Return .F.
+			break
 		Else
 			DbSelectArea("SG1")
 			DbSetOrder(1)
@@ -444,7 +444,7 @@ Static Function jbdelmt200()
 		If lMsErroAuto
 			MostraErro()
 			DisarmTransaction()
-			Return l_Ret
+			break
 		Else
 			DbSelectArea("SG1")
 			DbSetOrder(1)

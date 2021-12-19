@@ -16,11 +16,8 @@ nReg := Recno()
 nSeq := GetMv("MV_CNABCR")
 
 nProx := StrZero(Val(nSeq)+1,5)
-dbSelectArea("SX6")
-dbSeek(xFilial()+"MV_CNABCR")
-RecLock("SX6",.f.)
-   Replace X6_CONTEUD With nProx
-MsUnLock() 
+
+SetMV("MV_CNABCR",nProx)
 
 dbSelectArea(cAlias)
 dbSetOrder(nOrd)

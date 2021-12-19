@@ -12,11 +12,8 @@ USER FUNCTION CNABCBB1
 cAlias := Alias()
 nOrd := dbSetOrder()
 nReg := Recno()
-dbSelectArea("SX6")
-dbSeek(xFilial()+"MV_CNABCR")
-RecLock("SX6",.f.)
-   Replace X6_CONTEUD With "00000"
-MsUnLock()
+
+SetMV("MV_CNABCR",'00000')
 
 cRet := Space(6)
 dbSelectArea(cAlias)

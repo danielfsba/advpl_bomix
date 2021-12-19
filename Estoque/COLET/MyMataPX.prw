@@ -321,7 +321,7 @@ User Function MyMataPX
 
 				VTClear Screen
 				VTRestore(0, 0, 4, 10, a_Tela)
-			  	Return
+			  	Break
 			EndIf
 		End Transaction
 

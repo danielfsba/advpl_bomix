@@ -9081,7 +9081,7 @@ If Len(cMsgFis)>0
 	cString += '<Fisco>'+ConvType(cMsgFis,Len(cMsgFis))+'</Fisco>'
 EndIf
 
-cString += '<Cpl>[ContrTSS='+StrZero(Year(ddatabase),4)+'-'+StrZero(Month(ddatabase),2)+'-'+StrZero(Day(ddatabase),2)+'#'+AllTrim(Time())+'#'+AllTrim(UsrFullName())+']'
+cString += '<Cpl>[ContrTSS='+StrZero(Year(ddatabase),4)+'-'+StrZero(Month(ddatabase),2)+'-'+StrZero(Day(ddatabase),2)+'#'+AllTrim(Time())+'#'+AllTrim(GetNome())+']'
 
 If Len(cInfRem)>0
 	cString += ConvType(cInfRem,Len(cInfRem))+" "
@@ -11624,3 +11624,20 @@ if empty(cIndPres)
 endIf
 
 return cIndPres
+
+/*/{Protheus.doc} nomeStaticFunction
+	(long_description)
+	@type  Static Function
+	@author user
+	@since 18/12/2021
+	@version version
+	@param param_name, param_type, param_descr
+	@return return_var, return_type, return_description
+	@example
+	(examples)
+	@see (links_or_references)
+/*/
+Static Function GetNome(cCodUser)
+	Local cNome := ''
+	cNome := UsrFullName(cCodUser)
+Return cNome
