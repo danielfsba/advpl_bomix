@@ -24,111 +24,111 @@
 User Function FESTA015
 
 
-//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
-//³ Declaracao de Variaveis                                             ³
-//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-Local aCores := {}
+	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	//³ Declaracao de Variaveis                                             ³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+	Local aCores := {}
 
-Private cCadastro := "Inventario"
-//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
-//³ Array (tambem deve ser aRotina sempre) com as definicoes das opcoes ³
-//³ que apareceram disponiveis para o usuario. Segue o padrao:          ³
-//³ aRotina := { {<DESCRICAO>,<ROTINA>,0,<TIPO>},;                      ³
-//³              {<DESCRICAO>,<ROTINA>,0,<TIPO>},;                      ³
-//³              . . .                                                  ³
-//³              {<DESCRICAO>,<ROTINA>,0,<TIPO>} }                      ³
-//³ Onde: <DESCRICAO> - Descricao da opcao do menu                      ³
-//³       <ROTINA>    - Rotina a ser executada. Deve estar entre aspas  ³
-//³                     duplas e pode ser uma das funcoes pre-definidas ³
-//³                     do sistema (AXPESQUI,AXVISUAL,AXINCLUI,AXALTERA ³
-//³                     e AXDELETA) ou a chamada de um EXECBLOCK.       ³
-//³                     Obs.: Se utilizar a funcao AXDELETA, deve-se de-³
-//³                     clarar uma variavel chamada CDELFUNC contendo   ³
-//³                     uma expressao logica que define se o usuario po-³
-//³                     dera ou nao excluir o registro, por exemplo:    ³
-//³                     cDelFunc := 'ExecBlock("TESTE")'  ou            ³
-//³                     cDelFunc := ".T."                               ³
-//³                     Note que ao se utilizar chamada de EXECBLOCKs,  ³
-//³                     as aspas simples devem estar SEMPRE por fora da ³
-//³                     sintaxe.                                        ³
-//³       <TIPO>      - Identifica o tipo de rotina que sera executada. ³
-//³                     Por exemplo, 1 identifica que sera uma rotina de³
-//³                     pesquisa, portando alteracoes nao podem ser efe-³
-//³                     tuadas. 3 indica que a rotina e de inclusao, por³
-//³                     tanto, a rotina sera chamada continuamente ao   ³
-//³                     final do processamento, ate o pressionamento de ³
-//³                     <ESC>. Geralmente ao se usar uma chamada de     ³
-//³                     EXECBLOCK, usa-se o tipo 4, de alteracao.       ³
-//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+	Private cCadastro := "Inventario"
+	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	//³ Array (tambem deve ser aRotina sempre) com as definicoes das opcoes ³
+	//³ que apareceram disponiveis para o usuario. Segue o padrao:          ³
+	//³ aRotina := { {<DESCRICAO>,<ROTINA>,0,<TIPO>},;                      ³
+	//³              {<DESCRICAO>,<ROTINA>,0,<TIPO>},;                      ³
+	//³              . . .                                                  ³
+	//³              {<DESCRICAO>,<ROTINA>,0,<TIPO>} }                      ³
+	//³ Onde: <DESCRICAO> - Descricao da opcao do menu                      ³
+	//³       <ROTINA>    - Rotina a ser executada. Deve estar entre aspas  ³
+	//³                     duplas e pode ser uma das funcoes pre-definidas ³
+	//³                     do sistema (AXPESQUI,AXVISUAL,AXINCLUI,AXALTERA ³
+	//³                     e AXDELETA) ou a chamada de um EXECBLOCK.       ³
+	//³                     Obs.: Se utilizar a funcao AXDELETA, deve-se de-³
+	//³                     clarar uma variavel chamada CDELFUNC contendo   ³
+	//³                     uma expressao logica que define se o usuario po-³
+	//³                     dera ou nao excluir o registro, por exemplo:    ³
+	//³                     cDelFunc := 'ExecBlock("TESTE")'  ou            ³
+	//³                     cDelFunc := ".T."                               ³
+	//³                     Note que ao se utilizar chamada de EXECBLOCKs,  ³
+	//³                     as aspas simples devem estar SEMPRE por fora da ³
+	//³                     sintaxe.                                        ³
+	//³       <TIPO>      - Identifica o tipo de rotina que sera executada. ³
+	//³                     Por exemplo, 1 identifica que sera uma rotina de³
+	//³                     pesquisa, portando alteracoes nao podem ser efe-³
+	//³                     tuadas. 3 indica que a rotina e de inclusao, por³
+	//³                     tanto, a rotina sera chamada continuamente ao   ³
+	//³                     final do processamento, ate o pressionamento de ³
+	//³                     <ESC>. Geralmente ao se usar uma chamada de     ³
+	//³                     EXECBLOCK, usa-se o tipo 4, de alteracao.       ³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
-//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
-//³ aRotina padrao. Utilizando a declaracao a seguir, a execucao da     ³
-//³ MBROWSE sera identica a da AXCADASTRO:                              ³
-//³                                                                     ³
-//³ cDelFunc  := ".T."                                                  ³
-//³ aRotina   := { { "Pesquisar"    ,"AxPesqui" , 0, 1},;               ³
-//³                { "Visualizar"   ,"AxVisual" , 0, 2},;               ³
-//³                { "Incluir"      ,"AxInclui" , 0, 3},;               ³
-//³                { "Alterar"      ,"AxAltera" , 0, 4},;               ³
-//³                { "Excluir"      ,"AxDeleta" , 0, 5} }               ³
-//³                                                                     ³
-//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	//³ aRotina padrao. Utilizando a declaracao a seguir, a execucao da     ³
+	//³ MBROWSE sera identica a da AXCADASTRO:                              ³
+	//³                                                                     ³
+	//³ cDelFunc  := ".T."                                                  ³
+	//³ aRotina   := { { "Pesquisar"    ,"AxPesqui" , 0, 1},;               ³
+	//³                { "Visualizar"   ,"AxVisual" , 0, 2},;               ³
+	//³                { "Incluir"      ,"AxInclui" , 0, 3},;               ³
+	//³                { "Alterar"      ,"AxAltera" , 0, 4},;               ³
+	//³                { "Excluir"      ,"AxDeleta" , 0, 5} }               ³
+	//³                                                                     ³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
 
-//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
-//³ Monta um aRotina proprio                                            ³
-//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	//³ Monta um aRotina proprio                                            ³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
-Private aRotina := { {"Pesquisar","AxPesqui",0,1} ,;
-             {"Visualizar","AxVisual",0,2} ,;
-             {"Automático","U_fAuto",0,4} ,;
-             {"Excluir","AxDeleta",0,5} ,;
-             {"Inventario","U_fInvent",0,6},;
-             {"Legenda" ,"U_fLegenda" ,0,7} }
+	Private aRotina := { {"Pesquisar","AxPesqui",0,1} ,;
+		{"Visualizar","AxVisual",0,2} ,;
+		{"Automático","U_fAuto",0,4} ,;
+		{"Excluir","AxDeleta",0,5} ,;
+		{"Inventario","U_fInvent",0,6},;
+		{"Legenda" ,"U_fLegenda" ,0,7} }
 
-Private cDelFunc := ".T." // Validacao para a exclusao. Pode-se utilizar ExecBlock
-Private c_Doc    := ""
-Private cString  := "SZX"
+	Private cDelFunc := ".T." // Validacao para a exclusao. Pode-se utilizar ExecBlock
+	Private c_Doc    := ""
+	Private cString  := "SZX"
 
-AADD(aCores,{"ZX_STATUS == 'C'" ,"BR_VERDE" })
-AADD(aCores,{"ZX_STATUS == 'I'" ,"BR_VERMELHO" })
+	AADD(aCores,{"ZX_STATUS == 'C'" ,"BR_VERDE" })
+	AADD(aCores,{"ZX_STATUS == 'I'" ,"BR_VERMELHO" })
 
-dbSelectArea("SZX")
-dbSetOrder(1)
+	dbSelectArea("SZX")
+	dbSetOrder(1)
 
-//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
-//³ Executa a funcao MBROWSE. Sintaxe:                                  ³
-//³                                                                     ³
-//³ mBrowse(<nLin1,nCol1,nLin2,nCol2,Alias,aCampos,cCampo)              ³
-//³ Onde: nLin1,...nCol2 - Coordenadas dos cantos aonde o browse sera   ³
-//³                        exibido. Para seguir o padrao da AXCADASTRO  ³
-//³                        use sempre 6,1,22,75 (o que nao impede de    ³
-//³                        criar o browse no lugar desejado da tela).   ³
-//³                        Obs.: Na versao Windows, o browse sera exibi-³
-//³                        do sempre na janela ativa. Caso nenhuma este-³
-//³                        ja ativa no momento, o browse sera exibido na³
-//³                        janela do proprio SIGAADV.                   ³
-//³ Alias                - Alias do arquivo a ser "Browseado".          ³
-//³ aCampos              - Array multidimensional com os campos a serem ³
-//³                        exibidos no browse. Se nao informado, os cam-³
-//³                        pos serao obtidos do dicionario de dados.    ³
-//³                        E util para o uso com arquivos de trabalho.  ³
-//³                        Segue o padrao:                              ³
-//³                        aCampos := { {<CAMPO>,<DESCRICAO>},;         ³
-//³                                     {<CAMPO>,<DESCRICAO>},;         ³
-//³                                     . . .                           ³
-//³                                     {<CAMPO>,<DESCRICAO>} }         ³
-//³                        Como por exemplo:                            ³
-//³                        aCampos := { {"TRB_DATA","Data  "},;         ³
-//³                                     {"TRB_COD" ,"Codigo"} }         ³
-//³ cCampo               - Nome de um campo (entre aspas) que sera usado³
-//³                        como "flag". Se o campo estiver vazio, o re- ³
-//³                        gistro ficara de uma cor no browse, senao fi-³
-//³                        cara de outra cor.                           ³
-//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	//³ Executa a funcao MBROWSE. Sintaxe:                                  ³
+	//³                                                                     ³
+	//³ mBrowse(<nLin1,nCol1,nLin2,nCol2,Alias,aCampos,cCampo)              ³
+	//³ Onde: nLin1,...nCol2 - Coordenadas dos cantos aonde o browse sera   ³
+	//³                        exibido. Para seguir o padrao da AXCADASTRO  ³
+	//³                        use sempre 6,1,22,75 (o que nao impede de    ³
+	//³                        criar o browse no lugar desejado da tela).   ³
+	//³                        Obs.: Na versao Windows, o browse sera exibi-³
+	//³                        do sempre na janela ativa. Caso nenhuma este-³
+	//³                        ja ativa no momento, o browse sera exibido na³
+	//³                        janela do proprio SIGAADV.                   ³
+	//³ Alias                - Alias do arquivo a ser "Browseado".          ³
+	//³ aCampos              - Array multidimensional com os campos a serem ³
+	//³                        exibidos no browse. Se nao informado, os cam-³
+	//³                        pos serao obtidos do dicionario de dados.    ³
+	//³                        E util para o uso com arquivos de trabalho.  ³
+	//³                        Segue o padrao:                              ³
+	//³                        aCampos := { {<CAMPO>,<DESCRICAO>},;         ³
+	//³                                     {<CAMPO>,<DESCRICAO>},;         ³
+	//³                                     . . .                           ³
+	//³                                     {<CAMPO>,<DESCRICAO>} }         ³
+	//³                        Como por exemplo:                            ³
+	//³                        aCampos := { {"TRB_DATA","Data  "},;         ³
+	//³                                     {"TRB_COD" ,"Codigo"} }         ³
+	//³ cCampo               - Nome de um campo (entre aspas) que sera usado³
+	//³                        como "flag". Se o campo estiver vazio, o re- ³
+	//³                        gistro ficara de uma cor no browse, senao fi-³
+	//³                        cara de outra cor.                           ³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
-dbSelectArea(cString)
-mBrowse( 6,1,22,75,cString,,,,,,aCores)
+	dbSelectArea(cString)
+	mBrowse( 6,1,22,75,cString,,,,,,aCores)
 
 Return
 
@@ -164,10 +164,10 @@ User Function fInvent(cAlias, nReg, nOpc)
 	Local a_Endereco := {}
 
 	If SZX->ZX_STATUS == "C"
-	    dbSelectArea("SZX")
-	    dbSetOrder(1)
-	    dbGoTop()
-	    dbSeek(c_Filial + c_Produto + c_Local + c_Lote)
+		dbSelectArea("SZX")
+		dbSetOrder(1)
+		dbGoTop()
+		dbSeek(c_Filial + c_Produto + c_Local + c_Lote)
 		While SZX->(!EoF()) .And. (SZX->(ZX_FILIAL + ZX_PRODUTO + ZX_LOCAL + ZX_LOTECTL) == c_Filial + c_Produto + c_Local + c_Lote)
 			c_Endereco := SZX->ZX_END
 			n_Cont1 := 0
@@ -184,7 +184,7 @@ User Function fInvent(cAlias, nReg, nOpc)
 					l_Cont3 := .T.
 					n_Cont3 += SZX->ZX_QUANT
 				Endif
-		
+
 				SZX->(dbSkip())
 			End
 
@@ -202,18 +202,18 @@ User Function fInvent(cAlias, nReg, nOpc)
 
 		If l_Ok
 			If f_Mata270(c_Produto, c_Local, c_Lote, d_DtValid, n_Quant, c_Perg)
-			    dbSelectArea("SZX")
-			    dbSetOrder(1)
-			    dbGoTop()
-			    dbSeek(c_Filial + c_Produto + c_Local + c_Lote)
+				dbSelectArea("SZX")
+				dbSetOrder(1)
+				dbGoTop()
+				dbSeek(c_Filial + c_Produto + c_Local + c_Lote)
 				While SZX->(!EoF()) .And. SZX->(ZX_FILIAL + ZX_PRODUTO + ZX_LOCAL + ZX_LOTECTL) == c_Filial + c_Produto + c_Local + c_Lote
 					RecLock("SZX", .F.)
 					SZX->ZX_STATUS := "I"
 					MsUnlock()
-	
+
 					SZX->(dbSkip())
 				End
-	
+
 				Aviso(SM0->M0_NOMECOM,"Inventário " + AllTrim(c_Doc) + " gerado com sucesso",{"OK"},2,"Atenção")
 			Endif
 		Else
@@ -241,7 +241,7 @@ User Function fAuto
 	CriaPerg(c_Perg)
 
 	If Pergunte(c_Perg, .T.) == .T.
-    	Processa({|| fGeraSB7()}, "Aguarde...", "Gerando os registros do inventário...",.F.)
+		Processa({|| fGeraSB7()}, "Aguarde...", "Gerando os registros do inventário...",.F.)
 	Else
 		Aviso(SM0->M0_NOMECOM,"Inventário automático cancelado pelo usuário",{"OK"},2,"Atenção")
 	Endif
@@ -254,7 +254,7 @@ Return
 Static Function fGeraSB7
 	Local c_Perg 	 := "FESTA0151"
 	Local c_Produto  := ""
-    Local c_Desc     := ""
+	Local c_Desc     := ""
 	Local c_Local    := ""
 	Local c_Lote     := ""
 	Local c_DtValid  := ""
@@ -290,14 +290,14 @@ Static Function fGeraSB7
 	Aadd(a_Bord,{"TB_QUANT"   ,"N",12,2})
 	Aadd(a_Bord,{"TB_OBS"     ,"C",200,0})
 
-	c_Bord := CriaTrab(a_Bord,.t.)
-	Use &c_Bord Shared Alias TRC New
-	Index On TB_POS To &c_Bord
-
-	SET INDEX TO &c_Bord
+	oELT := FWTemporaryTable():New("TRC")
+	oELT:SetFields(a_Bord)
+	oELT:AddIndex("01",{"TB_POS"})
+	//oELT:AddIndex("02",{"FILIAL","PREFIXO","NUMERO","PARCELA","TIPO","FORNECE","LOJA","CCUSTO","NATUREZ"})
+	oELT:Create()
 
 	c_Qry := " SELECT ZX_PRODUTO PRODUTO, B1_DESC DESCRI, ZX_LOCAL ARM, ZX_LOTECTL LOTE, ZX_DTVALID DTVALID, ZX_END ENDERECO, ZX_CONT CONT, ZX_SEQ SEQ, ZX_QUANT QUANT, SZX.R_E_C_N_O_ RECNO FROM " + RetSqlName("SZX") + " SZX "
-	c_Qry += " JOIN " + RetSqlName("SB1") + " SB1 ON SB1.D_E_L_E_T_<>'*' AND B1_FILIAL = '" + XFILIAL("SB1") + "' AND B1_COD=ZX_PRODUTO "		
+	c_Qry += " JOIN " + RetSqlName("SB1") + " SB1 ON SB1.D_E_L_E_T_<>'*' AND B1_FILIAL = '" + XFILIAL("SB1") + "' AND B1_COD=ZX_PRODUTO "
 	c_Qry += " WHERE SZX.D_E_L_E_T_<>'*' AND ZX_STATUS = 'C' AND ZX_FILIAL = '" + XFILIAL("SZX") + "' AND "
 	c_Qry += " ZX_PRODUTO BETWEEN '" + MV_PAR02 + "' AND '" + MV_PAR03 + "' AND "
 	c_Qry += " ZX_LOCAL BETWEEN '" + MV_PAR04 + "' AND '" + MV_PAR05 + "' AND "
@@ -324,7 +324,7 @@ Static Function fGeraSB7
 		c_Qry += " ZX_DATA BETWEEN '" + DTOS(MV_PAR10) + "' AND '" + DTOS(MV_PAR11) + "') "
 	ENDIF
 	c_Qry += " ORDER BY 1, 2, 3, 4, 6 "
-		
+
 	TCQUERY c_Qry NEW ALIAS QRY
 	dbSelectArea("QRY")
 	dbGoTop()
@@ -332,7 +332,7 @@ Static Function fGeraSB7
 		Aviso(SM0->M0_NOMECOM,"Nenhum registro encontrado",{"OK"},2,"Atenção")
 	Else
 		Count To n_Reg
-		ProcRegua(n_Reg)		
+		ProcRegua(n_Reg)
 
 		dbGoTop()
 		While QRY->(!EoF())
@@ -400,8 +400,8 @@ Static Function fGeraSB7
 
 				If f_Mata270(c_Produto, c_Local, c_Lote, Stod(c_DtValid), n_Quant, c_Perg)
 					For j:=1 To Len(a_Recno)
-					    dbSelectArea("SZX")
-					    dbGoTo(a_Recno[j])
+						dbSelectArea("SZX")
+						dbGoTo(a_Recno[j])
 						RecLock("SZX", .F.)
 						SZX->ZX_STATUS := "I"
 						MsUnlock()
@@ -436,7 +436,7 @@ Static Function fGeraSB7
 			TRC->TB_QUANT3  := n_Cont3
 			TRC->TB_QUANT   := n_Quant
 			TRC->TB_OBS     := c_Obs
-			MSUNLOCK()			
+			MSUNLOCK()
 
 			n_Pos++
 		End
@@ -445,7 +445,7 @@ Static Function fGeraSB7
 		DBSELECTAREA("TRC")
 		TRC->(DBGOTOP())
 
-	 	Aadd(a_Campos,{"TB_POS"     ,,'Linha'      	,'@!'})
+		Aadd(a_Campos,{"TB_POS"     ,,'Linha'      	,'@!'})
 		Aadd(a_Campos,{"TB_PRODUTO" ,,'Produto'  	,'@!'})
 		Aadd(a_Campos,{"TB_DESC"    ,,'Descrição'  	,'@!'})
 		Aadd(a_Campos,{"TB_LOCAL"   ,,'Armazem'  	,'@!'})
@@ -464,7 +464,7 @@ Static Function fGeraSB7
 		o_Btn:= TButton():New( 253,60,"Sair"   ,o_Dlg,{|| o_Dlg:End() },041,012,,,,.T.,,"",,,,.F. )
 
 		o_Dlg:Activate(,,,.T.)
-	
+
 		DBSELECTAREA("TRC")
 		TRC->(DBCLOSEAREA())
 	End If
@@ -479,10 +479,10 @@ Static Function f_Mata270(c_Produto, c_Local, c_Lote, d_DtValid, n_Quant, c_Perg
 	Local lRet          := .F.
 	Local l_SB7         := .F.
 	Private lMsErroAuto := .F.
-	
+
 	If c_Perg == "FESTA015"
 		CriaPerg(c_Perg)
-		
+
 		If Pergunte(c_Perg, .T.) == .T.
 			c_Doc  := MV_PAR01
 			l_SB7  := .T.
@@ -490,24 +490,24 @@ Static Function f_Mata270(c_Produto, c_Local, c_Lote, d_DtValid, n_Quant, c_Perg
 	Else
 		l_SB7  := .T.
 	Endif
-	
+
 	If l_SB7
 		aVetor :=   {;
-		            {"B7_FILIAL", 	xFilial("SB7"),	Nil},;
-		            {"B7_COD",		c_Produto,		Nil},;
-		            {"B7_DOC",		c_Doc,			Nil},;
-		            {"B7_LOTECTL",	c_Lote,			Nil},;            
-		            {"B7_DTVALID",	d_DtValid,		Nil},;
-		            {"B7_QUANT",	n_Quant,		Nil},;
-		            {"B7_LOCAL",	c_Local,		Nil},;
-		            {"B7_DATA",		DDATABASE,		Nil} }
-		
+			{"B7_FILIAL", 	xFilial("SB7"),	Nil},;
+			{"B7_COD",		c_Produto,		Nil},;
+			{"B7_DOC",		c_Doc,			Nil},;
+			{"B7_LOTECTL",	c_Lote,			Nil},;
+			{"B7_DTVALID",	d_DtValid,		Nil},;
+			{"B7_QUANT",	n_Quant,		Nil},;
+			{"B7_LOCAL",	c_Local,		Nil},;
+			{"B7_DATA",		DDATABASE,		Nil} }
+
 		MSExecAuto({|x,y,z| mata270(x,y,z)}, aVetor, .T., 3)
-	
+
 		If lMsErroAuto
-		    MostraErro()
+			MostraErro()
 		Else
-		    lRet := .T.
+			lRet := .T.
 		EndIf
 	Else
 		Aviso(SM0->M0_NOMECOM,"Inventário cancelado pelo usuário",{"OK"},2,"Atenção")
@@ -518,18 +518,18 @@ Return lRet
 
 Static Function CriaPerg(c_Perg)
 	a_MV_PAR01 := {}
-	
+
 	Aadd(a_MV_PAR01, "Informe o número do documento")
 	Aadd(a_MV_PAR01, "que será criado.")
 
 	//PutSx1(cGrupo,cOrdem,c_Pergunt,cPerSpa,cPerEng,cVar,cTipo ,nTamanho,nDecimal,nPresel,cGSC,cValid,cF3, cGrpSxg,cPyme,cVar01,cDef01,cDefSpa1,cDefEng1,cCnt01, cDef02,cDefSpa2,cDefEng2,cDef03,cDefSpa3,cDefEng3, cDef04,cDefSpa4,cDefEng4, cDef05,cDefSpa5,cDefEng5, aHelpPor,aHelpEng,aHelpSpa,cHelp)
 	PutSx1(c_Perg,"01","Documento ?"   	,"","","mv_ch1","C",09,0,0,"G","","","","","mv_par01","","","","","","","","","","","","","","","","",a_MV_PAR01)
-	
+
 	If c_Perg == "FESTA0151"
 		a_MV_PAR02 := {}
 		a_MV_PAR03 := {}
-		a_MV_PAR04 := {}	
-		a_MV_PAR05 := {}                    
+		a_MV_PAR04 := {}
+		a_MV_PAR05 := {}
 		a_MV_PAR06 := {}
 		a_MV_PAR07 := {}
 		a_MV_PAR08 := {}
@@ -591,48 +591,48 @@ Static Function f_ExpLog()
 	Local c_Linha   := ""
 
 	If !Empty(c_Dir)
-		c_Destino := FCREATE(c_Dir + "LOG_INVENTARIO_" + AllTrim(c_Doc) + ".CSV")	
-	
+		c_Destino := FCREATE(c_Dir + "LOG_INVENTARIO_" + AllTrim(c_Doc) + ".CSV")
+
 		// TESTA A CRIAÇÃO DO ARQUIVO DE DESTINO
 		IF c_Destino == -1
 			MsgStop('Erro ao criar arquivo destino. Erro: '+str(ferror(),4),'Erro')
-		 	RETURN
+			RETURN
 		ENDIF
-	
+
 		c_Linha:= "REGISTRO;PRODUTO;DESCRIÇÃO;LOCAL;LOTE;DATA DE VALIDADE;PRIMEIRA CONTAGEM;SEGUNDA CONTAGEM;TERCEIRA CONTAGEM;QUANTIDADE FINAL;OBSERVAÇÃO" + CHR(13)+CHR(10)
-	
+
 		IF FWRITE(c_Destino,c_Linha,LEN(c_Linha)) != LEN(c_Linha)
 			IF !MSGALERT("Ocorreu um erro na gravação do arquivo destino. Continuar?","Atenção")
 				FCLOSE(c_Destino)
 				DBSELECTAREA("TRC")
 				DBGOTOP()
-	   	   		Return
+				Return
 			ENDIF
-	 	ENDIF
-	
+		ENDIF
+
 		DBSELECTAREA("TRC")
 		TRC->(DBGOTOP())
-		
+
 		Count To n_Reg
 		ProcRegua(n_Reg)
-	
+
 		TRC->(DBGOTOP())
 		WHILE !(TRC->(EOF()))
 			c_Linha:= STRZERO(TRC->TB_POS,6)+";"+TRC->TB_PRODUTO+";"+TRC->TB_DESC+";"+TRC->TB_LOCAL+";"+TRC->TB_LOTECTL+";"+Dtoc(TRC->TB_DTVALID)+";"+Transform(TRC->TB_QUANT1, "@E 999,999,999.99")+";"+Transform(TRC->TB_QUANT2, "@E 999,999,999.99")+";"+Transform(TRC->TB_QUANT3, "@E 999,999,999.99")+";"+Transform(TRC->TB_QUANT, "@E 999,999.99")+";"+TRC->TB_OBS + CHR(13)+CHR(10)
-	
+
 			IF FWRITE(c_Destino,c_Linha,LEN(c_Linha)) != LEN(c_Linha)
 				IF !MSGALERT("Ocorreu um erro na gravação do arquivo destino. Continuar?","Atenção")
 					FCLOSE(c_Destino)
 					DBSELECTAREA("TRC")
 					DBGOTOP()
-		   	   		Return
+					Return
 				ENDIF
-		 	ENDIF
-		 	
-		 	IncProc()
-		 	TRC->(DBSKIP())
-		ENDDO 
-	
+			ENDIF
+
+			IncProc()
+			TRC->(DBSKIP())
+		ENDDO
+
 		AVISO(SM0->M0_NOMECOM,"Arquivo exportado para " + c_Dir + "LOG_INVENTARIO_" + AllTrim(c_Doc) + ".CSV",{"Ok"},2,"Atenção")
 		FCLOSE(c_Destino)
 		DBSELECTAREA("TRC")

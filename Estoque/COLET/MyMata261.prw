@@ -22,6 +22,9 @@ User Function MyMata261
 	Local lOk	     := .T.
 	Local aItem	     := {}
 	Local nOpcAuto   := 3 
+	Local cEstNeg    := SuperGetMV('MV_ESTNEG')
+	Local SEQTRTI 	 := Getmv("BM_SEQTRTI")
+	Local SEQTRTP 	 := Getmv("BM_SEQTRTP")
 
 	Private lMsHelpAuto := .T.
 	Private lMsErroAuto := .F.
@@ -242,7 +245,7 @@ User Function MyMata261
 			Return .F.
 		Endif
 		
-		If SuperGetMV('MV_ESTNEG')=='N'
+		If cEstNeg == 'N'
 			dbSelectArea("SB2")
 			SB2->(dbSetOrder(1))
 			SB2->(dbSeek(xFilial("SB2") + c_Produto + "E2"))
@@ -509,15 +512,17 @@ User Function MyMata261
 		Endif
 
 		If c_LocDest == "TI"
+			SEQTRTI := Getmv("BM_SEQTRTI")
 			c_Seq := Upper(Soma1(c_SeqTrTI))
 
-			While Getmv("BM_SEQTRTI") <> c_Seq
+			While SEQTRTI <> c_Seq
 				Putmv("BM_SEQTRTI", c_Seq)
 			End
 		Elseif c_LocDest == "TP"
+			SEQTRTP 	 := Getmv("BM_SEQTRTP")
 			c_Seq := Upper(Soma1(c_SeqTrTP))
 
-			While Getmv("BM_SEQTRTP") <> c_Seq
+			While SEQTRTP <> c_Seq
 				Putmv("BM_SEQTRTP", c_Seq)
 			End
 		Endif

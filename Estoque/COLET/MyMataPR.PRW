@@ -27,6 +27,8 @@ User Function MyMataPR
 	Local a_ItensSZW := {}
 	Local l_ErroSZW  := .F.
 	Local n_QtdTotal := 0
+	Local cEstNeg    := SuperGetMV('MV_ESTNEG')
+	Local c_DocAux 	:= Getmv("BM_SEQV2LO")
 
 	Private lMsHelpAuto := .T.
 	Private lMsErroAuto := .F.
@@ -139,7 +141,7 @@ User Function MyMataPR
 			@ 3, 0 VTSAY "Lote: S/ CONTROLE"
 		Endif
 	
-		If SuperGetMV('MV_ESTNEG')=='N'
+		If cEstNeg == 'N'
 			dbSelectArea("SB2")
 			SB2->(dbSetOrder(1))
 			SB2->(dbSeek(xFilial("SB2") + c_Produto + c_Local))
@@ -421,9 +423,10 @@ User Function MyMataPR
 			VTAlert("Transferência " + c_Doc + " realizada com sucesso.", "Aviso")
 		Endif
 
+		c_DocAux := Getmv("BM_SEQPROD")
 		c_Seq := Upper(Soma1(c_SeqProd))
 
-		While Getmv("BM_SEQPROD") <> c_Seq
+		While c_DocAux <> c_Seq
 			Putmv("BM_SEQPROD", c_Seq)
 		End
 	Else

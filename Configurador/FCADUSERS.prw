@@ -46,12 +46,13 @@ Static Function ATUSERS(c_Empresa,c_Filial)
 	
 	PREPARE ENVIRONMENT EMPRESA c_Empresa FILIAL c_Filial TABLES "ZAL","ZAQ","ZAT","ZAS"
 
+/*
 	IF SELECT("SM0") <> 0
 		SM0->(DbCloseArea())
 	ENDIF
 
 	DbUseArea(.T.,"DBFCDX","\system\sigamat.emp","SM0", .T., .F.)
-
+*/
 	//cPatch	:= GetMV("BO_SCHEDHR")
 	cPatch	:= GetMV("MV_PATH_DI")
 	//aUsers	:= FWSFALLUSERS()

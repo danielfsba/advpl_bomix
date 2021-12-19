@@ -22,6 +22,7 @@ User Function FCMATATE
 	Local lOk	     := .T.
 	Local aItem	     := {}
 	Local nOpcAuto   := 3
+	Local cEstNeg    := SuperGetMV('MV_ESTNEG')
 
 	Private lMsHelpAuto := .T.
 	Private lMsErroAuto := .F.
@@ -157,7 +158,7 @@ User Function FCMATATE
 			Return .F.
 		Endif
 
-		If SuperGetMV('MV_ESTNEG')=='N'
+		If cEstNeg == 'N'
 			dbSelectArea("SB2")
 			SB2->(dbSetOrder(1))
 			SB2->(dbSeek(xFilial("SB2") + c_Produto + "P4"))

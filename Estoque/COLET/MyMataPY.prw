@@ -27,6 +27,8 @@ User Function MyMataPY
 	Local a_ItensSZW := {}
 	Local l_ErroSZW  := .F.
 	Local n_QtdTotal := 0
+	Local cEstNeg    := SuperGetMV('MV_ESTNEG')
+	Local c_DocAux 	:= Getmv("BM_SEQRCE2")
 
 	Private lMsHelpAuto := .T.
 	Private lMsErroAuto := .F.
@@ -141,7 +143,7 @@ User Function MyMataPY
 			@ 3, 0 VTSAY "Lote: S/ CONTROLE"
 		Endif
 	
-		If SuperGetMV('MV_ESTNEG')=='N'
+		If cEstNeg == 'N'
 			dbSelectArea("SB2")
 			SB2->(dbSetOrder(1))
 			SB2->(dbSeek(xFilial("SB2") + c_Produto + c_Local))
@@ -423,11 +425,13 @@ User Function MyMataPY
 			VTAlert("Transferência " + c_Doc + " realizada com sucesso.", "Aviso")
 		Endif
 
+		c_DocAux := Getmv("BM_SEQRCE2")
 		c_Seq := Upper(Soma1(c_SeqProd))
 
-		While Getmv("BM_SEQRCE2") <> c_Seq
+		While c_DocAux <> c_Seq
 			Putmv("BM_SEQRCE2", c_Seq)
 		End
+		
 	Else
 		VTAlert("Transferência cancelada pelo usuário.", "Aviso")
 	Endif

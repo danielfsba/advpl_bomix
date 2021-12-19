@@ -23,6 +23,8 @@ User Function MyMataTR
 	Local a_Itens    := {}
 	Local nOpcAuto   := 3 
 	Local l_Continua := .T.
+	Local cEstNeg    := SuperGetMV('MV_ESTNEG')
+	Local c_DocAux 	:= Getmv("BM_SEQRCE2")
 
 	Private lMsHelpAuto := .T.
 	Private lMsErroAuto := .F.
@@ -132,7 +134,7 @@ User Function MyMataTR
 				Return .F.
 			Endif
 	
-			If SuperGetMV('MV_ESTNEG')=='N'
+			If cEstNeg == 'N'
 				dbSelectArea("SB2")
 				SB2->(dbSetOrder(1))
 				SB2->(dbSeek(xFilial("SB2") + c_Produto + "TR"))
@@ -406,9 +408,10 @@ User Function MyMataTR
 			VTAlert("Transferência " + c_Doc + " do armazém TR para o armazém " + c_LocDest + " foi realizada, porém houve falha no processo de gravação do registro na tabela SZW.", "Aviso")
 		Endif
 
+		c_DocAux := Getmv("BM_SEQRCE2")
 		c_Seq := Upper(Soma1(c_SeqRecE2))
 
-		While Getmv("BM_SEQRCE2") <> c_Seq
+		While c_DocAux <> c_Seq
 			Putmv("BM_SEQRCE2", c_Seq)
 		End
 	Else

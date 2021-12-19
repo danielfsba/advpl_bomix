@@ -24,6 +24,8 @@ User Function LO_55
 	Local a_Itens    := {}
 	Local nOpcAuto   := 3
 	Local l_Continua := .T.
+	Local cEstNeg    := SuperGetMV('MV_ESTNEG')
+	Local c_DocAux 	:= Getmv("BM_SEQV2LO")	
 
 	Private lMsHelpAuto := .T.
 	Private lMsErroAuto := .F.
@@ -133,7 +135,7 @@ User Function LO_55
 				Return .F.
 			Endif
 
-			If SuperGetMV('MV_ESTNEG')=='N'
+			If cEstNeg == 'N'
 				dbSelectArea("SB2")
 				SB2->(dbSetOrder(1))
 				SB2->(dbSeek(xFilial("SB2") + c_Produto + "LO"))
@@ -410,10 +412,11 @@ User Function LO_55
 		Else
 			VTAlert("Transferência " + c_Doc + " do armazém LO para o armazém " + c_LocDest + " foi realizada, porém houve falha no processo de gravação do registro na tabela SZW.", "Aviso")
 		Endif
-
+		
+		c_DocAux := Getmv("BM_SEQV2LO")
 		c_Seq := Upper(Soma1(c_SeqExpe))
 
-		While Getmv("BM_SEQV2LO") <> c_Seq
+		While c_DocAux <> c_Seq
 			Putmv("BM_SEQV2LO", c_Seq)
 		End
 	Else
