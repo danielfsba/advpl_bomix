@@ -16,6 +16,6 @@
 User Function SISP003()
 
    nProx := Strzero(Val(GetMv("MV_LOTESIS"))+1,4)
-   SetMV("MV_LOTESIS",nProx)
+   PutMV("MV_LOTESIS",nProx)
 
 Return(nProx)

@@ -13,7 +13,7 @@ cAlias := Alias()
 nOrd := dbSetOrder()
 nReg := Recno()
 
-SetMV("MV_CNABCR",'00000')
+PutMV("MV_CNABCR",'00000')
 
 cRet := Space(6)
 dbSelectArea(cAlias)

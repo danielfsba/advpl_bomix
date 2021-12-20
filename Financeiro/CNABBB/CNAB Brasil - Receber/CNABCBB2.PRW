@@ -17,7 +17,7 @@ nSeq := GetMv("MV_CNABCR")
 
 nProx := StrZero(Val(nSeq)+1,5)
 
-SetMV("MV_CNABCR",nProx)
+PutMV("MV_CNABCR",nProx)
 
 dbSelectArea(cAlias)
 dbSetOrder(nOrd)

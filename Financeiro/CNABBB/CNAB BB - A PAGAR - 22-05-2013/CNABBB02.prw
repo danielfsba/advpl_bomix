@@ -35,13 +35,13 @@ Endif
 nProx := Val(xCont)+1
 
 If FUNNAME() == "FINA150"
-  SetMV("MV_CNABCR",StrZero(nProx,5))
+  PutMV("MV_CNABCR",StrZero(nProx,5))
 else
    If FUNNAME() == "FINA420"  .or. FUNNAME() == "FINA750"
-      SetMV("MV_CNABCP",StrZero(nProx,5))
+      PutMV("MV_CNABCP",StrZero(nProx,5))
    else
       If FUNNAME() == "GPEM410"
-         SetMV("MV_CNABFOL",StrZero(nProx,5))
+         PutMV("MV_CNABFOL",StrZero(nProx,5))
       Endif
    Endif
 Endif

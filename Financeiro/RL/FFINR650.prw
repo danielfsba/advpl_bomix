@@ -1634,15 +1634,17 @@ Static Function FA650Imp(lEnd,wnRel,cString)
 
 	cTabela := Iif( Empty(SEE->EE_TABELA), "17" , SEE->EE_TABELA )
 
-	dbSelectArea( "SX5" )
-	If !SX5->( dbSeek( cFilial + cTabela ) )
+	aRetSX5:=FWGetSX5( cTabela)
+	If ValType(aRetSX5) == "A" .AND. Len(aRetSX5) >= 1
+		CursorWait()
+		for nX :=  1 to len(aRetSX5)
+			AADD(aTabela,{Alltrim(aRetSX5[4]),Pad(aRetSX5[3],Len(IIF(mv_par07==1,SE1->E1_TIPO,SE2->E2_TIPO)))})
+		NEXT nX
+		CursorArrow()
+	ELSE
 		Help(" ",1,"PAR150")
 		Return .F.
-	Endif
-	While !SX5->(Eof()) .and. SX5->X5_TABELA == cTabela
-		AADD(aTabela,{Alltrim(X5Descri()),Pad(SX5->X5_CHAVE,Len(IIF(mv_par07==1,SE1->E1_TIPO,SE2->E2_TIPO)))})  // correcao da tabela de titulos (Pequim 18/08/00)
-		SX5->(dbSkip( ))
-	Enddo
+	ENDIF
 
 	IF mv_par08 == 1
 		//旼컴컴컴컴컴컴컴컴컴컴컴컴컴컴커

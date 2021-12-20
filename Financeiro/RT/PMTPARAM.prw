@@ -109,11 +109,11 @@ cPar2 := dDataBase - GetMv("MV_BLQMES2")
 cPar3 := "2"
 
 
-SetMV("MV_DATAFIN",Dtoc(cPar1))
-SetMV("MV_BXDTFIN",cPar3)
-SetMV("MV_DBLQMOV",Dtoc(cPar1))
-SetMV("MV_DATAFIS",Dtoc(cPar1))
-SetMV("MV_DATAREC",Dtoc(cPar2))
+PutMV("MV_DATAFIN",Dtoc(cPar1))
+PutMV("MV_BXDTFIN",cPar3)
+PutMV("MV_DBLQMOV",Dtoc(cPar1))
+PutMV("MV_DATAFIS",Dtoc(cPar1))
+PutMV("MV_DATAREC",Dtoc(cPar2))
 
 MsgBox("ATUALIZADO COM SUCESSO !!!")
 

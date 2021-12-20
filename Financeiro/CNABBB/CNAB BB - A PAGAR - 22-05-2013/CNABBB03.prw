@@ -22,13 +22,13 @@ User Function CNABBB03()        // incluido pelo assistente de conversao do AP5 
    nReg := Recno()
 
    If FUNNAME() == "FINA150"
-      SetMV("MV_CNABCR","00000")
+      PutMV("MV_CNABCR","00000")
    else
       If FUNNAME() == "FINA420"
-         SetMV("MV_CNABCP","00000")
+         PutMV("MV_CNABCP","00000")
       else
          If FUNNAME() == "GPEM410"
-            SetMV("MV_CNABFOL","00000")
+            PutMV("MV_CNABFOL","00000")
          Endif
       Endif
    Endif

@@ -39,7 +39,7 @@ Return
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Static Function CFOP_Grava( c_CFOP )
 
-SetMV("MV_DEVCFOP",AllTrim(c_CFOP))
+PutMV("MV_DEVCFOP",AllTrim(c_CFOP))
 MsgBox("Conteúdo modificado com sucesso." , "Atenção", "INFO")
 
 Return

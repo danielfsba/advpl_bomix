@@ -17,6 +17,6 @@
 User Function SISP005()
 
    nLote := "00" + GetMv("MV_LOTESIS")
-   SetMV("MV_LOTESIS","0000")
+   PutMV("MV_LOTESIS","0000")
 
 Return(nLote)

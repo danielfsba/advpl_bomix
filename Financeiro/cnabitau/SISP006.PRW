@@ -16,5 +16,5 @@
 
 User Function SISP006()
    nTotReg := M->NSEQ + 2 + Val(GetMv("MV_TOTREG"))
-   SetMV("MV_TOTREG",Strzero(nTotReg,6))
+   PutMV("MV_TOTREG",Strzero(nTotReg,6))
 Return('')

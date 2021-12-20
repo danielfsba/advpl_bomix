@@ -15,5 +15,5 @@
    */
 User Function SISP007()
    nTotReg := Strzero(Val(GetMv("MV_TOTREG")) + 2, 6)
-   SetMV("MV_TOTREG",'000000')
+   PutMV("MV_TOTREG",'000000')
 Return(nTotReg)
