@@ -39,13 +39,7 @@ Return
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Static Function CFOP_Grava( c_CFOP )
 
-dbSelectArea("SX6")
-dbSetOrder(1)
-If dbSeek(space(6) + "MV_DEVCFOP")
-	RecLock("SX6",.F.)
-		X6_CONTEUD := AllTrim(c_CFOP)
-	MsUnlock()
-	MsgBox("Conteúdo modificado com sucesso." , "Atenção", "INFO")
-EndIf
+SetMV("MV_DEVCFOP",AllTrim(c_CFOP))
+MsgBox("Conteúdo modificado com sucesso." , "Atenção", "INFO")
 
 Return

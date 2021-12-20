@@ -5,7 +5,7 @@
 #include "TbiConn.ch"
 #INCLUDE "APVT100.CH"
 #Include "TopConn.ch"
-#INCLUDE "TRYEXCEPTION.CH"  
+#INCLUDE "TRYEXCEPTION.CH"
 
 /*
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
@@ -38,14 +38,14 @@ User Function SD3250I()
 	Local l_Ret        := .T.
 	Local cQry         := ""
 	Local m_data       := ""
-	Local m_lote       := ""	
+	Local m_lote       := ""
 	Local m_produto    := ""
 	Local nSaldo	   := 0
 
 	c_CRLF             := chr(13) + chr(10)
 
 	dbSelectArea("SH6")
-	If cFilAnt == "010101" 
+	If cFilAnt == "010101"
 
 		m_lote=SH6->H6_LOTECTL
 		m_produto=SH6->H6_PRODUTO
@@ -71,46 +71,47 @@ User Function SD3250I()
 
 		c_Qry := ""
 
-		// ATUALIZA A VALIDADE DO LOTE NA TABELA DE LOTE 
+		// ATUALIZA A VALIDADE DO LOTE NA TABELA DE LOTE
 
 		//c_Qry := " BEGIN TRAN " + c_CRLF
 		c_Qry := " UPDATE " + RetSqlName("SB8") + " SET B8_DTVALID = '" + m_data +"'"+ c_CRLF
 		c_Qry += " WHERE B8_LOTECTL= '" +m_lote +"'" + c_CRLF
 		c_Qry += " AND B8_PRODUTO= '" +m_produto +"'" + c_CRLF
-		c_Qry += " 	AND B8_FILIAL = '" + xFilial("SB8") + "'" + c_CRLF	
+		c_Qry += " 	AND B8_FILIAL = '" + xFilial("SB8") + "'" + c_CRLF
 		/*
 		If TcSqlExec(c_Qry) < 0
 		MsgStop("SQL Error: " + TcSqlError())
 		TcSqlExec("ROLLBACK")
 		l_Ret := .F.
 		Else
-		TcSqlExec("COMMIT")	
+		TcSqlExec("COMMIT")
 		l_Ret := .T.
 		Endif
 		*/
 		// TRECHO ALTERADO POR VICTOR SOUSA 28/06/20 O TRATAMENTO ACIMA DE GRAVAÇÃO  ESTAVA GERANDO ERRO NO DBACCESS ATUAL
 		TRYEXCEPTION
 
-		TcCommit(1,ProcName())    //Begin Transaction
+			TcCommit(1,ProcName())    //Begin Transaction
 
-		IF ( TcSqlExec( c_Qry ) < 0 )
-			cTCSqlError := TCSQLError()
-			ConOut( cMsgOut += ( "[ProcName: " + ProcName() + "]" ) )
-			cMsgOut += cCRLF
-			ConOut( cMsgOut += ( "[ProcLine:" + Str(ProcLine()) + "]" ) )
-			cMsgOut += cCRLF
-			ConOut( cMsgOut += ( "[TcSqlError:" + cTCSqlError + "]" ) )
-			cMsgOut += cCRLF
-			UserException( cMsgOut )
-		EndIF
+			IF ( TcSqlExec( c_Qry ) < 0 )
+				cTCSqlError := TCSQLError()
+				cMsgOut += ( "[ProcName: " + ProcName() + "]" )
+				cMsgOut += cCRLF
+				cMsgOut += ( "[ProcLine:" + Str(ProcLine()) + "]" )
+				cMsgOut += cCRLF
+				cMsgOut += ( "[TcSqlError:" + cTCSqlError + "]" )
+				cMsgOut += cCRLF
+				FWLogMsg("ERROR", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cMsgOut, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+				UserException( cMsgOut )
+			EndIF
 
-		TcCommit(2,ProcName())    //Commit
-		TcCommit(4)                //End Transaction
+			TcCommit(2,ProcName())    //Commit
+			TcCommit(4)                //End Transaction
 
-		CATCHEXCEPTION   
+		CATCHEXCEPTION
 
-		TcCommit(3) //RollBack
-		TcCommit(4) //End Transaction
+			TcCommit(3) //RollBack
+			TcCommit(4) //End Transaction
 
 		ENDEXCEPTION
 
@@ -119,18 +120,18 @@ User Function SD3250I()
 		If ALLTRIM(SC2->C2_FSLOTOP)=""
 			dbSelectArea("SC2")
 			RecLock("SC2", .F.)
-			SC2->C2_FSLOTOP :=   SH6->H6_LOTECTL      
+			SC2->C2_FSLOTOP :=   SH6->H6_LOTECTL
 			SC2->(MsUnlock())
 		eNDIF
 
 		dbSelectArea("SC2")
 		nSaldo := SH6->H6_QTDPROD
 		RecLock("SC2", .F.)
-			SC2->C2_FSSALDO := SC2->C2_FSSALDO - nSaldo
+		SC2->C2_FSSALDO := SC2->C2_FSSALDO - nSaldo
 		MsUnlock()
 
 		// U_ATUAD3D5()
-		
+
 	Endif
 	RestArea(aArea1)
 	RestArea(aAreaB2)
@@ -153,8 +154,8 @@ User Function ATUAD3D5()
 	Local c_Produto := ""
 	Local mv_p01 := mv_par01
 	Local mv_p02 := mv_par02
-	Local mv_p03 := mv_par03	
-	Local mv_p04 := mv_par04	
+	Local mv_p03 := mv_par03
+	Local mv_p04 := mv_par04
 
 	Local n_Quant2 :=0
 	Local n_qtdd4  :=0
@@ -204,7 +205,7 @@ User Function ATUAD3D5()
 				Z05->(dbSeek(xFilial("SB1") + SB1->B1_CODINSU))
 				Lperda:=Z05->Z05_PERDA
 
-				IF found() //.and. RTRIM(Z05->Z05_PERDA)="N"				
+				IF found() //.and. RTRIM(Z05->Z05_PERDA)="N"
 
 					dbSelectArea("SD4")
 					SD4->(dbSetOrder(2))
@@ -223,7 +224,7 @@ User Function ATUAD3D5()
 							c_Op      := SD3->D3_OP
 							d_Data    := SD3->D3_EMISSAO
 
-							// NO ÚLTIMO APONTAMENTO (Condição apontamento="T")É EXECUTADA A QUERY ABAIXO VERIFICANDO O SALDO DOS INSUMOS PENDENTES - SD4 EM 
+							// NO ÚLTIMO APONTAMENTO (Condição apontamento="T")É EXECUTADA A QUERY ABAIXO VERIFICANDO O SALDO DOS INSUMOS PENDENTES - SD4 EM
 							// RELAÇÃO À TABELA SD3 - MOVIMENTAÇÃO INTERNA
 
 							If c_parctot="T"
@@ -292,10 +293,10 @@ User Function ATUAD3D5()
 
 								Else
 									If SG1->G1_QUANT/n_quantbase<>1
-										n_Quant   := (SG1->G1_QUANT/n_quantbase*(n_qtdprod+n_perda))  //SD3->D3_QTDEORI - n_qtdprod //+ (SG1->G1_QUANT * n_Perc)							
+										n_Quant   := (SG1->G1_QUANT/n_quantbase*(n_qtdprod+n_perda))  //SD3->D3_QTDEORI - n_qtdprod //+ (SG1->G1_QUANT * n_Perc)
 									Else
-										n_Quant   := ROUND((SG1->G1_QUANT/n_quantbase*(n_qtdprod+n_perda)),0) //ROUND(SD3->D3_QUANT,0)  //SD3->D3_QTDEORI - n_qtdprod //+ (SG1->G1_QUANT * n_Perc)							
-									Endif	
+										n_Quant   := ROUND((SG1->G1_QUANT/n_quantbase*(n_qtdprod+n_perda)),0) //ROUND(SD3->D3_QUANT,0)  //SD3->D3_QTDEORI - n_qtdprod //+ (SG1->G1_QUANT * n_Perc)
+									Endif
 									n_Quant=n_Quant+n_Quant2 //-n_QD3
 								Endif
 
@@ -307,13 +308,13 @@ User Function ATUAD3D5()
 
 									RecLock("SD3", .F.)
 									//SD3->D3_COD := c_Produto
-									//SD3->D3_LOCAL := c_Local         
-									//SD3->D3_OP    := c_Op  			
-									//SD3->D3_EMISSAO:=   d_Data	    
+									//SD3->D3_LOCAL := c_Local
+									//SD3->D3_OP    := c_Op
+									//SD3->D3_EMISSAO:=   d_Data
 
 									// CORRIGE A QUANTIDADE DO INSUMO NA TABELA SD3 - MOVIMENTOS INTERNOS
 
-									SD3->D3_QUANT :=   n_Quant       
+									SD3->D3_QUANT :=   n_Quant
 
 									SD3->(MsUnlock())
 
@@ -324,7 +325,7 @@ User Function ATUAD3D5()
 									SD5->(dbSetOrder(3))
 									SD5->(dbSeek(xFilial("SD5") + c_numseq + c_Produto+c_Local ))
 									If Found()
-										/*							
+										/*
 										c_Produto := SD5->D5_PRODUTO
 										c_Local   := SD5->D5_LOCAL
 										c_Op      := SD5->D5_OP
@@ -333,30 +334,30 @@ User Function ATUAD3D5()
 
 										RecLock("SD5", .F.)
 										//SD5->D5_PRODUTO := c_Produto
-										//SD5->D5_LOCAL := c_Local         
-										//SD5->D5_OP    := c_Op  			
-										//SD5->D5_DATA	:=   d_Data	    
+										//SD5->D5_LOCAL := c_Local
+										//SD5->D5_OP    := c_Op
+										//SD5->D5_DATA	:=   d_Data
 
 										// CORRIGE A QUANTIDADE DO INSUMO NA TABELA SD5 - MOVIMENTOS INTERNOS POR LOTE
-										//						SD5->D5_QUANT :=   n_Quant       
+										//						SD5->D5_QUANT :=   n_Quant
 										/////////////////////////////////////////////
 
 										//n_quantd5:=0
 										If Lperda="N"
 											If (( SG1->G1_QUANT-INT(SG1->G1_QUANT)) <> 0 )
-												n_Quantd5   := (SG1->G1_QUANT/n_quantbase*n_perda)  //SD3->D3_QTDEORI - n_qtdprod //+ (SG1->G1_QUANT * n_Perc)							
+												n_Quantd5   := (SG1->G1_QUANT/n_quantbase*n_perda)  //SD3->D3_QTDEORI - n_qtdprod //+ (SG1->G1_QUANT * n_Perc)
 											Else
-												n_Quantd5   := ROUND((SG1->G1_QUANT/n_quantbase*n_perda),0) //ROUND(SD3->D3_QUANT,0)  //SD3->D3_QTDEORI - n_qtdprod //+ (SG1->G1_QUANT * n_Perc)							
-											Endif	
+												n_Quantd5   := ROUND((SG1->G1_QUANT/n_quantbase*n_perda),0) //ROUND(SD3->D3_QUANT,0)  //SD3->D3_QTDEORI - n_qtdprod //+ (SG1->G1_QUANT * n_Perc)
+											Endif
 
 											While SD5->(!EoF()) .And. SD5->D5_PRODUTO==c_Produto .And. SD5->D5_NUMSEQ=c_numseq //LOCAL = c_Local .And. SD5->D5_OP    := c_Op
 
 												IF n_quantd5<=SD5->D5_QUANT
-													SD5->D5_QUANT :=   SD5->D5_QUANT-n_quantd5 
+													SD5->D5_QUANT :=   SD5->D5_QUANT-n_quantd5
 													n_quantd5:=0
 												Else
 													n_quantd5:=n_quantd5-SD5->D5_QUANT
-													SD5->D5_QUANT :=   0 //SD5->D5_QUANT-n_Quant 
+													SD5->D5_QUANT :=   0 //SD5->D5_QUANT-n_Quant
 												Endif
 
 												SD5->(dbSkip())
@@ -365,12 +366,12 @@ User Function ATUAD3D5()
 											/*
 											Else
 											If (( SG1->G1_QUANT-INT(SG1->G1_QUANT)) <> 0 )
-											n_Quantd5   := (SG1->G1_QUANT/n_quantbase*n_perda)  //SD3->D3_QTDEORI - n_qtdprod //+ (SG1->G1_QUANT * n_Perc)							
+											n_Quantd5   := (SG1->G1_QUANT/n_quantbase*n_perda)  //SD3->D3_QTDEORI - n_qtdprod //+ (SG1->G1_QUANT * n_Perc)
 											Else
-											n_Quantd5   := ROUND((SG1->G1_QUANT/n_quantbase*n_perda),0) //ROUND(SD3->D3_QUANT,0)  //SD3->D3_QTDEORI - n_qtdprod //+ (SG1->G1_QUANT * n_Perc)							
-											Endif	
+											n_Quantd5   := ROUND((SG1->G1_QUANT/n_quantbase*n_perda),0) //ROUND(SD3->D3_QUANT,0)  //SD3->D3_QTDEORI - n_qtdprod //+ (SG1->G1_QUANT * n_Perc)
+											Endif
 											//Endif
-											cQry:="SELECT                                                    "+ c_CRLF           
+											cQry:="SELECT                                                    "+ c_CRLF
 											cQry+="	SB8.B8_PRODUTO                                           "+ c_CRLF
 											cQry+="  , SB8.B8_SALDO                                          "+ c_CRLF
 											cQry+="  , SB8.B8_LOTECTL                                        "+ c_CRLF
@@ -404,7 +405,7 @@ User Function ATUAD3D5()
 											cQry+="  , B8_DTVALID                                            "+ c_CRLF
 
 											MemoWrit("C:\BOMIX\SALDO_LOTE.SQL",cQry)
-											TCQuery cQry New Alias "QRYLOTE"										
+											TCQuery cQry New Alias "QRYLOTE"
 											dbSelectArea("QRYLOTE")
 
 											WHILE QRYLOTE->B8_SALDO>=n_Quantd5 .And. QRYLOTE->B8_PRODUTO=c_Produto .And. n_quantd5<>0
@@ -419,11 +420,11 @@ User Function ATUAD3D5()
 
 											//	IF n_quantd5<=SD5->D5_QUANT
 
-											SD5->D5_QUANT :=   SD5->D5_QUANT+n_quantd5 
+											SD5->D5_QUANT :=   SD5->D5_QUANT+n_quantd5
 											n_quantd5:=0
 											//		Else
 											//	n_quantd5:=n_quantd5-SD5->D5_QUANT
-											//	SD5->D5_QUANT :=   0 //SD5->D5_QUANT-n_Quant 
+											//	SD5->D5_QUANT :=   0 //SD5->D5_QUANT-n_Quant
 											//		Endif
 
 											SD5->(dbSkip())
@@ -431,7 +432,7 @@ User Function ATUAD3D5()
 											QRYLOTE->(dbSkip())
 											End
 											QRYLOTE->(DbCloseArea())
-											*/											
+											*/
 
 										Endif
 										//Endif
@@ -474,10 +475,10 @@ User Function ATUAD3D5()
 
 					U_SALDO(c_Local,c_Produto)
 
-					mv_par01 := mv_p01 
-					mv_par02 := mv_p02 
-					mv_par03 := mv_p03 	
-					mv_par04 := mv_p04 						
+					mv_par01 := mv_p01
+					mv_par02 := mv_p02
+					mv_par03 := mv_p03
+					mv_par04 := mv_p04
 				EndIf
 				SG1->(dbSkip())
 			End
@@ -505,7 +506,7 @@ User Function Saldo(c_Local,c_Produto)
 	//lJob := .T.
 	Local PARAMIXB := .F.
 
-	//Atualiza as perguntas 
+	//Atualiza as perguntas
 
 	u_zAtuPerg(cPerg, "MV_PAR01", c_Local)     //Armazém De
 	u_zAtuPerg(cPerg, "MV_PAR02", c_Local)     //Armazém Até
@@ -524,7 +525,7 @@ User Function Saldo(c_Local,c_Produto)
 
 		MostraErro(cDiretorio, cArquivo)
 	EndIf
-	//	RestArea(aArea1)	
+	//	RestArea(aArea1)
 Return Nil
 
 //User Function zAtuPerg(cPergAux, cParAux, xConteud)
@@ -544,7 +545,7 @@ User Function zAtuPerg(cPerg, cParAux, xConteud)
 
 	//Chama a pergunta em memória
 	//	Pergunte(cPergAux, .F., /*cTitle*/, /*lOnlyView*/, /*oDlg*/, /*lUseProf*/, @aPergAux)
-	Pergunte(cPerg, .F.,,,,, @aPergAux)	
+	Pergunte(cPerg, .F.,,,,, @aPergAux)
 
 	//Procura a posição do MV_PAR
 	nLinEncont := aScan(aPergAux, {|x| Upper(Alltrim(x[nPosPar])) == Upper(cParAux) })
@@ -587,8 +588,8 @@ Return
 ±±º           ³ com perda durante o processo.		                      º±±
 ±±ÈÍÍÍÍÍÍÍÍÍÍÏÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¼±±
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß        
-*/        
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+*/
 
 
 /*
@@ -624,8 +625,8 @@ c_Produto := SD4->D4_COD
 c_Local   := SD4->D4_LOCAL
 c_Op      := SD4->D4_OP
 d_Data    := SD4->D4_DATA
-n_QtdOri  := SD4->D4_QTDEORI  + (n_perda/SG1->G1_QUANT)*SG1->G1_QUANT //(SG1->G1_QUANT * n_Perc) ALTERADO POR VICTOR SOUSA 12/02/20 
-n_Quant   := SD4->D4_QUANT  + (n_perda/SG1->G1_QUANT)*SG1->G1_QUANT  //(SG1->G1_QUANT * n_Perc) ALTERADO POR VICTOR SOUSA 12/02/20 
+n_QtdOri  := SD4->D4_QTDEORI  + (n_perda/SG1->G1_QUANT)*SG1->G1_QUANT //(SG1->G1_QUANT * n_Perc) ALTERADO POR VICTOR SOUSA 12/02/20
+n_Quant   := SD4->D4_QUANT  + (n_perda/SG1->G1_QUANT)*SG1->G1_QUANT  //(SG1->G1_QUANT * n_Perc) ALTERADO POR VICTOR SOUSA 12/02/20
 c_Trt     := SD4->D4_TRT
 
 a_Vetor:={  {"D4_COD"     ,c_Produto		,Nil},; //COM O TAMANHO EXATO DO CAMPO

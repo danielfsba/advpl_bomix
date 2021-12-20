@@ -62,9 +62,10 @@ User Function FESTA001
 	Aadd(a_Strut,{"TB_TPOP"		,"C",TamSX3("C2_TPOP")[1]	,0})
 	Aadd(a_Strut,{"TB_FSTPOPI"	,"C",TamSX3("C2_FSTPOPI")[1],0})
 
-	c_Pro := CriaTrab(a_Strut, .T.)
-	Use &c_Pro Shared Alias TRB New
-	Index on TB_NUM To &c_Pro
+	oELT := FWTemporaryTable():New("TRB")
+	oELT:SetFields(a_Strut)
+	oELT:AddIndex("01",{"TB_NUM"})
+	oELT:Create()
 
 	Aadd(a_Campos,{"TB_NUM"		,,'Ord. Prod.'  	,'@!'})
 	Aadd(a_Campos,{"TB_ITEM"	,,'Item'			,'@!'})

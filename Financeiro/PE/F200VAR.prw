@@ -6,7 +6,7 @@ User Function F200VAR
 
 	Private c_Perg  := "F200VAR"
 
-	CriaPerg()
+	//CriaPerg()
 
 	//a_Valores := ( { cNumTit, dBaixa, cTipo, cNsNum, nDespes, nDescont, nAbatim, nValRec, nJuros, nMulta, nOutrDesp, nValCc, dDataCred, cOcorr, cMotBan, xBuffer,dDtVc,{} })
 
@@ -39,7 +39,7 @@ User Function F200VAR
 	RestArea(a_Area)
 Return
 
-
+/*
 
 Static Function CriaPerg
 	Local a_PAR01 := {}
@@ -58,3 +58,4 @@ Static Function CriaPerg
 	 	PutSx1(c_Perg,"01","Valor do Juros ?"  	    ,"","","mv_ch1","N",TamSX3("E1_VALJUR")[1],TamSX3("E1_VALJUR")[2],0,"G","Positivo()","","","","mv_par01","","","","","","","","","","","","","","","","",a_PAR01)
 	Endif
 Return Nil
+*/

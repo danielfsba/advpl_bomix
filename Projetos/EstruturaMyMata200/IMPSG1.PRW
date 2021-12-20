@@ -1,7 +1,7 @@
 #INCLUDE 'TOTVS.CH'
 #INCLUDE "TBICONN.CH"
 
-User Function aaaa() 
+User Function aaaa()
 	Local aButtons := {}
 	Local cCadastro := "Importação da Estrutura de Produtos"
 	Local aSays     	:= {}
@@ -132,29 +132,29 @@ Static Function Importa(PARAMIXB3)
 				aCabec := {}
 				aItens := {}
 				aCabec := {{"G1_COD",cCodigo,NIL}}
-				IncProc("Importando produto " + cCodigo +" ") 
+				IncProc("Importando produto " + cCodigo +" ")
 				For nY:=2 to Len(aDados)
 					If 	cCodigo == aDados[nY][2]
 						cVlr100:= StrTran( aDados[nY,4],",", "." )//retira virgula
-						cPerda:= StrTran( aDados[nY,5],",", "." )//retira virgula				
+						cPerda:= StrTran( aDados[nY,5],",", "." )//retira virgula
 						nVlr100:= Val(cVlr100)
 						nPerda:= Val(cPerda)
-						aLinhas := {} 
-						aadd(aLinhas,{"G1_COD",cCodigo,NIL}) 
-						aadd(aLinhas,{"G1_COMP",aDados[nY][3],NIL}) 
-						aadd(aLinhas,{"G1_TRT",aDados[nY][8],NIL}) 
-						aadd(aLinhas,{"G1_QUANT",nVlr100,NIL}) 
-						aadd(aLinhas,{"G1_PERDA",nPerda,NIL}) 
-						aadd(aLinhas,{"G1_INI",CTOD(aDados[nY][6]),NIL}) 
-						aadd(aLinhas,{"G1_FIM",CTOD(aDados[nY][7]),NIL}) 
-						aadd(aItens,aLinhas) 	
+						aLinhas := {}
+						aadd(aLinhas,{"G1_COD",cCodigo,NIL})
+						aadd(aLinhas,{"G1_COMP",aDados[nY][3],NIL})
+						aadd(aLinhas,{"G1_TRT",aDados[nY][8],NIL})
+						aadd(aLinhas,{"G1_QUANT",nVlr100,NIL})
+						aadd(aLinhas,{"G1_PERDA",nPerda,NIL})
+						aadd(aLinhas,{"G1_INI",CTOD(aDados[nY][6]),NIL})
+						aadd(aLinhas,{"G1_FIM",CTOD(aDados[nY][7]),NIL})
+						aadd(aItens,aLinhas)
 					Endif
 				Next nY
 				//Verifica se o codigo da estrutura ja existe. Caso exista, exclui a estrutura
-				If SG1->(MsSeek(cFilAnt+cCodigo)) 
+				If SG1->(MsSeek(cFilAnt+cCodigo))
 					Begin Transaction
-						//Chama a rotina de execauto	
-						MSExecAuto({|x,y,z| mata200(x,y,z)},aCabec,Nil,5) 
+						//Chama a rotina de execauto
+						MSExecAuto({|x,y,z| mata200(x,y,z)},aCabec,Nil,5)
 						If lMsErroAuto
 							MostraErro()
 							DisarmTransaction()
@@ -164,8 +164,8 @@ Static Function Importa(PARAMIXB3)
 				EndIf
 				If lExclui
 					Begin Transaction
-						//Chama a rotina de execauto	
-						MSExecAuto({|x,y,z| mata200(x,y,z)},aCabec,aItens,3) 
+						//Chama a rotina de execauto
+						MSExecAuto({|x,y,z| mata200(x,y,z)},aCabec,aItens,3)
 						If lMsErroAuto
 							MostraErro()
 							DisarmTransaction()
@@ -176,20 +176,20 @@ Static Function Importa(PARAMIXB3)
 			If !lExclui
 				Exit
 			EndIf
-		Next nX	
+		Next nX
 		If !lMsErroAuto
 			Aviso("Atenção","A Importação foi executada com sucesso.", {"Ok"}, 2)
 		EndIf
 	EndIF
 
-	Return
+Return
 
 /*/{Protheus.doc} ValArq(aDados)
-	Função de validação do arquivo TXT 
+	Função de validação do arquivo TXT
 	@author Jair Matos
-	@since 29/05/2019 
+	@since 29/05/2019
 	@version 1.0
-	@return lContinua 
+	@return lContinua
 /*/
 Static Function ValArq(aDados)
 	Local lRet := .T.
@@ -289,174 +289,197 @@ Return
 
 User Function jmata200()
 
-Local PARAMIXB1 := {}
-Local PARAMIXB2 := {}
-Local aGets     := {}
-Local lOK       := .T.
-Local cString   := ''
- 
-Private lMsErroAuto := .F.
- 
-Default PARAMIXB3 := 3
- 
-//------------------------//| Abertura do ambiente |//----------------------------
-PREPARE ENVIRONMENT EMPRESA "99" FILIAL "01" MODULO "PCP" TABLES "SB1","SG1","SG5"
-ConOut(Repl("-",80))
-ConOut(PadC("Teste de rotina automatica para estrutura de produtos",80))
-//------------------------//| Teste de Inclusao |//-------------------------------
- 
-If PARAMIXB3==3
-    PARAMIXB1 := {{"G1_COD","PA001",NIL},;
-                {"G1_QUANT",1,NIL},;
-                {"NIVALT","S",NIL}} // A variavel NIVALT eh utilizada pra recalcular ou nao a estrutura
-    aGets := {}
-    aadd(aGets,{"G1_COD","PA001",NIL})
-    aadd(aGets,{"G1_COMP","PI001",NIL})
-    aadd(aGets,{"G1_TRT",Space(3),NIL})
-    aadd(aGets,{"G1_QUANT",1,NIL})
-    aadd(aGets,{"G1_PERDA",0,NIL})
-    aadd(aGets,{"G1_INI",CTOD("01/01/01"),NIL})
-    aadd(aGets,{"G1_FIM",CTOD("31/12/49"),NIL})
-    aadd(PARAMIXB2,aGets)
-    aGets := {}
-    aadd(aGets,{"G1_COD","PI001",NIL})
-    aadd(aGets,{"G1_COMP","PI002",NIL})
-    aadd(aGets,{"G1_TRT",Space(3),NIL})
-    aadd(aGets,{"G1_QUANT",1,NIL})
-    aadd(aGets,{"G1_PERDA",0,NIL})
-    aadd(aGets,{"G1_INI",CTOD("01/01/01"),NIL})
-    aadd(aGets,{"G1_FIM",CTOD("31/12/49"),NIL})
-    aadd(PARAMIXB2,aGets)
-    aGets := {}
-    aadd(aGets,{"G1_COD","PI001",NIL})
-    aadd(aGets,{"G1_COMP","MP002",NIL})
-    aadd(aGets,{"G1_TRT",Space(3),NIL})
-    aadd(aGets,{"G1_QUANT",1,NIL})
-    aadd(aGets,{"G1_PERDA",0,NIL})
-    aadd(aGets,{"G1_INI",CTOD("01/01/01"),NIL})
-    aadd(aGets,{"G1_FIM",CTOD("31/12/49"),NIL})
-    aadd(PARAMIXB2,aGets)
-    aGets := {}
-    aadd(aGets,{"G1_COD","PI002",NIL})
-    aadd(aGets,{"G1_COMP","MP001",NIL})
-    aadd(aGets,{"G1_TRT",Space(3),NIL})
-    aadd(aGets,{"G1_QUANT",1,NIL})
-    aadd(aGets,{"G1_PERDA",0,NIL})
-    aadd(aGets,{"G1_INI",CTOD("01/01/01"),NIL})
-    aadd(aGets,{"G1_FIM",CTOD("31/12/49"),NIL})
-    aadd(PARAMIXB2,aGets)
-    aGets := {}
-    aadd(aGets,{"G1_COD","PA001",NIL})
-    aadd(aGets,{"G1_COMP","PI003",NIL})
-    aadd(aGets,{"G1_TRT",Space(3),NIL})
-    aadd(aGets,{"G1_QUANT",1,NIL})
-    aadd(aGets,{"G1_PERDA",0,NIL})
-    aadd(aGets,{"G1_INI",CTOD("01/01/01"),NIL})
-    aadd(aGets,{"G1_FIM",CTOD("31/12/49"),NIL})
-    aadd(PARAMIXB2,aGets)
-    aGets := {}
-    aadd(aGets,{"G1_COD","PA001",NIL})
-    aadd(aGets,{"G1_COMP","MP004",NIL})
-    aadd(aGets,{"G1_TRT",Space(3),NIL})
-    aadd(aGets,{"G1_QUANT",1,NIL})
-    aadd(aGets,{"G1_PERDA",0,NIL})
-    aadd(aGets,{"G1_INI",CTOD("01/01/01"),NIL})
-    aadd(aGets,{"G1_FIM",CTOD("31/12/49"),NIL})
-    aadd(PARAMIXB2,aGets)
-    aGets := {}
-    aadd(aGets,{"G1_COD","PI003",NIL})
-    aadd(aGets,{"G1_COMP","MP003",NIL})
-    aadd(aGets,{"G1_TRT",Space(3),NIL})
-    aadd(aGets,{"G1_QUANT",1,NIL})
-    aadd(aGets,{"G1_PERDA",0,NIL})
-    aadd(aGets,{"G1_INI",CTOD("01/01/01"),NIL})
-    aadd(aGets,{"G1_FIM",CTOD("31/12/49"),NIL})
-    aadd(PARAMIXB2,aGets)
- 
-    If lOk
-        ConOut("Teste de Inclusao")
-        ConOut("Inicio: "+Time())
-        MSExecAuto({|x,y,z| mata200(x,y,z)},PARAMIXB1,PARAMIXB2,PARAMIXB3)
-        //Inclusao
-        ConOut("Fim: "+Time())
-    EndIf
-Else
-    //--------------- Exemplo de Exclusao ------------------------------------
-    If lOk
-        SG1->(dbSetOrder(1))
-        SG1->(dbSeek(xFilial("SG1")+PadR('PA001',Len(SG1->G1_COD))))
-        PARAMIXB1 := {{"G1_COD","PA001",NIL},;
-        {"NIVALT","S",NIL}} // A variavel NIVALT eh utilizada pra recalcular
-        // ou nao a estrutura
-        ConOut("Teste de Exclusao do codigo PA001")
-        ConOut("Inicio: "+Time())
-        MSExecAuto({|x,y,z| mata200(x,y,z)},PARAMIXB1,NIL,5)
-        //Exclusao
-        lOk := !lMsErroAuto
-        ConOut("Fim: "+Time())
-    EndIf
- 
-    If lOk
-        SG1->(dbSetOrder(1))
-        SG1->(dbSeek(xFilial("SG1")+PadR('PI001',Len(SG1->G1_COD))))
-        PARAMIXB1 := {{"G1_COD","PI001",NIL},; 
-		{"NIVALT","S",NIL}} // A variavel NIVALT eh utilizada pra recalcular
-        // ou nao a estrutura
-        ConOut("Teste de Exclusao do codigo PI001")
-        ConOut("Inicio: "+Time())
-        MSExecAuto({|x,y,z| mata200(x,y,z)},PARAMIXB1,NIL,5)
-        //Exclusao
-        lOk := !lMsErroAuto
-        ConOut("Fim: "+Time())
-    EndIf
- 
-    If lOk
-        SG1->(dbSetOrder(1))
-        SG1->(dbSeek(xFilial("SG1")+PadR('PI002',Len(SG1->G1_COD))))
-        PARAMIXB1 := {{"G1_COD","PI002",NIL},; 
-		{"NIVALT","S",NIL}} // A variavel NIVALT eh utilizada pra recalcular
-        // ou nao a estrutura
-        ConOut("Teste de Exclusao do codigo PI002")
-        ConOut("Inicio: "+Time())
-        MSExecAuto({|x,y,z| mata200(x,y,z)},PARAMIXB1,NIL,5)
-        //Exclusao
-        lOk := !lMsErroAuto
-        ConOut("Fim: "+Time())
-    EndIf
- 
-    If lOk
-        SG1->(dbSetOrder(1))
-        SG1->(dbSeek(xFilial("SG1")+PadR('PI003',Len(SG1->G1_COD))))
-        PARAMIXB1 := {{"G1_COD","PI003",NIL},; 
-		{"NIVALT","S",NIL}} // A variavel NIVALT eh utilizada pra recalcular
-        // ou nao a estrutura
-        ConOut("Teste de Exclusao do codigo PI003")
-        ConOut("Inicio: "+Time())
-        MSExecAuto({|x,y,z| mata200(x,y,z)},PARAMIXB1,NIL,5) //Exclusao
-        ConOut("Fim: "+Time()) 
-	EndIf
-    EndIf
- 
-    If lMsErroAuto
-        If IsBlind()
-            If IsTelnet()
-                VTDispFile(NomeAutoLog(),.t.)
-            Else
-                cString := MemoRead(NomeAutoLog())
-                Aviso("Aviso de Erro:",cString)
-            EndIf
-        Else
-            MostraErro()
-        EndIf
-    Else
-        If lOk
-            Aviso("Aviso","Operacao efetuada com sucesso",{"Ok"})
-        Else
-            Aviso("Aviso","Fazer os devidos cadastros",{"Ok"})
-        EndIf
-    Endif
+	Local PARAMIXB1 := {}
+	Local PARAMIXB2 := {}
+	Local aGets     := {}
+	Local lOK       := .T.
+	Local cString   := ''
 
- 
+	Private lMsErroAuto := .F.
+
+	Default PARAMIXB3 := 3
+
+	//------------------------//| Abertura do ambiente |//----------------------------
+	PREPARE ENVIRONMENT EMPRESA "99" FILIAL "01" MODULO "PCP" TABLES "SB1","SG1","SG5"
+
+	cBmLog := Repl("-",80)
+	FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+	cBmLog := PadC("Teste de rotina automatica para estrutura de produtos",80)
+	FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+
+	//------------------------//| Teste de Inclusao |//-------------------------------
+
+	If PARAMIXB3==3
+		PARAMIXB1 := {{"G1_COD","PA001",NIL},;
+			{"G1_QUANT",1,NIL},;
+			{"NIVALT","S",NIL}} // A variavel NIVALT eh utilizada pra recalcular ou nao a estrutura
+		aGets := {}
+		aadd(aGets,{"G1_COD","PA001",NIL})
+		aadd(aGets,{"G1_COMP","PI001",NIL})
+		aadd(aGets,{"G1_TRT",Space(3),NIL})
+		aadd(aGets,{"G1_QUANT",1,NIL})
+		aadd(aGets,{"G1_PERDA",0,NIL})
+		aadd(aGets,{"G1_INI",CTOD("01/01/01"),NIL})
+		aadd(aGets,{"G1_FIM",CTOD("31/12/49"),NIL})
+		aadd(PARAMIXB2,aGets)
+		aGets := {}
+		aadd(aGets,{"G1_COD","PI001",NIL})
+		aadd(aGets,{"G1_COMP","PI002",NIL})
+		aadd(aGets,{"G1_TRT",Space(3),NIL})
+		aadd(aGets,{"G1_QUANT",1,NIL})
+		aadd(aGets,{"G1_PERDA",0,NIL})
+		aadd(aGets,{"G1_INI",CTOD("01/01/01"),NIL})
+		aadd(aGets,{"G1_FIM",CTOD("31/12/49"),NIL})
+		aadd(PARAMIXB2,aGets)
+		aGets := {}
+		aadd(aGets,{"G1_COD","PI001",NIL})
+		aadd(aGets,{"G1_COMP","MP002",NIL})
+		aadd(aGets,{"G1_TRT",Space(3),NIL})
+		aadd(aGets,{"G1_QUANT",1,NIL})
+		aadd(aGets,{"G1_PERDA",0,NIL})
+		aadd(aGets,{"G1_INI",CTOD("01/01/01"),NIL})
+		aadd(aGets,{"G1_FIM",CTOD("31/12/49"),NIL})
+		aadd(PARAMIXB2,aGets)
+		aGets := {}
+		aadd(aGets,{"G1_COD","PI002",NIL})
+		aadd(aGets,{"G1_COMP","MP001",NIL})
+		aadd(aGets,{"G1_TRT",Space(3),NIL})
+		aadd(aGets,{"G1_QUANT",1,NIL})
+		aadd(aGets,{"G1_PERDA",0,NIL})
+		aadd(aGets,{"G1_INI",CTOD("01/01/01"),NIL})
+		aadd(aGets,{"G1_FIM",CTOD("31/12/49"),NIL})
+		aadd(PARAMIXB2,aGets)
+		aGets := {}
+		aadd(aGets,{"G1_COD","PA001",NIL})
+		aadd(aGets,{"G1_COMP","PI003",NIL})
+		aadd(aGets,{"G1_TRT",Space(3),NIL})
+		aadd(aGets,{"G1_QUANT",1,NIL})
+		aadd(aGets,{"G1_PERDA",0,NIL})
+		aadd(aGets,{"G1_INI",CTOD("01/01/01"),NIL})
+		aadd(aGets,{"G1_FIM",CTOD("31/12/49"),NIL})
+		aadd(PARAMIXB2,aGets)
+		aGets := {}
+		aadd(aGets,{"G1_COD","PA001",NIL})
+		aadd(aGets,{"G1_COMP","MP004",NIL})
+		aadd(aGets,{"G1_TRT",Space(3),NIL})
+		aadd(aGets,{"G1_QUANT",1,NIL})
+		aadd(aGets,{"G1_PERDA",0,NIL})
+		aadd(aGets,{"G1_INI",CTOD("01/01/01"),NIL})
+		aadd(aGets,{"G1_FIM",CTOD("31/12/49"),NIL})
+		aadd(PARAMIXB2,aGets)
+		aGets := {}
+		aadd(aGets,{"G1_COD","PI003",NIL})
+		aadd(aGets,{"G1_COMP","MP003",NIL})
+		aadd(aGets,{"G1_TRT",Space(3),NIL})
+		aadd(aGets,{"G1_QUANT",1,NIL})
+		aadd(aGets,{"G1_PERDA",0,NIL})
+		aadd(aGets,{"G1_INI",CTOD("01/01/01"),NIL})
+		aadd(aGets,{"G1_FIM",CTOD("31/12/49"),NIL})
+		aadd(PARAMIXB2,aGets)
+
+		If lOk
+			cBmLog := "Teste de Inclusao"
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+			cBmLog := "Inicio: "+Time()
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+
+			MSExecAuto({|x,y,z| mata200(x,y,z)},PARAMIXB1,PARAMIXB2,PARAMIXB3)
+			//Inclusao
+			cBmLog := "Fim: "+Time()
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+
+		EndIf
+	Else
+		//--------------- Exemplo de Exclusao ------------------------------------
+		If lOk
+			SG1->(dbSetOrder(1))
+			SG1->(dbSeek(xFilial("SG1")+PadR('PA001',Len(SG1->G1_COD))))
+			PARAMIXB1 := {{"G1_COD","PA001",NIL},;
+				{"NIVALT","S",NIL}} // A variavel NIVALT eh utilizada pra recalcular
+			// ou nao a estrutura
+			cBmLog := "Teste de Exclusao do codigo PA001"
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+			cBmLog := "Inicio: "+Time()
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+			MSExecAuto({|x,y,z| mata200(x,y,z)},PARAMIXB1,NIL,5)
+			//Exclusao
+			lOk := !lMsErroAuto
+			cBmLog := "Fim: "+Time()
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+		EndIf
+
+		If lOk
+			SG1->(dbSetOrder(1))
+			SG1->(dbSeek(xFilial("SG1")+PadR('PI001',Len(SG1->G1_COD))))
+			PARAMIXB1 := {{"G1_COD","PI001",NIL},;
+				{"NIVALT","S",NIL}} // A variavel NIVALT eh utilizada pra recalcular
+			// ou nao a estrutura
+			cBmLog := "Teste de Exclusao do codigo PI001"
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+			cBmLog := "Inicio: "+Time()
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+			MSExecAuto({|x,y,z| mata200(x,y,z)},PARAMIXB1,NIL,5)
+			//Exclusao
+			lOk := !lMsErroAuto
+			cBmLog := "Fim: "+Time()
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+		EndIf
+
+		If lOk
+			SG1->(dbSetOrder(1))
+			SG1->(dbSeek(xFilial("SG1")+PadR('PI002',Len(SG1->G1_COD))))
+			PARAMIXB1 := {{"G1_COD","PI002",NIL},;
+				{"NIVALT","S",NIL}} // A variavel NIVALT eh utilizada pra recalcular
+			// ou nao a estrutura
+			cBmLog := "Teste de Exclusao do codigo PI002"
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+			cBmLog := "Inicio: "+Time()
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+
+			MSExecAuto({|x,y,z| mata200(x,y,z)},PARAMIXB1,NIL,5)
+			//Exclusao
+			lOk := !lMsErroAuto
+			cBmLog := "Fim: "+Time()
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+		EndIf
+
+		If lOk
+			SG1->(dbSetOrder(1))
+			SG1->(dbSeek(xFilial("SG1")+PadR('PI003',Len(SG1->G1_COD))))
+			PARAMIXB1 := {{"G1_COD","PI003",NIL},;
+				{"NIVALT","S",NIL}} // A variavel NIVALT eh utilizada pra recalcular
+			// ou nao a estrutura
+			cBmLog := "Teste de Exclusao do codigo PI003"
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+			cBmLog := "Inicio: "+Time()
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+
+			MSExecAuto({|x,y,z| mata200(x,y,z)},PARAMIXB1,NIL,5) //Exclusao
+			cBmLog := "Fim: "+Time()
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+		EndIf
+	EndIf
+
+	If lMsErroAuto
+		If IsBlind()
+			If IsTelnet()
+				VTDispFile(NomeAutoLog(),.t.)
+			Else
+				cString := MemoRead(NomeAutoLog())
+				Aviso("Aviso de Erro:",cString)
+			EndIf
+		Else
+			MostraErro()
+		EndIf
+	Else
+		If lOk
+			Aviso("Aviso","Operacao efetuada com sucesso",{"Ok"})
+		Else
+			Aviso("Aviso","Fazer os devidos cadastros",{"Ok"})
+		EndIf
+	Endif
+
+
 Return
 
 
@@ -464,90 +487,94 @@ Return
 
 
 User Function MyMATA200()
- 
-Local PARAMIXB1 := {}
-Local PARAMIXB2 := {}
-Local PARAMIXB3 := 7
- 
-Private lMsErroAuto := .F.
- 
-//------------------------//| Abertura do ambiente |//---------------------------------------------
-RPCSetType(3)
-PREPARE ENVIRONMENT EMPRESA "99" FILIAL "01" MODULO "SIGAPCP" TABLES "SB1","SG1","SG5","SC2","SD4"
-ConOut(Repl("-",80))
-ConOut(PadC("Teste de rotina automatica para estrutura de produtos",80))
-//------------------------//| Teste de Substituição |//--------------------------------------------
- 
-aadd(PARAMIXB1,{"G1_CODORIG","9475-MP3",NIL})
-aadd(PARAMIXB1,{"G1_GRPORIG","",NIL})
-aadd(PARAMIXB1,{"G1_OPCORIG","",NIL})
- 
-aadd(PARAMIXB1,{"G1_SEQORIG","001",NIL}) //Este campo não é obrigatório. Se for passado, filtrará o componente a ser substituído por uma sequência específica.
- 
-aadd(PARAMIXB1,{"G1_CODDEST","9475-MP4",NIL})
-aadd(PARAMIXB1,{"G1_GRPDEST","",NIL})
-aadd(PARAMIXB1,{"G1_OPCDEST","",NIL})
-aadd(PARAMIXB1,{"ALTEMPENHO","S",NIL}) //Se altera os empenhos. S = Sim e N = Não.
-//Este campo não é obrigatório. Se ele não estiver no array, será considerado N - Não.
- 
-// Informar os itens Pais que será feito a substituição do componente origem pelo componente destino
- 
-aadd(PARAMIXB2,{"G1_COD","94751-PA",NIL})  
-aadd(PARAMIXB2,{"G1_COD","PI002",NIL}) 
- 
-MSExecAuto({|x,y,Z| mata200(x,y,z)},PARAMIXB1,PARAMIXB2,PARAMIXB3) //Substituição
- 
-If lMsErroAuto 
-    MostraErro()   
-Else
-    alert("Substituição efetuada com sucesso") 
-Endif
- 
+
+	Local PARAMIXB1 := {}
+	Local PARAMIXB2 := {}
+	Local PARAMIXB3 := 7
+
+	Private lMsErroAuto := .F.
+
+	//------------------------//| Abertura do ambiente |//---------------------------------------------
+	RPCSetType(3)
+	PREPARE ENVIRONMENT EMPRESA "99" FILIAL "01" MODULO "SIGAPCP" TABLES "SB1","SG1","SG5","SC2","SD4"
+
+	cBmLog := Repl("-",80)
+	FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+	cBmLog := PadC("Teste de rotina automatica para estrutura de produtos",80)
+	FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBmLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+
+	//------------------------//| Teste de Substituição |//--------------------------------------------
+
+	aadd(PARAMIXB1,{"G1_CODORIG","9475-MP3",NIL})
+	aadd(PARAMIXB1,{"G1_GRPORIG","",NIL})
+	aadd(PARAMIXB1,{"G1_OPCORIG","",NIL})
+
+	aadd(PARAMIXB1,{"G1_SEQORIG","001",NIL}) //Este campo não é obrigatório. Se for passado, filtrará o componente a ser substituído por uma sequência específica.
+
+	aadd(PARAMIXB1,{"G1_CODDEST","9475-MP4",NIL})
+	aadd(PARAMIXB1,{"G1_GRPDEST","",NIL})
+	aadd(PARAMIXB1,{"G1_OPCDEST","",NIL})
+	aadd(PARAMIXB1,{"ALTEMPENHO","S",NIL}) //Se altera os empenhos. S = Sim e N = Não.
+	//Este campo não é obrigatório. Se ele não estiver no array, será considerado N - Não.
+
+	// Informar os itens Pais que será feito a substituição do componente origem pelo componente destino
+
+	aadd(PARAMIXB2,{"G1_COD","94751-PA",NIL})
+	aadd(PARAMIXB2,{"G1_COD","PI002",NIL})
+
+	MSExecAuto({|x,y,Z| mata200(x,y,z)},PARAMIXB1,PARAMIXB2,PARAMIXB3) //Substituição
+
+	If lMsErroAuto
+		MostraErro()
+	Else
+		alert("Substituição efetuada com sucesso")
+	Endif
+
 Return
 
 //EXCLUSAO ITEM ESPECÍFICO
 
 User Function ExcMyMATA200()
- 
-Local cItemPai := "PA-20868       "
-Local cFilho1  := "MP-20868       "
-Local cFilho2  := "MP-20868-2     "
-Local cSeqTrt  := "   "
-Local aCab     := {}
-Local aItem    := {}
-Local aDetalhe := {}
- 
-Private lMsErroAuto := .F.
- 
-aCab := {{"G1_COD"      , cItemPai  , NIL},;
-         {"ATUREVSB1"   , "S"       , NIL},;
-         {"NIVEL1"      , "S"       , NIL},;
-         {"NIVALT"      , "S"       , NIL},;
-         {"G1_QUANT"    , 1         , NIL}}
- 
-aadd(aDetalhe, {"G1_COD"    , cItemPai              , NIL})
-aadd(aDetalhe, {"G1_COMP"   , cFilho1               , NIL})
-aadd(aDetalhe, {"G1_TRT"    , cSeqTrt               , NIL})
-aadd(aDetalhe, {"G1_INI"    , dDataBase             , NIL})
-aadd(aDetalhe, {"G1_FIM"    , DaySum(dDataBase, 365), NIL})
-aadd(aDetalhe, {"G1_FIXVAR" ,"V"                    , NIL})
-aadd(aDetalhe, {"G1_QUANT"  , 1                     , NIL})
-aadd(aDetalhe, {"G1_PERDA"  , 0                     , NIL})
- 
-aadd(aItem,aDetalhe)
- 
-dbSelectArea('SG1')
-SG1->(dbSetOrder(1))
-if SG1->(dbSeek(xFilial('SG1')+cItemPai))
-    MSExecAuto({|x,y,z| mata200(x,y,z)},aCab,aItem,4) //Alteração ou Exclusão de Item não enviado no array aItem
-Else
-    MSExecAuto({|x,y,z| mata200(x,y,z)},aCab,aItem,3)
-Endif
- 
-If lMsErroAuto 
-    MostraErro()   
-Else
-    alert("Alteração/Exclusão item efetuada com sucesso") 
-Endif
- 
+
+	Local cItemPai := "PA-20868       "
+	Local cFilho1  := "MP-20868       "
+	Local cFilho2  := "MP-20868-2     "
+	Local cSeqTrt  := "   "
+	Local aCab     := {}
+	Local aItem    := {}
+	Local aDetalhe := {}
+
+	Private lMsErroAuto := .F.
+
+	aCab := {{"G1_COD"      , cItemPai  , NIL},;
+		{"ATUREVSB1"   , "S"       , NIL},;
+		{"NIVEL1"      , "S"       , NIL},;
+		{"NIVALT"      , "S"       , NIL},;
+		{"G1_QUANT"    , 1         , NIL}}
+
+	aadd(aDetalhe, {"G1_COD"    , cItemPai              , NIL})
+	aadd(aDetalhe, {"G1_COMP"   , cFilho1               , NIL})
+	aadd(aDetalhe, {"G1_TRT"    , cSeqTrt               , NIL})
+	aadd(aDetalhe, {"G1_INI"    , dDataBase             , NIL})
+	aadd(aDetalhe, {"G1_FIM"    , DaySum(dDataBase, 365), NIL})
+	aadd(aDetalhe, {"G1_FIXVAR" ,"V"                    , NIL})
+	aadd(aDetalhe, {"G1_QUANT"  , 1                     , NIL})
+	aadd(aDetalhe, {"G1_PERDA"  , 0                     , NIL})
+
+	aadd(aItem,aDetalhe)
+
+	dbSelectArea('SG1')
+	SG1->(dbSetOrder(1))
+	if SG1->(dbSeek(xFilial('SG1')+cItemPai))
+		MSExecAuto({|x,y,z| mata200(x,y,z)},aCab,aItem,4) //Alteração ou Exclusão de Item não enviado no array aItem
+	Else
+		MSExecAuto({|x,y,z| mata200(x,y,z)},aCab,aItem,3)
+	Endif
+
+	If lMsErroAuto
+		MostraErro()
+	Else
+		alert("Alteração/Exclusão item efetuada com sucesso")
+	Endif
+
 Return

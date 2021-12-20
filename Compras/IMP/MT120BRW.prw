@@ -57,7 +57,10 @@ User Function MT120BRW()
   IF ( ValType( oException ) == "O" )
    cMsgHelp := oException:Description
    Help( "" , 1 , ProcName() , NIL , OemToAnsi( cMsgHelp ) , 1 , 0 )
-   ConOut( CaptureError() )
+   //Mensagem simples, de forma reduzida, somente parâmetros obrigatórios
+    FWLogMsg("ERROR", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, CaptureError(), /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+
+   
   EndIF
 
  ENDEXCEPTION

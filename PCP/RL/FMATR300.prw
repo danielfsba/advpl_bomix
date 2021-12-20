@@ -89,7 +89,7 @@ Local lVersao := (VAL(GetVersao(.F.)) == 11 .And. GetRpoRelease() >= "R6" .Or. V
 //³ mv_par26     // Ate SubLote                                  ³
 //³ mv_par27     // Imprime a Descricao do Armazem               ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-AjustaSX1()
+//AjustaSX1()
 Pergunte("MTR300",.F.)
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Criacao do componente de impressao                                      ³
@@ -611,7 +611,7 @@ PRIVATE nLastKey := 0 ,cPerg := "MTR300"
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Verifica as perguntas selecionadas                           ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-AjustaSX1()
+//AjustaSX1()
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Verifica as perguntas selecionadas                           ³
@@ -1105,6 +1105,7 @@ MS_FLUSH()
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 /*/
+/*
 Static Function AjustaSX1()
 Local aArea := GetArea()
 Local aHelpPor :={} 
@@ -1146,7 +1147,7 @@ PutSx1('MTR300','26','Ate Sub-Lote                 ?','¿A Sub-Lote              
 {'                                        ','                                        '}, ;                        
 {'                                        ','                                        '},'')                                            //-- 36 - X1_HELP
 
-/*-----------------------MV_PAR27--------------------------*/
+/*-----------------------MV_PAR27--------------------------
 Aadd( aHelpPor, "Imprime descricao do Armazem. Sim ou Nao" )
 
 Aadd( aHelpEng, "Print warehouse description. Yes or No  " )
@@ -1201,6 +1202,8 @@ EndIf
 
 RestArea(aArea)
 Return
+*/
+
 
 Static Function f_Footer(oReport, oSection2)
 	n_Linha := oReport:Row()

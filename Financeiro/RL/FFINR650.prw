@@ -35,7 +35,7 @@ User Function FFINR650()
 
 Local oReport
 
-AjustaSX1()
+//AjustaSX1()
 
 If FindFunction("TRepInUse") .And. !ExecSchedule() .and. TRepInUse()
 	//⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø
@@ -219,6 +219,7 @@ Local aFile	:= ""
 Local aArqConf	:= {}		// Atributos do arquivo de configuracao
 Local aAreaSE1	:= {}
 Local aAreaSE2	:= {}
+Local lF650DESCR := ExistBlock ("F650DESCR")
 
 PRIVATE m_pag , cbtxt , cbcont , li 
 
@@ -1072,7 +1073,7 @@ While nTamArq-nLidos >= nTamDet
 		cDescr := RTrim(cOcorr) + "-" + Subs(SEB->EB_DESCRI,1,27)
 		
 		// Ponto de entrada para alterar a descricao do relatorio
-		If ExistBlock ("F650DESCR")
+		If lF650DESCR 
         	cDescr := ExecBlock("F650DESCR",.F.,.F.,{cDescr})
  		EndIf                            	
  		        	
@@ -1568,6 +1569,7 @@ Local aFile		:= {}
 Local aArqConf	:= {}		// Atributos do arquivo de configuracao
 Local aAreaSE1	:= {}
 Local aAreaSE2	:= {}
+Local lF650DESCR := ExistBlock ("F650DESCR")
 
 //Essas variaveis tem que ser private para serem manipuladas
 //nos pontos de entrada, assim como eh feito no FINA200
@@ -2414,7 +2416,7 @@ While nTamArq-nLidos >= nTamDet
 	Endif
 	
 	// Ponto de entrada para alterar a descricao do relatorio
-	If ExistBlock ("F650DESCR")
+	If lF650DESCR 
      	cDescr := ExecBlock("F650DESCR",.F.,.F.,{cDescr})
  	EndIf                            	
  		
@@ -2719,6 +2721,7 @@ Return .F.
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂ
 */
+/*
 Static Function AjustaSX1()
 
 Local aArea		:= GetArea()
@@ -2767,7 +2770,7 @@ RestArea( aArea )
 
 Return
 
-
+*/
 
 /*‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±

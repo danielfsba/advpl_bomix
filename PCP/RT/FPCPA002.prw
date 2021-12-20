@@ -1,9 +1,9 @@
 #INCLUDE 'TOTVS.CH'
 #INCLUDE 'FONT.CH'
 #INCLUDE 'COLORS.CH'
-#INCLUDE "RWMAKE.CH" 
-#INCLUDE "TBICONN.CH" 
-#INCLUDE "TOPCONN.CH" 
+#INCLUDE "RWMAKE.CH"
+#INCLUDE "TBICONN.CH"
+#INCLUDE "TOPCONN.CH"
 
 /*
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
@@ -35,7 +35,7 @@ User Function FPCPA002()
 	±± Definicao do Dialog e todos os seus componentes.                        ±±
 	Ù±±ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ*/
 	oDlg1      := MSDialog():New( 090,230,198,670,SM0->M0_NOME,,,.F.,,,,,,.T.,,,.T. )
-	
+
 	oSay1      := TSay():New( 006,004,{||"Arquivo:"},oDlg1,,,.F.,.F.,.F.,.T.,CLR_BLACK,CLR_WHITE,040,008)
 	oGet1      := TGet():New( 004,025,{|u| if( Pcount( )>0, c_File := u, u := c_File) },oDlg1,151,010,'',,CLR_BLACK,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.T.,.F.,"","",,)
 
@@ -45,7 +45,7 @@ User Function FPCPA002()
 
 	oGrp1      := TGroup():New( 018,004,050,176,"Descrição",oDlg1,CLR_BLACK,CLR_WHITE,.T.,.F. )
 	oSay2      := TSay():New( 026,016,{||c_Texto},oGrp1,,,.F.,.F.,.F.,.T.,CLR_BLACK,CLR_WHITE,160,036)
-	
+
 	oDlg1:Activate(,,,.T.)
 Return()
 
@@ -84,13 +84,13 @@ Return
 Static Function f_ImportaDados()
 	Private n_Pos    := 1    //Numero da linha do arquivo
 	Private n_QtdInc := 0    //Conta quantas linhas foram importadas
-	Private n_QtdErr := 0    //Conta quantas linhas não foram importadas	
+	Private n_QtdErr := 0    //Conta quantas linhas não foram importadas
 	Private c_Buffer := ""   //Buffer do arquivo
 	Private a_Buffer := {}   //Array com o Buffer do arquivo
 	Private c_Linha  := ""
 	Private c_Filial := ""
 	Private c_CodPro := ""
-    Private c_Desc   := ""
+	Private c_Desc   := ""
 	Private c_NcmAnt := ""
 	Private c_Ncm    := ""
 	Private c_Obs    := ""
@@ -111,35 +111,34 @@ Static Function f_ImportaDados()
 			Aadd(a_Bord,{"TB_NCM"     ,"C",TamSX3("B1_POSIPI")[1],0})
 			Aadd(a_Bord,{"TB_OBS"     ,"C",150,0})
 
-			c_Bord := CriaTrab(a_Bord,.t.)
-			Use &c_Bord Shared Alias TRC New
-			Index On TB_POS To &c_Bord
+			oELT := FWTemporaryTable():New("TRC")
+			oELT:SetFields(a_Bord)
+			oELT:AddIndex("01",{"TB_POS"})
+			oELT:Create()
 
-			SET INDEX TO &c_Bord
-
-			l_CriaTb:= .T.	 
-		ENDIF	
+			l_CriaTb:= .T.
+		ENDIF
 
 		IF FT_FUSE(ALLTRIM(c_File)) == -1
-	  		ShowHelpDlg("Validação de Arquivo",;
-	  		{"O arquivo "+ALLTRIM(c_File)+" não foi encontrado."},5,;
-		  	{"Verifique se o caminho está correto ou se o arquivo ainda se encontra no local indicado."},5)
+			ShowHelpDlg("Validação de Arquivo",;
+				{"O arquivo "+ALLTRIM(c_File)+" não foi encontrado."},5,;
+				{"Verifique se o caminho está correto ou se o arquivo ainda se encontra no local indicado."},5)
 			Return()
 		Endif
-	 
+
 		ProcRegua(FT_FLastRec())
 
 		WHILE !FT_FEOF()
 			c_Buffer := FT_FREADLN()
 			c_Buffer := StrTran(c_Buffer, ";;", "; ;")
-		  	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+			//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 			//³STRTOKARR:                                                                       ³
 			//³Funcao utilizada para retornar um array, de acordo com os dados passados como    ³
 			//³parametro para a funcao. Esta funcao recebe uma string <cValue> e um caracter    ³
 			//³<cToken> que representa um separador, e para toda ocorrencia deste separador     ³
 			//³em <cValue> e adicionado um item no array.                                       ³
-			//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ  
-			a_Buffer:= STRTOKARR(c_Buffer,";")        
+			//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+			a_Buffer:= STRTOKARR(c_Buffer,";")
 
 			c_Filial := PADR(UPPER(AllTrim(a_Buffer[1])), TAMSX3("B1_FILIAL")[1])  		// Filial do produto
 			c_CodPro := PADR(UPPER(AllTrim(a_Buffer[2])), TAMSX3("B1_COD")[1])  		// Código do produto
@@ -153,7 +152,7 @@ Static Function f_ImportaDados()
 			IF FOUND()
 				c_NcmAnt := SB1->B1_POSIPI
 				c_Desc   := SB1->B1_DESC
-		    	n_QtdInc++
+				n_QtdInc++
 
 				If Upper(AllTrim(c_Ncm)) == "BLOQUEAR"
 					RECLOCK("SB1", .F.)
@@ -169,7 +168,7 @@ Static Function f_ImportaDados()
 					c_Obs  := "Pos.IPI/NCM do Produto " + AllTrim(c_CodPro) + " foi atualizado pela rotina."
 				Endif
 			ELSE
-		    	n_QtdErr++
+				n_QtdErr++
 				c_Obs  := "Pos.IPI/NCM do Produto " + AllTrim(c_CodPro) + " não foi atualizado pela rotina, porque o Produto " + AllTrim(c_CodPro) + " não está cadastrado no sistema."
 			ENDIF
 
@@ -195,7 +194,7 @@ Static Function f_ImportaDados()
 		DBSELECTAREA("TRC")
 		TRC->(DBGOTOP())
 
-	 	Aadd(a_Campos,{"TB_POS"     ,,'Linha'    ,'@!'})
+		Aadd(a_Campos,{"TB_POS"     ,,'Linha'    ,'@!'})
 		Aadd(a_Campos,{"TB_FILIAL"  ,,'Filial'   ,'@!'})
 		Aadd(a_Campos,{"TB_PRODUTO" ,,'Produto'  ,'@!'})
 		Aadd(a_Campos,{"TB_DESC"    ,,'Descrição'  ,'@!'})
@@ -214,7 +213,7 @@ Static Function f_ImportaDados()
 		DBSELECTAREA("TRC")
 		TRC->(DBCLOSEAREA())
 	ENDIF
-Return() 
+Return()
 
 /*/
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
@@ -241,7 +240,7 @@ Static Function f_ExpLog()
 	// TESTA A CRIAÇÃO DO ARQUIVO DE DESTINO
 	IF c_Destino == -1
 		MsgStop('Erro ao criar arquivo destino. Erro: '+str(ferror(),4),'Erro')
-	 	RETURN
+		RETURN
 	ENDIF
 
 	c_Linha:= "LINHA ;   FILIAL;   "+Padr("PRODUTO", TamSX3('B1_COD')[1])+";   "+Padr("DESCRICAO", TamSX3('B1_COD')[1])+";   "+Padr("NCMANT", TamSX3('B1_COD')[1])+";   "+Padr("NCM", TamSX3('B1_COD')[1])+";   "+Padr("OBSERVACAO", TamSX3('B1_COD')[1]) + CHR(13)+CHR(10)
@@ -251,9 +250,9 @@ Static Function f_ExpLog()
 			FCLOSE(c_Destino)
 			DBSELECTAREA("TRC")
 			DBGOTOP()
-   	   		Return
+			Return
 		ENDIF
- 	ENDIF
+	ENDIF
 
 	DBSELECTAREA("TRC")
 	TRC->(DBGOTOP())
@@ -270,13 +269,13 @@ Static Function f_ExpLog()
 				FCLOSE(c_Destino)
 				DBSELECTAREA("TRC")
 				DBGOTOP()
-	   	   		Return
+				Return
 			ENDIF
-	 	ENDIF
-	 	
-	 	IncProc()
-	 	TRC->(DBSKIP())
-	ENDDO 
+		ENDIF
+
+		IncProc()
+		TRC->(DBSKIP())
+	ENDDO
 
 	AVISO(SM0->M0_NOMECOM,"Log exportado para o arquivo C:\TEMP\LOG_ATUALIZACAO_POSIPI_NCM.TXT",{"Ok"},2,"Atenção")
 	FCLOSE(c_Destino)

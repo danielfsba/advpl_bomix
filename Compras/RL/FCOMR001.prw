@@ -82,7 +82,7 @@ Static Function ReportDef(nReg,nOpcx)
 	//?mv_par13               Endereco de Entrega                   ?
 	//?mv_par14               todas ou em aberto ou atendidos       ?
 	//滥哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪馁
-	AjustaSX1()
+	//AjustaSX1()
 	Pergunte("MTR110",.F.)
 	//谀哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪哪目
 	//矯riacao do componente de impressao                                      ?
@@ -1226,6 +1226,7 @@ Return( Space((30-Len(AllTrim(cLiberador)))/2)+AllTrim(cLiberador) )
 北篣so       ?MATR110                                                    罕?
 北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北?
 */
+/*
 Static Function AjustaSX1()
 
 	Local aHelpPor	:= {}
@@ -1246,7 +1247,7 @@ Static Function AjustaSX1()
 	PutSX1Help("P.MTR11014.",aHelpPor,aHelpEng,aHelpSpa)
 
 Return
-
+*/
 /*/
 	北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北?
 	北矲un噮o    矯hkPergUs ?Autor ?Nereu Humberto Junior ?Data ?1/09/07  潮?

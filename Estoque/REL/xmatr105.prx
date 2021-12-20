@@ -82,9 +82,11 @@ Local oSection
 Local oCell         
 Local cPerg	:= "MTR105"
 
+/*
 If !lMTR105 .And. ValType(aPerg) ==  "A"
 	AjustaSX1(cPerg,aPerg)
 EndIf
+*/
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Criacao do componente de impressao                                      ³
@@ -283,7 +285,7 @@ Return NIL
 ±±ÀÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ±±
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß*/
-
+/*
 Static Function AjustaSX1(cPerg,aPerg)
 
 Local nTamSX1 := Len(SX1->X1_GRUPO)
@@ -312,7 +314,7 @@ If dbSeek(PADR(cPerg,nTamSX1)+"04")
 	MsUnLock()
 EndIf
 Return Nil  
-
+*/
 /*/
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
@@ -372,9 +374,11 @@ Private nLastKey:= 0  // Controla o cancelamento da SetPrint e SetDefault
 
 lMTR105 := If(ValType(lMTR105)#"L",.T.,lMTR105)
 
+/*
 If !lMTR105 .And. ValType(aPerg) ==  "A"
 	AjustaSX1(cPerg,aPerg)
 EndIf
+*/
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Verifica as Perguntas Seleciondas                                      ³
 //³ mv_par01  -  Da data      ?                                            ³

@@ -41,7 +41,7 @@ Private	lEnd		:= .f.,;
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Ajusta os parametros.³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-		AjustaSX1(cPerg)
+		//AjustaSX1(cPerg)
 
 		// Se a Impressão Não Vier da Tela de Pedido de Compras então Efetua Pergunta de Parâmetros
 		// Caso contrário então posiciona no pedido que foi clicado a opção imprimir.
@@ -777,7 +777,7 @@ Return
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
-
+/*
 Static Function AjustaSX1(cPerg)
 Local	aRegs   := {},;
 		_sAlias := Alias(),;
@@ -844,9 +844,10 @@ Local	aRegs   := {},;
 		Next nX
 
 Return
-
+*/
+
 User Function PedMail()
-Private _PedCom
+Private _PedCom
 Private nTarget:=0
 Private cFOpen :=""
 Private nOpc   := 0

@@ -1083,50 +1083,47 @@ Local cValid      := ""
 Local cReferencia := ""
 Local nPosIni     := 0
 Local nLen        := 0
+Local nX := 0
+Local aFields := {}
 
 If aFisGet == Nil
 	aFisGet	:= {}
-	dbSelectArea("SX3")
-	dbSetOrder(1)
-	MsSeek("SC6")
-	While !Eof().And.X3_ARQUIVO=="SC6"
-		cValid := UPPER(X3_VALID+X3_VLDUSER)
+
+	aFields := FWSX3Util():GetAllFields( "SC6" , .T. )
+	For nX := 1 To Len(aFields)
+		cValid := UPPER(GetSx3Cache(aFields[nX], 'X3_VALID')  + GetSx3Cache(aFields[nX], 'X3_VLDUSER') )
 		If 'MAFISGET("'$cValid
 			nPosIni 	:= AT('MAFISGET("',cValid)+10
 			nLen		:= AT('")',Substr(cValid,nPosIni,Len(cValid)-nPosIni))-1
 			cReferencia := Substr(cValid,nPosIni,nLen)
-			aAdd(aFisGet,{cReferencia,X3_CAMPO,MaFisOrdem(cReferencia)})
+			aAdd(aFisGet,{cReferencia,aFields[nX],MaFisOrdem(cReferencia)})
 		EndIf
 		If 'MAFISREF("'$cValid
 			nPosIni		:= AT('MAFISREF("',cValid) + 10
 			cReferencia	:=Substr(cValid,nPosIni,AT('","MT410",',cValid)-nPosIni)
-			aAdd(aFisGet,{cReferencia,X3_CAMPO,MaFisOrdem(cReferencia)})
+			aAdd(aFisGet,{cReferencia,aFields[nX],MaFisOrdem(cReferencia)})
 		EndIf
-		dbSkip()
-	EndDo
+	Next nX
 	aSort(aFisGet,,,{|x,y| x[3]<y[3]})
 EndIf
 
 If aFisGetSC5 == Nil
 	aFisGetSC5	:= {}
-	dbSelectArea("SX3")
-	dbSetOrder(1)
-	MsSeek("SC5")
-	While !Eof().And.X3_ARQUIVO=="SC5"
-		cValid := UPPER(X3_VALID+X3_VLDUSER)
+	aFields := FWSX3Util():GetAllFields( "SC5" , .T. )
+	For nX := 1 To Len(aFields)
+		cValid := UPPER(GetSx3Cache(aFields[nX], 'X3_VALID')  + GetSx3Cache(aFields[nX], 'X3_VLDUSER') )
 		If 'MAFISGET("'$cValid
 			nPosIni 	:= AT('MAFISGET("',cValid)+10
 			nLen		:= AT('")',Substr(cValid,nPosIni,Len(cValid)-nPosIni))-1
 			cReferencia := Substr(cValid,nPosIni,nLen)
-			aAdd(aFisGetSC5,{cReferencia,X3_CAMPO,MaFisOrdem(cReferencia)})
+			aAdd(aFisGetSC5,{cReferencia,aFields[nX],MaFisOrdem(cReferencia)})
 		EndIf
 		If 'MAFISREF("'$cValid
 			nPosIni		:= AT('MAFISREF("',cValid) + 10
 			cReferencia	:=Substr(cValid,nPosIni,AT('","MT410",',cValid)-nPosIni)
-			aAdd(aFisGetSC5,{cReferencia,X3_CAMPO,MaFisOrdem(cReferencia)})
+			aAdd(aFisGetSC5,{cReferencia,aFields[nX],MaFisOrdem(cReferencia)})
 		EndIf
-		dbSkip()
-	EndDo
+	Next nX
 	aSort(aFisGetSC5,,,{|x,y| x[3]<y[3]})
 EndIf
 MaFisEnd()

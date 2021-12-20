@@ -43,7 +43,7 @@ User Function PCOMA010(c_Pedido, n_Opcao)
 		IF DBSEEK(XFILIAL("SC7")+Alltrim(c_Pedido),.T.)
 
 			IF (ALLTRIM(SC7->C7_CONAPRO) = "L")
-			
+
 				c_Filial	:= SC7->C7_FILIAL
 				c_NumSC		:= SC7->C7_NUMSC
 				c_Pedido	:= SC7->C7_NUM
@@ -76,19 +76,19 @@ User Function PCOMA010(c_Pedido, n_Opcao)
 					ENDDO
 
 					c_To := a_To[1] //EMAIL DO SOLICITANTE E DO FORNECEDOR
-					
+
 					a_To		:= {}
 					a_Ret		:= {}
-					
+
 					PswOrder(1)
-                	PswSeek(__CUSERID, .T.)
-                	a_Ret    := PswRet(1)
-               
-	                If Ascan(a_To,Alltrim(a_Ret[1][14]))==0
-                 		AADD(a_To,Alltrim(a_Ret[1][14]))
-                	ENDIF
-               
-                	c_To += ";"+a_To[1]  //EMAIL DO COMPRADOR
+					PswSeek(__CUSERID, .T.)
+					a_Ret    := PswRet(1)
+
+					If Ascan(a_To,Alltrim(a_Ret[1][14]))==0
+						AADD(a_To,Alltrim(a_Ret[1][14]))
+					ENDIF
+
+					c_To += ";"+a_To[1]  //EMAIL DO COMPRADOR
 
 					c_Msg += '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">''
 					c_Msg += '<html xmlns="http://www.w3.org/1999/xhtml">'
@@ -111,7 +111,7 @@ User Function PCOMA010(c_Pedido, n_Opcao)
 					c_Msg += ' 	</td>'
 					c_Msg += '  </tr>'
 					c_Msg += '</table>'
-//Itens
+					//Itens
 					c_Msg += '<table cellpadding="0" cellspacing="0" width="800" border="1">'
 					c_Msg += '  <tr>'
 					c_Msg += '  	<td align="center" width="10%">Filial</td>'
@@ -120,8 +120,8 @@ User Function PCOMA010(c_Pedido, n_Opcao)
 					c_Msg += '  	<td align="center" width="10%">Qtd</td>'
 					c_Msg += '  	<td align="center" width="10%">Vlr. Ref.</td>'
 					c_Msg += '  	<td align="center" width="10%">Total Ref.</td>'
-//c_Msg += '  	<td align="center" width="10%">CC</td>'
-//c_Msg += '  	<td align="center" width="10%">CR</td>'
+					//c_Msg += '  	<td align="center" width="10%">CC</td>'
+					//c_Msg += '  	<td align="center" width="10%">CR</td>'
 					c_Msg += '  </tr>'
 
 					c_Qry += "SELECT * "
@@ -142,8 +142,8 @@ User Function PCOMA010(c_Pedido, n_Opcao)
 						c_Msg += '  	<td align="center" width="10%"><font face="Arial" size="2">'+Transform(QRY->C7_QUANT,"@e 999,999,999.99")+'</font></td>'
 						c_Msg += '  	<td align="center" width="10%"><font face="Arial" size="2">'+Transform(QRY->C7_PRECO,"@e 999,999,999.99")+'</font></td>'
 						c_Msg += '  	<td align="center" width="10%"><font face="Arial" size="2">'+Transform(QRY->C7_TOTAL,"@e 999,999,999.99")+'</font></td>'
-//	c_Msg += '  	<td align="center" width="10%"><font face="Arial" size="2">'+QRY->C7_CC+'</font></td>'
-//	c_Msg += '  	<td align="center" width="10%"><font face="Arial" size="2">'+QRY->C7_ITEMCTA+'</font></td>'
+						//	c_Msg += '  	<td align="center" width="10%"><font face="Arial" size="2">'+QRY->C7_CC+'</font></td>'
+						//	c_Msg += '  	<td align="center" width="10%"><font face="Arial" size="2">'+QRY->C7_ITEMCTA+'</font></td>'
 						c_Msg += '  </tr>'
 						QRY->(DBSKIP())
 					ENDDO
@@ -155,27 +155,28 @@ User Function PCOMA010(c_Pedido, n_Opcao)
 					c_Msg += '</body>'
 					c_Msg += '</html>'
 
-//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
-//³Chama a função que envia email:                                 ³
-//³                                                                ³
-//³1º Parâmetro: Para                                              ³
-//³2º Parâmetro: Corpo do Email                                    ³
-//³3º Parâmetro: Assunto                                           ³
-//³4º Parâmetro: Se exibe a tela informando que o email foi enviado³
-//³5º Parâmetro: Anexo                                             ³
-//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+					//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+					//³Chama a função que envia email:                                 ³
+					//³                                                                ³
+					//³1º Parâmetro: Para                                              ³
+					//³2º Parâmetro: Corpo do Email                                    ³
+					//³3º Parâmetro: Assunto                                           ³
+					//³4º Parâmetro: Se exibe a tela informando que o email foi enviado³
+					//³5º Parâmetro: Anexo                                             ³
+					//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
 					U_TBSENDMAIL(c_To, c_Msg, c_Subj, .F., c_Anexo)
 
 				ENDIF
 
 				U_PCOMA013(c_Filial,c_Pedido)
-				
+
 			ENDIF
 
 		ELSE
 			If lIsBlind()
-				Conout(SM0->M0_NOMECOM+": O pedido teve problemas na liberação. Verifique situação do documento com o administrador do sistema")
+				cBMLog := SM0->M0_NOMECOM+": O pedido teve problemas na liberação. Verifique situação do documento com o administrador do sistema"
+				FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 			Else
 				Aviso(SM0->M0_NOMECOM,"O pedido teve problemas na liberação. Verifique situação do documento com o administrador do sistema",{"Ok"},2,"Atenção!")
 			Endif
@@ -186,4 +187,4 @@ User Function PCOMA010(c_Pedido, n_Opcao)
 
 	ENDIF
 
-	Return()
+Return()

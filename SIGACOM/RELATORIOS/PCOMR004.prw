@@ -111,10 +111,10 @@ Static Function ReportDef(nReg,nOpcx)
 	oReport:DisableOrientation()
 	oReport:ParamReadOnly(lAuto)
 	oSection1:= TRSection():New(oReport,STR0102,{"SC7","SM0","SA2"}, /* <aOrder> */ ,;
-	/* <.lLoadCells.> */ , , /* <cTotalText>  */, /* !<.lTotalInCol.>  */, /* <.lHeaderPage.>  */,;
-	/* <.lHeaderBreak.> */, /* <.lPageBreak.>  */, /* <.lLineBreak.>  */, /* <nLeftMargin>  */,;
-	.T./* <.lLineStyle.>  */, /* <nColSpace>  */,.T. /*<.lAutoSize.> */, /*<cSeparator> */,;
-	/*<nLinesBefore>  */, /*<nCols>  */, /* <nClrBack> */, /* <nClrFore>  */)
+		/* <.lLoadCells.> */ , , /* <cTotalText>  */, /* !<.lTotalInCol.>  */, /* <.lHeaderPage.>  */,;
+		/* <.lHeaderBreak.> */, /* <.lPageBreak.>  */, /* <.lLineBreak.>  */, /* <nLeftMargin>  */,;
+		.T./* <.lLineStyle.>  */, /* <nColSpace>  */,.T. /*<.lAutoSize.> */, /*<cSeparator> */,;
+		/*<nLinesBefore>  */, /*<nCols>  */, /* <nClrBack> */, /* <nClrFore>  */)
 	oSection1:SetReadOnly()
 	oSection1:SetNoFilter("SA2")
 
@@ -147,10 +147,10 @@ Static Function ReportDef(nReg,nOpcx)
 	oSection1:Cell("INSCR"    ):SetCellBreak()
 
 	oSection2:= TRSection():New(oSection1, STR0103, {"SC7","SB1"}, /* <aOrder> */ ,;
-	/* <.lLoadCells.> */ , , /* <cTotalText>  */, /* !<.lTotalInCol.>  */, /* <.lHeaderPage.>  */,;
-	/* <.lHeaderBreak.> */, /* <.lPageBreak.>  */, /* <.lLineBreak.>  */, /* <nLeftMargin>  */,;
-	/* <.lLineStyle.>  */, /* <nColSpace>  */, /*<.lAutoSize.> */, /*<cSeparator> */,;
-	/*<nLinesBefore>  */, /*<nCols>  */, /* <nClrBack> */, /* <nClrFore>  */)
+		/* <.lLoadCells.> */ , , /* <cTotalText>  */, /* !<.lTotalInCol.>  */, /* <.lHeaderPage.>  */,;
+		/* <.lHeaderBreak.> */, /* <.lPageBreak.>  */, /* <.lLineBreak.>  */, /* <nLeftMargin>  */,;
+		/* <.lLineStyle.>  */, /* <nColSpace>  */, /*<.lAutoSize.> */, /*<cSeparator> */,;
+		/*<nLinesBefore>  */, /*<nCols>  */, /* <nClrBack> */, /* <nClrFore>  */)
 
 	oSection2:SetCellBorder("ALL",,,.T.)
 	oSection2:SetCellBorder("RIGHT")
@@ -356,13 +356,13 @@ Static Function ReportPrint(oReport,nReg,nOpcX)
 	While !oReport:Cancel() .And. !SC7->(Eof()) .And. SC7->C7_FILIAL == xFilial("SC7") .And. SC7->C7_NUM >= mv_par01 .And. SC7->C7_NUM <= mv_par02
 
 		If (SC7->C7_CONAPRO == "B" .And. mv_par10 == 1) .Or.;
-		(SC7->C7_CONAPRO <> "B" .And. mv_par10 == 2) .Or.;
-		(SC7->C7_EMITIDO == "S" .And. mv_par05 == 1) .Or.;
-		((SC7->C7_EMISSAO < mv_par03) .Or. (SC7->C7_EMISSAO > mv_par04)) .Or.;
-		((SC7->C7_TIPO == 1 .OR. SC7->C7_TIPO == 3) .And. mv_par08 == 2) .Or.;
-		(SC7->C7_TIPO == 2 .And. (mv_par08 == 1 .OR. mv_par08 == 3)) .Or. !MtrAValOP(mv_par11, "SC7") .Or.;
-		(SC7->C7_QUANT > SC7->C7_QUJE .And. mv_par14 == 3) .Or.;
-		((SC7->C7_QUANT - SC7->C7_QUJE <= 0 .Or. !Empty(SC7->C7_RESIDUO)) .And. mv_par14 == 2 )
+				(SC7->C7_CONAPRO <> "B" .And. mv_par10 == 2) .Or.;
+				(SC7->C7_EMITIDO == "S" .And. mv_par05 == 1) .Or.;
+				((SC7->C7_EMISSAO < mv_par03) .Or. (SC7->C7_EMISSAO > mv_par04)) .Or.;
+				((SC7->C7_TIPO == 1 .OR. SC7->C7_TIPO == 3) .And. mv_par08 == 2) .Or.;
+				(SC7->C7_TIPO == 2 .And. (mv_par08 == 1 .OR. mv_par08 == 3)) .Or. !MtrAValOP(mv_par11, "SC7") .Or.;
+				(SC7->C7_QUANT > SC7->C7_QUJE .And. mv_par14 == 3) .Or.;
+				((SC7->C7_QUANT - SC7->C7_QUJE <= 0 .Or. !Empty(SC7->C7_RESIDUO)) .And. mv_par14 == 2 )
 
 			dbSelectArea("SC7")
 			dbSkip()
@@ -416,13 +416,13 @@ Static Function ReportPrint(oReport,nReg,nOpcX)
 			While !oReport:Cancel() .And. !SC7->(Eof()) .And. SC7->C7_FILIAL == xFilial("SC7") .And. SC7->C7_NUM == cNumSC7
 
 				If (SC7->C7_CONAPRO == "B" .And. mv_par10 == 1) .Or.;
-				(SC7->C7_CONAPRO <> "B" .And. mv_par10 == 2) .Or.;
-				(SC7->C7_EMITIDO == "S" .And. mv_par05 == 1) .Or.;
-				((SC7->C7_EMISSAO < mv_par03) .Or. (SC7->C7_EMISSAO > mv_par04)) .Or.;
-				((SC7->C7_TIPO == 1 .OR. SC7->C7_TIPO == 3) .And. mv_par08 == 2) .Or.;
-				(SC7->C7_TIPO == 2 .And. (mv_par08 == 1 .OR. mv_par08 == 3)) .Or. !MtrAValOP(mv_par11, "SC7") .Or.;
-				(SC7->C7_QUANT > SC7->C7_QUJE .And. mv_par14 == 3) .Or.;
-				((SC7->C7_QUANT - SC7->C7_QUJE <= 0 .Or. !Empty(SC7->C7_RESIDUO)) .And. mv_par14 == 2 )
+						(SC7->C7_CONAPRO <> "B" .And. mv_par10 == 2) .Or.;
+						(SC7->C7_EMITIDO == "S" .And. mv_par05 == 1) .Or.;
+						((SC7->C7_EMISSAO < mv_par03) .Or. (SC7->C7_EMISSAO > mv_par04)) .Or.;
+						((SC7->C7_TIPO == 1 .OR. SC7->C7_TIPO == 3) .And. mv_par08 == 2) .Or.;
+						(SC7->C7_TIPO == 2 .And. (mv_par08 == 1 .OR. mv_par08 == 3)) .Or. !MtrAValOP(mv_par11, "SC7") .Or.;
+						(SC7->C7_QUANT > SC7->C7_QUJE .And. mv_par14 == 3) .Or.;
+						((SC7->C7_QUANT - SC7->C7_QUJE <= 0 .Or. !Empty(SC7->C7_RESIDUO)) .And. mv_par14 == 2 )
 					dbSelectArea("SC7")
 					dbSkip()
 					Loop
@@ -464,7 +464,7 @@ Static Function ReportPrint(oReport,nReg,nOpcX)
 					dbSetOrder(1)
 					dbSeek( xFilial("SC1") + SC7->C7_NUMSC + SC7->C7_ITEMSC )
 
-					cDescPro := SB1->B1_DESC 
+					cDescPro := SB1->B1_DESC
 
 				ElseIf AllTrim(mv_par06) == "B5_CEME"
 					SB5->(dbSetOrder(1))
@@ -474,7 +474,7 @@ Static Function ReportPrint(oReport,nReg,nOpcX)
 						dbSetOrder(1)
 						dbSeek( xFilial("SC1") + SC7->C7_NUMSC + SC7->C7_ITEMSC )
 
-						cDescPro := SB5->B5_CEME 
+						cDescPro := SB5->B5_CEME
 
 					EndIf
 				ElseIf AllTrim(mv_par06) == "C7_DESCRI"
@@ -483,7 +483,7 @@ Static Function ReportPrint(oReport,nReg,nOpcX)
 					dbSetOrder(1)
 					dbSeek( xFilial("SC1") + SC7->C7_NUMSC + SC7->C7_ITEMSC )
 
-					cDescPro := SC7->C7_DESCRI 
+					cDescPro := SC7->C7_DESCRI
 
 				EndIf
 
@@ -495,7 +495,7 @@ Static Function ReportPrint(oReport,nReg,nOpcX)
 					dbSetOrder(1)
 					dbSeek( xFilial("SC1") + SC7->C7_NUMSC + SC7->C7_ITEMSC )
 
-					cDescPro := SB1->B1_DESC 
+					cDescPro := SB1->B1_DESC
 
 				EndIf
 
@@ -506,7 +506,7 @@ Static Function ReportPrint(oReport,nReg,nOpcX)
 					dbSetOrder(1)
 					dbSeek( xFilial("SC1") + SC7->C7_NUMSC + SC7->C7_ITEMSC )
 
-					cDescPro := cDescPro + " ("+Alltrim(SA5->A5_CODPRF)+")" 
+					cDescPro := cDescPro + " ("+Alltrim(SA5->A5_CODPRF)+")"
 
 				EndIf
 
@@ -662,11 +662,11 @@ Static Function ReportPrint(oReport,nReg,nOpcX)
 			Endif
 
 			oReport:PrintText( STR0007 /*"D E S C O N T O S -->"*/ + " " + ;
-			TransForm(SC7->C7_DESC1,"999.99" ) + " %    " + ;
-			TransForm(SC7->C7_DESC2,"999.99" ) + " %    " + ;
-			TransForm(SC7->C7_DESC3,"999.99" ) + " %    " + ;
-			TransForm(xMoeda(nDescProd,SC7->C7_MOEDA,MV_PAR12,SC7->C7_DATPRF,MsDecimais(SC7->C7_MOEDA),nTxMoeda) , PesqPict("SC7","C7_VLDESC",14, MV_PAR12) ),;
-			2022 , 050 )
+				TransForm(SC7->C7_DESC1,"999.99" ) + " %    " + ;
+				TransForm(SC7->C7_DESC2,"999.99" ) + " %    " + ;
+				TransForm(SC7->C7_DESC3,"999.99" ) + " %    " + ;
+				TransForm(xMoeda(nDescProd,SC7->C7_MOEDA,MV_PAR12,SC7->C7_DATPRF,MsDecimais(SC7->C7_MOEDA),nTxMoeda) , PesqPict("SC7","C7_VLDESC",14, MV_PAR12) ),;
+				2022 , 050 )
 
 			oReport:SkipLine()
 			oReport:SkipLine()
@@ -691,7 +691,7 @@ Static Function ReportPrint(oReport,nReg,nOpcX)
 				dbSeek(xFilial( "SC1" ) +  SC7->C7_NUMSC + SC7->C7_ITEMSC )
 
 				oReport:PrintText(STR0008 + SM0->M0_ENDENT+"  "+Rtrim(SM0->M0_CIDENT)+"  - "+SM0->M0_ESTENT+" - "+STR0009+" "+Trans(Alltrim(SM0->M0_CEPENT),PesqPict("SA2","A2_CEP")),, 050 )
-			
+
 
 			Else
 				oReport:PrintText(STR0008 + mv_par13,, 050 ) //"Local de Entrega  : " imprime o endereco digitado na pergunte
@@ -723,12 +723,12 @@ Static Function ReportPrint(oReport,nReg,nOpcX)
 				oReport:PrintText(SubStr(SE4->E4_DESCRI,1,34),nLinPC, 050 )
 				oReport:PrintText( dtoc(SC7->C7_EMISSAO),nLinPC,1120 )
 				oReport:PrintText( STR0063+ "   " + ; //"Total dos Impostos:    "
-				Transform(xMoeda(nValIVA,SC7->C7_MOEDA,MV_PAR12,SC7->C7_DATPRF,MsDecimais(SC7->C7_MOEDA),nTxMoeda) , tm(nValIVA,14,MsDecimais(MV_PAR12)) ),nLinPC,1612 )
+					Transform(xMoeda(nValIVA,SC7->C7_MOEDA,MV_PAR12,SC7->C7_DATPRF,MsDecimais(SC7->C7_MOEDA),nTxMoeda) , tm(nValIVA,14,MsDecimais(MV_PAR12)) ),nLinPC,1612 )
 			Else
 				oReport:PrintText( SubStr(SE4->E4_DESCRI,1,34),nLinPC, 050 )
 				oReport:PrintText( dtoc(SC7->C7_EMISSAO),nLinPC,1120 )
 				oReport:PrintText( STR0064+ "  " + ; //"Total com Impostos:    "
-				Transform(xMoeda(nTotMerc,SC7->C7_MOEDA,MV_PAR12,SC7->C7_DATPRF,MsDecimais(SC7->C7_MOEDA),nTxMoeda) , tm(nTotMerc,14,MsDecimais(MV_PAR12)) ),nLinPC,1612 )
+					Transform(xMoeda(nTotMerc,SC7->C7_MOEDA,MV_PAR12,SC7->C7_DATPRF,MsDecimais(SC7->C7_MOEDA),nTxMoeda) , tm(nTotMerc,14,MsDecimais(MV_PAR12)) ),nLinPC,1612 )
 			Endif
 			oReport:SkipLine()
 
@@ -828,15 +828,15 @@ Static Function ReportPrint(oReport,nReg,nOpcX)
 					cAprov += AllTrim(GetNome(SCR->CR_USER))+" ["
 					Do Case
 						Case SCR->CR_STATUS=="02" //Pendente
-						cAprov += "BLQ"
+							cAprov += "BLQ"
 						Case SCR->CR_STATUS=="03" //Liberado
-						cAprov += "Ok"
+							cAprov += "Ok"
 						Case SCR->CR_STATUS=="04" //Bloqueado
-						cAprov += "BLQ"
+							cAprov += "BLQ"
 						Case SCR->CR_STATUS=="05" //Nivel Liberado
-						cAprov += "##"
+							cAprov += "##"
 						OtherWise                 //Aguar.Lib
-						cAprov += "??"
+							cAprov += "??"
 					EndCase
 					cAprov += "] - "
 					dbSelectArea("SCR")
@@ -1281,15 +1281,13 @@ Static Function f_PCOMR004(cAlias,nReg,nOpcx)
 	//� se o tamanho do C7_CC no SX3 estiver > que 9 o relatorio sera impresso comprrimido com espaco para o campo �
 	//� C7_CC centro de custo para ate 20 posicoes,Obs.desabilitando a selecao do modo de impresso retrato/paisagem�
 	//읕컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴켸
-	dbSelectArea("SX3")
-	dbSetOrder(2)
-	If dbSeek("C7_CC")
-		If SX3->X3_TAMANHO == 9
-			nDifColCC := 11
-			Tamanho   := "M"
-		Else
-			lComp	  := .F.   // C.Custo c/ tamanho maior que 9, sempre PAISAGEM
-		Endif
+	aStruct :=  FWSX3Util():GetFieldStruct("C7_CC")
+
+	if aStruct[3] == 9
+		nDifColCC := 11
+		Tamanho   := "M"
+	Else
+		lComp	  := .F.   // C.Custo c/ tamanho maior que 9, sempre PAISAGEM
 	Endif
 
 	wnrel:=SetPrint(cString,wnrel,If(lAuto,Nil,"MTR110"),@Titulo,cDesc1,cDesc2,cDesc3,.F.,,lComp,Tamanho,,!lAuto)
@@ -1410,7 +1408,7 @@ Static Function C110PC(lEnd,WnRel,cString,nReg)
 	@ 0,0 PSay AvalImp(Iif(nDifColCC < 11,220,132))
 
 	While !Eof() .And. C7_FILIAL = xFilial("SC7") .And. C7_NUM >= mv_par01 .And. ;
-	C7_NUM <= mv_par02
+			C7_NUM <= mv_par02
 
 		//旼컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴커
 		//� Cria as variaveis para armazenar os valores do pedido        �
@@ -1427,7 +1425,7 @@ Static Function C110PC(lEnd,WnRel,cString,nReg)
 			Loop
 		Endif
 		If	(C7_CONAPRO == "B" .And. mv_par10 == 1) .Or.;
-		(C7_CONAPRO != "B" .And. mv_par10 == 2)
+				(C7_CONAPRO != "B" .And. mv_par10 == 2)
 			dbSkip()
 			Loop
 		Endif
@@ -1720,7 +1718,7 @@ Static Function C110AE(lEnd,WnRel,cString,nReg)
 			Loop
 		Endif
 		If	(C7_CONAPRO == "B" .And. mv_par10 == 1) .Or.;
-		(C7_CONAPRO != "B" .And. mv_par10 == 2)
+				(C7_CONAPRO != "B" .And. mv_par10 == 2)
 			dbSelectArea("SC7")
 			dbSkip()
 			Loop
@@ -1959,7 +1957,7 @@ Static Function ImpProd()
 		dbSetOrder(1)
 		dbSeek( xFilial("SC1") + SC7->C7_NUMSC + SC7->C7_ITEMSC )
 
-		cDescri := Alltrim(SB1->B1_DESC) 
+		cDescri := Alltrim(SB1->B1_DESC)
 
 		dbSelectArea("SC7")
 	EndIf
@@ -1975,7 +1973,7 @@ Static Function ImpProd()
 			dbSetOrder(1)
 			dbSeek( xFilial("SC1") + SC7->C7_NUMSC + SC7->C7_ITEMSC )
 
-			cDescri := Alltrim(B5_CEME) 
+			cDescri := Alltrim(B5_CEME)
 
 		EndIf
 		dbSelectArea("SC7")
@@ -1986,7 +1984,7 @@ Static Function ImpProd()
 		dbSelectArea("SC1")
 		dbSetOrder(1)
 		dbSeek( xFilial("SC1") + SC7->C7_NUMSC + SC7->C7_ITEMSC )
-		cDescri := Alltrim(SC7->C7_DESCRI) 
+		cDescri := Alltrim(SC7->C7_DESCRI)
 	EndIf
 
 	If Empty(cDescri)
@@ -1998,7 +1996,7 @@ Static Function ImpProd()
 		dbSetOrder(1)
 		dbSeek( xFilial("SC1") + SC7->C7_NUMSC + SC7->C7_ITEMSC )
 
-		cDescri := Alltrim(SB1->B1_DESC) 
+		cDescri := Alltrim(SB1->B1_DESC)
 
 		dbSelectArea("SC7")
 	EndIf
@@ -2011,7 +2009,7 @@ Static Function ImpProd()
 		dbSetOrder(1)
 		dbSeek( xFilial("SC1") + SC7->C7_NUMSC + SC7->C7_ITEMSC )
 
-		cDescri := cDescri + " ("+Alltrim(A5_CODPRF)+")" 
+		cDescri := cDescri + " ("+Alltrim(A5_CODPRF)+")"
 
 	EndIf
 
@@ -2393,15 +2391,15 @@ Static Function FinalPed(nDescProd)
 			cAprov += AllTrim(GetNome(SCR->CR_USER))+" ["
 			Do Case
 				Case SCR->CR_STATUS=="02" //Pendente
-				cAprov += "BLQ"
+					cAprov += "BLQ"
 				Case SCR->CR_STATUS=="03" //Liberado
-				cAprov += "Ok"
+					cAprov += "Ok"
 				Case SCR->CR_STATUS=="04" //Bloqueado
-				cAprov += "BLQ"
+					cAprov += "BLQ"
 				Case SCR->CR_STATUS=="05" //Nivel Liberado
-				cAprov += "##"
+					cAprov += "##"
 				OtherWise                 //Aguar.Lib
-				cAprov += "??"
+					cAprov += "??"
 			EndCase
 			cAprov += "] - "
 			dbSelectArea("SCR")
@@ -2821,13 +2819,13 @@ Static Function FinalAE(nDescProd)
 			cAprov += AllTrim(GetNome(SCR->CR_USER))+" ["
 			Do Case
 				Case SCR->CR_STATUS=="03" //Liberado
-				cAprov += "Ok"
+					cAprov += "Ok"
 				Case SCR->CR_STATUS=="04" //Bloqueado
-				cAprov += "BLQ"
+					cAprov += "BLQ"
 				Case SCR->CR_STATUS=="05" //Nivel Liberado
-				cAprov += "##"
+					cAprov += "##"
 				OtherWise                 //Aguar.Lib
-				cAprov += "??"
+					cAprov += "??"
 			EndCase
 			cAprov += "] - "
 			dbSelectArea("SCR")
@@ -3198,6 +3196,7 @@ Static Function R110FIniPC(cPedido,cItem,cSequen,cFiltro)
 	Local cItemDe		:= IIf(cItem==Nil,'',cItem)
 	Local cItemAte	:= IIf(cItem==Nil,Repl('Z',Len(SC7->C7_ITEM)),cItem)
 	Local cRefCols	:= ''
+	Local nX := 0
 	DEFAULT cSequen	:= ""
 	DEFAULT cFiltro	:= ""
 
@@ -3207,7 +3206,7 @@ Static Function R110FIniPC(cPedido,cItem,cSequen,cFiltro)
 		MaFisEnd()
 		MaFisIni(SC7->C7_FORNECE,SC7->C7_LOJA,"F","N","R",{})
 		While !Eof() .AND. SC7->C7_FILIAL+SC7->C7_NUM == xFilial("SC7")+cPedido .AND. ;
-		SC7->C7_ITEM <= cItemAte .AND. (Empty(cSequen) .OR. cSequen == SC7->C7_SEQUEN)
+				SC7->C7_ITEM <= cItemAte .AND. (Empty(cSequen) .OR. cSequen == SC7->C7_SEQUEN)
 
 			// Nao processar os Impostos se o item possuir residuo eliminado
 			If &cFiltro
@@ -3219,22 +3218,20 @@ Static Function R110FIniPC(cPedido,cItem,cSequen,cFiltro)
 			// Inicia a Carga do item nas funcoes MATXFIS
 			nItem++
 			MaFisIniLoad(nItem)
-			dbSelectArea("SX3")
-			dbSetOrder(1)
-			dbSeek('SC7')
-			While !EOF() .AND. (X3_ARQUIVO == 'SC7')
-				cValid	:= StrTran(UPPER(SX3->X3_VALID)," ","")
+
+			aFields := FWSX3Util():GetAllFields( "SC7" , .T. )
+			For nX := 1 To Len(aFields)
+				cValid	:= StrTran(UPPER(X3Valid(aFields[nX]))," ","")
 				cValid	:= StrTran(cValid,"'",'"')
 				If "MAFISREF" $ cValid
 					nPosRef  := AT('MAFISREF("',cValid) + 10
 					cRefCols := Substr(cValid,nPosRef,AT('","MT120",',cValid)-nPosRef )
 					// Carrega os valores direto do SC7.
-					IF(SX3->X3_CAMPO <> "C7_OPER")
-						MaFisLoad(cRefCols,&("SC7->"+ SX3->X3_CAMPO),nItem)
+					IF(aFields[nX] <> "C7_OPER")
+						MaFisLoad(cRefCols,&("SC7->"+ aFields[nX]),nItem)
 					EndIf
 				EndIf
-				dbSkip()
-			End
+			Next nX
 			MaFisEndLoad(nItem,2)
 			dbSelectArea('SC7')
 			dbSkip()

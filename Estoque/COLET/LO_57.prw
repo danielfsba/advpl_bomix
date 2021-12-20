@@ -135,7 +135,7 @@ User Function LO_57
 				Return .F.
 			Endif
 	
-			If SuperGetMV('MV_ESTNEG')=='N'
+			If cEstNeg == 'N'
 				dbSelectArea("SB2")
 				SB2->(dbSetOrder(1))
 				SB2->(dbSeek(xFilial("SB2") + c_Produto + "LO"))

@@ -1,5 +1,5 @@
 #Include "Protheus.ch"
- 
+
 /*/{Protheus.doc} zSpedXML
 Função que gera o arquivo xml da nota (normal ou cancelada) através do documento e da série disponibilizados
 @author Atilio
@@ -12,27 +12,29 @@ Função que gera o arquivo xml da nota (normal ou cancelada) através do documento
 @type function
 @example Segue exemplo abaixo
     u_zSpedXML("000000001", "1", "C:\TOTVS\arquivo1.xml", .F.) //Não mostra mensagem com o XML
-     
+
     u_zSpedXML("000000001", "1", "C:\TOTVS\arquivo2.xml", .T.) //Mostra mensagem com o XML
 /*/
- 
+
 User Function zSpedXML(cDocumento, cSerie, cArqXML, lMostra)
     Local aArea        := GetArea()
-    Local cURLTss      := PadR(GetNewPar("MV_SPEDURL","http://"),250)  
+    Local cURLTss      := PadR(GetNewPar("MV_SPEDURL","http://"),250)
     Local oWebServ
     Local cIdEnt       := StaticCall(SPEDNFE, GetIdEnt)
     Local cTextoXML    := ""
+    Local cMsgOut       := ""
+
     Default cDocumento := ""
     Default cSerie     := ""
     Default cArqXML    := GetTempPath()+"arquivo_"+cSerie+cDocumento+".xml"
     Default lMostra    := .F.
-     
+
     //Se tiver documento
     If !Empty(cDocumento)
         cDocumento := PadR(cDocumento, TamSX3('F2_DOC')[1])
         cSerie     := PadR(cSerie,     TamSX3('F2_SERIE')[1])
-         
-        //Instancia a conexão com o WebService do TSS    
+
+        //Instancia a conexão com o WebService do TSS
         oWebServ:= WSNFeSBRA():New()
         oWebServ:cUSERTOKEN        := "TOTVS"
         oWebServ:cID_ENT           := cIdEnt
@@ -41,44 +43,44 @@ User Function zSpedXML(cDocumento, cSerie, cArqXML, lMostra)
         aAdd(oWebServ:oWSNFEID:oWSNotas:oWSNFESID2,NFESBRA_NFESID2():New())
         aTail(oWebServ:oWSNFEID:oWSNotas:oWSNFESID2):cID := (cSerie+cDocumento)
         oWebServ:nDIASPARAEXCLUSAO := 0
-        oWebServ:_URL              := AllTrim(cURLTss)+"/NFeSBRA.apw"   
-         
+        oWebServ:_URL              := AllTrim(cURLTss)+"/NFeSBRA.apw"
+
         //Se tiver notas
         If oWebServ:RetornaNotas()
-         
+
             //Se tiver dados
             If Len(oWebServ:oWsRetornaNotasResult:OWSNOTAS:oWSNFES3) > 0
-             
+
                 //Se tiver sido cancelada
                 If oWebServ:oWsRetornaNotasResult:OWSNOTAS:oWSNFES3[1]:oWSNFECANCELADA != Nil
                     cTextoXML := oWebServ:oWsRetornaNotasResult:OWSNOTAS:oWSNFES3[1]:oWSNFECANCELADA:cXML
-                     
-                //Senão, pega o xml normal
+
+                    //Senão, pega o xml normal
                 Else
                     cTextoXML := oWebServ:oWsRetornaNotasResult:OWSNOTAS:oWSNFES3[1]:oWSNFE:cXML
                 EndIf
-                 
+
                 //Gera o arquivo
                 MemoWrite(cArqXML, cTextoXML)
-                 
+
                 //Se for para mostrar, será mostrado um aviso com o conteúdo
                 If lMostra
                     Aviso("zSpedXML", cTextoXML, {"Ok"}, 3)
                 EndIf
-                 
-            //Caso não encontre as notas, mostra mensagem
+                //Caso não encontre as notas, mostra mensagem
             Else
-                ConOut("zSpedXML > Verificar parâmetros, documento e série não encontrados ("+cDocumento+"/"+cSerie+")...")
-                 
+                cMsgOut := "zSpedXML > Verificar parâmetros, documento e série não encontrados ("+cDocumento+"/"+cSerie+")..."
+                FWLogMsg("ERROR", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cMsgOut, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+
+
                 If lMostra
                     Aviso("zSpedXML", "Verificar parâmetros, documento e série não encontrados ("+cDocumento+"/"+cSerie+")...", {"Ok"}, 3)
                 EndIf
             EndIf
-         
-        //Senão, houve erros na classe
+            //Senão, houve erros na classe
         Else
-            ConOut("zSpedXML > "+IIf(Empty(GetWscError(3)), GetWscError(1), GetWscError(3))+"...")
-             
+            cMsgOut := "zSpedXML > "+IIf(Empty(GetWscError(3)), GetWscError(1), GetWscError(3))+"..."
+            FWLogMsg("ERROR", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cMsgOut, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
             If lMostra
                 Aviso("zSpedXML", IIf(Empty(GetWscError(3)), GetWscError(1), GetWscError(3)), {"Ok"}, 3)
             EndIf

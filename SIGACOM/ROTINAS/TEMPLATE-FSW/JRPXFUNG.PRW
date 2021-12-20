@@ -41,7 +41,8 @@ User Function TBSENDMAIL(c_To,c_Body,c_Subj,l_ExibeTela,c_Anexo, c_CCO )
 
 	IF c_To == NIL .or. Empty( c_To )
 		If IsBlind()
-			CONOUT("O e-mail não pôde ser enviado, pois o primeiro parâmetro (DESTINATÁRIO) não foi preenchido.")
+			cBMLog := "O e-mail não pôde ser enviado, pois o primeiro parâmetro (DESTINATÁRIO) não foi preenchido."
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 		Else
 			Aviso(SM0->M0_NOMECOM,"O e-mail não pôde ser enviado, pois o primeiro parâmetro (DESTINATÁRIO) não foi preenchido.",{"Ok"},2,"Erro de envio!")
 		Endif
@@ -68,7 +69,8 @@ User Function TBSENDMAIL(c_To,c_Body,c_Subj,l_ExibeTela,c_Anexo, c_CCO )
 				IF l_ExibeTela .And. !(IsBlind())
 					Aviso(SM0->M0_NOMECOM,"Falha na autenticação do Usuário!",{"Ok"},1,"Atenção")
 				ENDIF
-				CONOUT("Falha na autenticação do Usuário!")
+				cBMLog := "Falha na autenticação do Usuário!"
+				FWLogMsg("ERROR", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 				DISCONNECT SMTP SERVER RESULT lDisConectou
 				Return(.F.)
 			Endif
@@ -81,9 +83,10 @@ User Function TBSENDMAIL(c_To,c_Body,c_Subj,l_ExibeTela,c_Anexo, c_CCO )
 	If !lConectou
 		IF l_ExibeTela .And. !(IsBlind())
 			Aviso(SM0->M0_NOMECOM,"Erro ao conectar servidor de E-Mail (SMTP) - " + c_Server+CHR(10)+CHR(13)+;
-			"Solicite ao Administrador que seja verificado os parâmretros e senhas do servidor de E-Mail (SMTP)",{"Ok"},3,"Atenção!")
+				"Solicite ao Administrador que seja verificado os parâmretros e senhas do servidor de E-Mail (SMTP)",{"Ok"},3,"Atenção!")
 		ENDIF
-		CONOUT("Erro ao conectar servidor de E-Mail (SMTP) - " + c_Server+CHR(10)+CHR(13)+"Solicite ao Administrador que seja verificado os parâmretros e senhas do servidor de E-Mail (SMTP)")
+		cBMLog := "Erro ao conectar servidor de E-Mail (SMTP) - " + c_Server+CHR(10)+CHR(13)+"Solicite ao Administrador que seja verificado os parâmretros e senhas do servidor de E-Mail (SMTP)"
+		FWLogMsg("ERROR", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 		Return(.F.)
 	Endif
 
@@ -103,18 +106,17 @@ User Function TBSENDMAIL(c_To,c_Body,c_Subj,l_ExibeTela,c_Anexo, c_CCO )
 		IF l_ExibeTela .And. !(IsBlind())
 			Aviso(SM0->M0_NOMECOM,"Foi enviado e-mail para "+c_To+" com sucesso!",{"Ok"},3,"Informação!")
 		ENDIF
-		CONOUT("Foi enviado e-mail para "+c_To+" com sucesso!")
+		cBMLog := "Foi enviado e-mail para "+c_To+" com sucesso!"
+		FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 	Else
 		c_Body := ""
 		GET MAIL ERROR c_Body
 		IF l_ExibeTela .And. !(IsBlind())
 			Aviso(SM0->M0_NOMECOM,c_Body,{"Ok"},3,"Atenção!")
 		Else
-			Conout(SM0->M0_NOMECOM+": "+c_Body)
+			cBMLog := SM0->M0_NOMECOM+": "+c_Body
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 		ENDIF
-		
-		//CONOUT(c_Body)
-		
 		Return(.F.)
 	Endif
 
@@ -158,15 +160,18 @@ User Function TBCRIAPASTAS( c_GrvFile )
 
 			IF MakeDir(c_PathFil) <> 0
 				If IsBlind()
-					conout("Criacao de Diretorios:")
-					conout("O caminho "+Alltrim(c_PathFil)+" não pôde ser criado.")
-					conout("Contate o administrador de sistemas.")
+					cBMLog := "Criacao de Diretorios:"
+					cBMLog += CRLF
+					cBMLog += "O caminho "+Alltrim(c_PathFil)+" não pôde ser criado."
+					cBMLog += CRLF
+					cBMLog += "Contate o administrador de sistemas."
+					FWLogMsg("ERROR", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 				Else
 					ShowHelpDlg("Criacao de Diretorios",;
-					{"O caminho "+Alltrim(c_PathFil)+" não pôde ser criado."},5,;
-					{"Contate o administrador de sistemas."},5)
+						{"O caminho "+Alltrim(c_PathFil)+" não pôde ser criado."},5,;
+						{"Contate o administrador de sistemas."},5)
 				Endif
-				
+
 				l_Ret	:= .F.
 
 			ENDIF
@@ -202,14 +207,15 @@ User Function TBFSMASKENT(c_Entidade,c_Codigo, c_Conta)
 	Local nX			:= 0
 
 	BEGINSQL ALIAS "QRY"
-
-	SELECT *
-	FROM %TABLE:CTM% CTM
-	WHERE CTM_IDENT = %EXP:c_Entidade%
-	AND CTM_CODIGO = %EXP:c_Codigo%
-	AND CTM.%NOTDEL%
-	ORDER BY CTM_SEGMEN
-
+		SELECT *
+		FROM
+			%TABLE:CTM% CTM
+		WHERE
+			CTM_IDENT = %EXP:c_Entidade%
+			AND CTM_CODIGO = %EXP:c_Codigo%
+			AND CTM.%NOTDEL%
+		ORDER BY
+			CTM_SEGMEN
 	ENDSQL
 
 	DBSELECTAREA("QRY")
@@ -421,8 +427,8 @@ User Function TBCONVUM( cCod,nQtd1,nQtd2,nUnid )
 	lPConvUm  := If(Valtype(lPConvUm) # "L",ExistBlock("CONVUM"),lPConvUM)
 
 	If ((ValType(nQtd1) == "N") .And. ;
-	(ValType(nQtd2) == "N") .And. ;
-	(ValType(nUnid) == "N"))
+			(ValType(nQtd2) == "N") .And. ;
+			(ValType(nUnid) == "N"))
 
 		aArea := { Alias(),IndexOrd(),Recno() }
 		nBack := If( (nUnid == 1),nQtd1,nQtd2 )
@@ -432,7 +438,7 @@ User Function TBCONVUM( cCod,nQtd1,nQtd2,nUnid )
 		DbSetOrder(1)
 
 		If ((xFilial("SB1")+cCod == B1_FILIAL+B1_COD) .Or. ;
-		DbSeek(xFilial("SB1")+cCod,.F.))
+				DbSeek(xFilial("SB1")+cCod,.F.))
 			If (B1_CONV != 0)
 				If ( SB1->B1_TIPCONV != "D" )
 					If ( nUnid == 1 )

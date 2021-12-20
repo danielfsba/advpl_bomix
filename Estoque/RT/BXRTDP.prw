@@ -2,7 +2,7 @@
 #Include 'Topconn.ch'
 
 /*/{Protheus.doc} BXRTDP
-	Cadastro de Item/Molde 
+	Cadastro de Item/Molde
 	@type Function
 	@version 12.1.25
 	@author Jonas Machado
@@ -28,11 +28,11 @@ User Function BXRTDP()
 	AADD(aBotao ,{'POSCLI',{||U_F_ITENS()},'Importar Itens'})
 
 	Private aRotina := {;
-	{ OemToAnsi('Pesquisar')	,'AxPesqui',0,1},; 		//'Pesquisar'
-	{ OemToAnsi('Visualizar')	,'U_BRTDPVISUA',0,2},;	//'Visualisar'
-	{ OemToAnsi('Incluir')		,'U_BRTDPINCLU',0,3},;	//'Incluir'
-	{ OemToAnsi('Alterar')		,'U_BRTDPVISUA',0,4},;	//'Alterar'
-	{ OemToAnsi('Exclusao')		,'U_BRTDPVISUA',0,5}};	//'Exclusao'
+		{ OemToAnsi('Pesquisar')	,'AxPesqui',0,1},; 		//'Pesquisar'
+		{ OemToAnsi('Visualizar')	,'U_BRTDPVISUA',0,2},;	//'Visualisar'
+		{ OemToAnsi('Incluir')		,'U_BRTDPINCLU',0,3},;	//'Incluir'
+		{ OemToAnsi('Alterar')		,'U_BRTDPVISUA',0,4},;	//'Alterar'
+		{ OemToAnsi('Exclusao')		,'U_BRTDPVISUA',0,5}};	//'Exclusao'
 
 	MBROWSE( 6, 1,22,75,"SZT",,,,,,) //MBROWSER DA TELA INICIAL
 
@@ -108,21 +108,21 @@ User Function BRTDPINCLU(cAlias,nReg,nOpcx)
 	aAdd( aTitles,OemToAnsi('Itens/Moldes'))
 
 	DEFINE MSDIALOG oDlg TITLE cCadastro From aSize[7],00 To aSize[6],aSize[5] OF oMainWnd PIXEL
-		EnChoice(cAlias,nReg,nOpcx,,,,,aPosObj[1],,1)
-		
-		oFolder := TFolder():New(aPosObj[2,1],aPosObj[2,2],aTitles,{''},oDlg,,,,.T.,.F.,aPosObj[2,4]-aPosObj[2,2],aPosObj[2,3]-aPosObj[2,1]+110)
-		aFldF   := oFolder:aDialogs
-		
-		aEval(aFldF,{|x| x:SetFont(oDlg:oFont)})
-		
-		oScr		:= TScrollBox():New(aFldF[1],0,0,aPosObj[2,3]+10,aPosObj[2,4]-5,.T.,.T.,.T.) // cria controles dentro do scrollbox
-		aCpoMolde	:={'ZN_ORDEM','ZN_CODMED','ZN_ESPECIF','ZN_VARIA','ZN_MINIMO','ZN_MAXIMO'} //aqui são os campos que você poderá alterar, logo deve adicioná-los aqui
-		
-		CCISZN()
-		
-		aItLimpo 	:= aClone(aItMolde)
-		oMGDMolde	:= MsNewGetDados():New(0,0,aPosObj[2,3]-100,aPosObj[2,4]-5,GD_INSERT+GD_DELETE+GD_UPDATE,,,"+ZN_SEQ+ZN_ORDEM",; //Pasta de Itens/Moldes
-		aCpoMolde,,999,,,,aFldF[1],aHdMolde,aItMolde)	
+	EnChoice(cAlias,nReg,nOpcx,,,,,aPosObj[1],,1)
+
+	oFolder := TFolder():New(aPosObj[2,1],aPosObj[2,2],aTitles,{''},oDlg,,,,.T.,.F.,aPosObj[2,4]-aPosObj[2,2],aPosObj[2,3]-aPosObj[2,1]+110)
+	aFldF   := oFolder:aDialogs
+
+	aEval(aFldF,{|x| x:SetFont(oDlg:oFont)})
+
+	oScr		:= TScrollBox():New(aFldF[1],0,0,aPosObj[2,3]+10,aPosObj[2,4]-5,.T.,.T.,.T.) // cria controles dentro do scrollbox
+	aCpoMolde	:={'ZN_ORDEM','ZN_CODMED','ZN_ESPECIF','ZN_VARIA','ZN_MINIMO','ZN_MAXIMO'} //aqui são os campos que você poderá alterar, logo deve adicioná-los aqui
+
+	CCISZN()
+
+	aItLimpo 	:= aClone(aItMolde)
+	oMGDMolde	:= MsNewGetDados():New(0,0,aPosObj[2,3]-100,aPosObj[2,4]-5,GD_INSERT+GD_DELETE+GD_UPDATE,,,"+ZN_SEQ+ZN_ORDEM",; //Pasta de Itens/Moldes
+		aCpoMolde,,999,,,,aFldF[1],aHdMolde,aItMolde)
 
 	ACTIVATE MSDIALOG oDlg ON INIT EnchoiceBar(oDlg, {||nOpca :=1,IIF(U_BRTDPVALIDI(aGets,aTela),oDlg:End(),.F.)},{||nOpca :=2,oDlg:End()},,aBotao)
 
@@ -204,10 +204,10 @@ User Function BRTDPVISUA(cAlias,nReg,nOpcx)
 	If  nOpcx = 5
 		MsgBox(OemtoAnsi("Item/Molde não pode ser excluída!"))
 	Else
-		
+
 		aSize	 := MsAdvSize()
 		aObjects := {}
-		
+
 		AAdd( aObjects, {  60, 100, .T., .T. } )
 		AAdd( aObjects, { 100, 100, .T., .T. } )
 
@@ -221,59 +221,59 @@ User Function BRTDPVISUA(cAlias,nReg,nOpcx)
 
 		DEFINE MSDIALOG oDlg TITLE cCadastro From aSize[7],00 To aSize[6],aSize[5] OF oMainWnd PIXEL
 
-			EnChoice( cAlias ,nReg, nOpcx, , , , , aPosObj[1], , 3 )
-			oFolder := TFolder():New(aPosObj[2,1],aPosObj[2,2],aTitles,{""},oDlg,,,,.T.,.F.,aPosObj[2,4]-aPosObj[2,2],aPosObj[2,3]-aPosObj[2,1]+110)
+		EnChoice( cAlias ,nReg, nOpcx, , , , , aPosObj[1], , 3 )
+		oFolder := TFolder():New(aPosObj[2,1],aPosObj[2,2],aTitles,{""},oDlg,,,,.T.,.F.,aPosObj[2,4]-aPosObj[2,2],aPosObj[2,3]-aPosObj[2,1]+110)
 
-			aFldF   := oFolder:aDialogs
-			aEval(aFldF,{|x| x:SetFont(oDlg:oFont)})
-			/*
+		aFldF   := oFolder:aDialogs
+		aEval(aFldF,{|x| x:SetFont(oDlg:oFont)})
+		/*
 			ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 			±±ÌÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¹±±
 			±±ºPasta de Itens/Moldes												  º±±
 			±±ÌÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¹±±
 			ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
-			*/
-			oScr    := TScrollBox():New(aFldF[1],0,0,aPosObj[2,3]+10,aPosObj[2,4]-5,.T.,.T.,.T.) // cria controles dentro do scrollbox
+		*/
+		oScr    := TScrollBox():New(aFldF[1],0,0,aPosObj[2,3]+10,aPosObj[2,4]-5,.T.,.T.,.T.) // cria controles dentro do scrollbox
 
-			aCpoMolde :={"ZN_ORDEM","ZN_CODMED","ZN_ESPECIF","ZN_VARIA","ZN_MINIMO","ZN_MAXIMO"}
+		aCpoMolde :={"ZN_ORDEM","ZN_CODMED","ZN_ESPECIF","ZN_VARIA","ZN_MINIMO","ZN_MAXIMO"}
 
-			CCISZN()
+		CCISZN()
 
-			aItLimpo := aClone(aItMolde)
+		aItLimpo := aClone(aItMolde)
 
-			CIMSZN()
+		CIMSZN()
 
-			oMGDMOLDE  	:= MsNewGetDados():New(0,0,aPosObj[2,3]-100,aPosObj[2,4]-5,xOpcoes,,,"+ZN_SEQ+ZN_ORDEM",;	//Pasta de Itens/Moldes
+		oMGDMOLDE  	:= MsNewGetDados():New(0,0,aPosObj[2,3]-100,aPosObj[2,4]-5,xOpcoes,,,"+ZN_SEQ+ZN_ORDEM",;	//Pasta de Itens/Moldes
 			aCpoMolde,,999,,,,aFldF[1],aHdMolde,aItMolde)
 
 		ACTIVATE MSDIALOG oDlg ON INIT EnchoiceBar(oDlg, {||nOpca :=1,IIF(U_BRTDPVALIDI(aGets,aTela),oDlg:End(),.F.)},{||nOpca :=2,oDlg:End()},,aBotao)
 
 		If ( nOpca == 1 )
 			Begin Transaction
-			Do Case
-				Case nOpcx = 5			// Exclusão
+				Do Case
+					Case nOpcx = 5			// Exclusão
 
-					xChave := M->ZT_GROUPOMS
+						xChave := M->ZT_GROUPOMS
 
-					DbSelectArea("SZT")
-					RecLock("SZT",.F.)
+						DbSelectArea("SZT")
+						RecLock("SZT",.F.)
 						SZT->(DbDelete())
-					MsUnLock()
-
-					DbSelectArea("SZN")
-					SZN->(DbSetOrder(2))
-					If SZN->(DbSeek(xFilial("SZN")+xChave))
-						RecLock("SZN",.F.)
-							ZZ4->(DbDelete())
 						MsUnLock()
-					EndIf
 
-				Case nOpcx = 4			//ALTERACAO
-					U_GRV_BRTDPCA(2)
-					U_GRV_ITENS(2)
-			EndCase
+						DbSelectArea("SZN")
+						SZN->(DbSetOrder(2))
+						If SZN->(DbSeek(xFilial("SZN")+xChave))
+							RecLock("SZN",.F.)
+							ZZ4->(DbDelete())
+							MsUnLock()
+						EndIf
 
-			EvalTrigger()
+					Case nOpcx = 4			//ALTERACAO
+						U_GRV_BRTDPCA(2)
+						U_GRV_ITENS(2)
+				EndCase
+
+				EvalTrigger()
 			End Transaction
 		Else
 			RollBackSX8()
@@ -305,20 +305,19 @@ Return(.T.)
 Static Function CCISZN()
 
 	Local nUsado:=	0
+	Local nX := 0
 
-	dbSelectArea("SX3")
-	dbSetOrder(1)
-	dbSeek("SZN")
-	While !Eof() .And. (x3_arquivo == "SZN")	//Monta o aHeader
-		If AllTrim(X3_CAMPO) $ "ZN_SEQ/ZN_ORDEM/ZN_CODMED/ZN_MEDIDA/ZN_UNIDADE/ZN_ESPECIF/ZN_VARIA/ZN_MINIMO/ZN_MAXIMO"
-		If X3USO(x3_usado) .AND. cNivel >= x3_nivel
+	aFields := FWSX3Util():GetAllFields( "SZN" , .T. )
+	For nX := 1 To Len(aFields)
+		If AllTrim(aFields[nX]) $ "ZN_SEQ/ZN_ORDEM/ZN_CODMED/ZN_MEDIDA/ZN_UNIDADE/ZN_ESPECIF/ZN_VARIA/ZN_MINIMO/ZN_MAXIMO"
+			If X3Uso(GetSx3Cache(aFields[nx],"X3_USADO")) .AND. cNivel >= GetSx3Cache(aFields[nx],"X3_NIVEL") .AND. aScan(aHdMolde,{|x| x == Upper(AllTrim(aFields[nx]))}) == 0
 				nUsado ++
-				AADD(aHdMolde,{TRIM(x3_titulo),AllTrim(X3_CAMPO),;
-				x3_picture,x3_tamanho, x3_decimal,,x3_usado, x3_tipo,,x3_context})
-		EndIf
-		EndIf
-		dbSkip()
-	EndDo
+				AADD(aHdMolde, { TRIM(RetTitle(aFields[nX])), aFields[nX], ;
+					X3PICTURE(aFields[nX]),TamSX3(aFields[nX])[1], TamSX3(aFields[nX])[2],,;
+					X3USADO(aFields[nX]), TamSX3(aFields[nX])[3], /*X3F3(aFields[nX])*/, GetSx3Cache(aFields[nX], 'X3_CONTEXT') })
+			EndIf
+		ENDIF
+	Next nX
 
 	AADD(aHdMolde,{"Recno","RECNO","@E 9999999999",10,0    ,"€€€€€€€€€€€€€€ ",  ,"N",,'R'})
 	nUsado ++
@@ -432,21 +431,21 @@ User Function GRV_ITENS(xTipo)
 				Begin Transaction
 					DbSelectArea("SZN")
 					Reclock("SZN",.T.)
-						SZN->ZN_FILIAL  := xFilial("SZN")
-						SZN->ZN_GRUPO   := M->ZT_GRUPOMS
-						SZN->ZN_ITEM    := M->ZT_DESCMS
-						SZN->ZN_GRUPOFK := 1
-						SZN->ZN_GRUPOBX := M->ZT_GRUPOBX
-						SZN->ZN_SEQ     := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_SEQ"})]
-						SZN->ZN_ORDEM   := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_ORDEM"})]
-						SZN->ZN_CODMED  := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_CODMED"})]
-						SZN->ZN_MEDIDA  := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_MEDIDA"})]
-						SZN->ZN_TIPO    := POSICIONE("SZO",1,XFILIAL("SZO")+oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_CODMED"})],"ZO_TIPO")
-						SZN->ZN_UNIDADE := POSICIONE("SZO",1,XFILIAL("SZO")+oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_CODMED"})],"ZO_UNIDADE") //oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_UNIDADE"})]
-						SZN->ZN_ESPECIF := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_ESPECIF"})]
-						SZN->ZN_VARIA   := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_VARIA"})]
-						SZN->ZN_MINIMO  := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_MINIMO"})]
-						SZN->ZN_MAXIMO  := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_MAXIMO"})]
+					SZN->ZN_FILIAL  := xFilial("SZN")
+					SZN->ZN_GRUPO   := M->ZT_GRUPOMS
+					SZN->ZN_ITEM    := M->ZT_DESCMS
+					SZN->ZN_GRUPOFK := 1
+					SZN->ZN_GRUPOBX := M->ZT_GRUPOBX
+					SZN->ZN_SEQ     := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_SEQ"})]
+					SZN->ZN_ORDEM   := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_ORDEM"})]
+					SZN->ZN_CODMED  := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_CODMED"})]
+					SZN->ZN_MEDIDA  := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_MEDIDA"})]
+					SZN->ZN_TIPO    := POSICIONE("SZO",1,XFILIAL("SZO")+oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_CODMED"})],"ZO_TIPO")
+					SZN->ZN_UNIDADE := POSICIONE("SZO",1,XFILIAL("SZO")+oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_CODMED"})],"ZO_UNIDADE") //oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_UNIDADE"})]
+					SZN->ZN_ESPECIF := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_ESPECIF"})]
+					SZN->ZN_VARIA   := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_VARIA"})]
+					SZN->ZN_MINIMO  := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_MINIMO"})]
+					SZN->ZN_MAXIMO  := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_MAXIMO"})]
 					MsUnLock()
 				End Transaction
 				Loop
@@ -456,7 +455,7 @@ User Function GRV_ITENS(xTipo)
 		Else
 			If l_Deletar
 				RecLock("SZN",.F.)
-					SZN->(DbDelete())
+				SZN->(DbDelete())
 				MsUnLock()
 				Loop
 			Else
@@ -464,7 +463,7 @@ User Function GRV_ITENS(xTipo)
 					l_Email  := .F.
 
 					Begin Transaction
-					Reclock("SZN",.F.)
+						Reclock("SZN",.F.)
 						SZN->ZN_FILIAL  := xFilial("SZN")
 						SZN->ZN_GRUPO   := M->ZT_GRUPOMS
 						SZN->ZN_ITEM    := M->ZT_DESCMS
@@ -491,7 +490,7 @@ User Function GRV_ITENS(xTipo)
 								l_Email  := .T.
 								c_Titulo := "Notificação de alteração do grupo de produto " + AllTrim(SZN->ZN_GRUPO) + " - " + AllTrim(SZN->ZN_ITEM)
 								c_Corpo  := c_Titulo + chr(13) + chr(10) + AllTrim(SZO->ZO_DESC) + " alterado(a) de " + AllTrim(SZN->ZN_ESPECIF) + " para " + ;
-											AllTrim(oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_ESPECIF"})]) + " pelo usuário(a) " + UsrRetName(__CUSERID)
+									AllTrim(oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_ESPECIF"})]) + " pelo usuário(a) " + UsrRetName(__CUSERID)
 							EndIf
 							RestArea(a_Area)
 						EndIf
@@ -499,13 +498,13 @@ User Function GRV_ITENS(xTipo)
 						SZN->ZN_VARIA   := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_VARIA"})]
 						SZN->ZN_MINIMO  := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_MINIMO"})]
 						SZN->ZN_MAXIMO  := oMGDMOLDE:aCols[nX,aScan(aHdMolde,{|x| AllTrim(x[2]) == "ZN_MAXIMO"})]
-				MsUnLock()
-				End Transaction
+						MsUnLock()
+					End Transaction
 
-				If l_Email
-					U_TBSEndMAIL(c_Email, c_Corpo, c_Titulo, .T.)
+					If l_Email
+						U_TBSEndMAIL(c_Email, c_Corpo, c_Titulo, .T.)
+					EndIf
 				EndIf
-			EndIf
 				Loop
 			EndIf
 		EndIf
@@ -573,7 +572,7 @@ Return()
 	@return variant, Documentar corretamente
 /*/
 User Function BRTDPVALIDI()
-	
+
 	Local lRet := .F.
 
 	If Obrigatorio(aGets,aTela)
@@ -592,22 +591,22 @@ Return lRet
 	@since 04/08/2021
 	@param xTipo, variant, Documentar corretamente
 	@return variant, Documentar corretamente
-/*/	
+/*/
 User Function GRV_BRTDPCA(xTipo)
 
 	Begin Transaction
 
-	If xTipo == 1				// Grava
-		DbSelectArea("SZT")
-		Reclock("SZT",.T.)
+		If xTipo == 1				// Grava
+			DbSelectArea("SZT")
+			Reclock("SZT",.T.)
 			SZT->ZT_FILIAL  := xFilial("SZT")
 			SZT->ZT_GRUPOMS := M->ZT_GRUPOMS
 			SZT->ZT_DESCMS  := M->ZT_DESCMS
-		confirmsx8("SZT")
-	Else						// Atualiza
-		DbSelectArea("SZT")
-		Reclock("SZT",.F.)
-	EndIf
+			confirmsx8("SZT")
+		Else						// Atualiza
+			DbSelectArea("SZT")
+			Reclock("SZT",.F.)
+		EndIf
 		SZT->ZT_GRUPOBX := M->ZT_GRUPOBX
 		SZT->ZT_DESCBX  := M->ZT_DESCBX
 		MsUnLock()
@@ -622,7 +621,7 @@ Return()
 	@author Jonas Machado
 	@since 04/08/2021
 	@return variant, Documentar corretamente
-/*/						
+/*/
 User Function f_Itens()
 
 	Local c_Formato     := ""
@@ -742,9 +741,9 @@ User Function IncGrpProd()
 
 	Begin Transaction
 		aGrpProd:= {{'BM_FILIAL'	,xFilial("SBM"),Nil},;
-					{'BM_GRUPO'		,M->ZT_GRUPOMS ,Nil},;
-					{'BM_DESC'		,M->ZT_DESCMS  ,Nil},;
-					{'BM_GRUPOBX'	,M->ZT_GRUPOBX ,Nil}}
+			{'BM_GRUPO'		,M->ZT_GRUPOMS ,Nil},;
+			{'BM_DESC'		,M->ZT_DESCMS  ,Nil},;
+			{'BM_GRUPOBX'	,M->ZT_GRUPOBX ,Nil}}
 
 		MSExecAuto({|x,y| mata035(x,y)},aGrpProd,nOpc)
 

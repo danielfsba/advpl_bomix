@@ -20,7 +20,7 @@ User Function FCOMA004( c_NumCot, c_Proposta )
 	Local c_Qry			:= ""
 	Local c_Filial		:= ""
 	Local n_NumFluig	:= 0
-
+	Local MAILCOM	:= SUPERGETMV("FS_MAILCOM",,"compras@bomix.com.br")
 	
 	Local oServico						:= WSECMWorkflowEngineServiceService():New()
 	Local cUsername						:= SuperGetMV("FS_FLGUSER",.F.,"bomix")
@@ -126,7 +126,7 @@ User Function FCOMA004( c_NumCot, c_Proposta )
 			//MemoWrite(c_Fornec + c_NumCot + c_Loja + ".txt",c_Body)
 
 			If !Empty( c_Email )
-				c_Email += ";"+SUPERGETMV("FS_MAILCOM",,"compras@bomix.com.br")
+				c_Email += ";"+MAILCOM
 				U_TBSENDMAIL( c_Email, c_Body, c_Subj, l_ExibeTela, c_Anexo )
 			EndIf
 

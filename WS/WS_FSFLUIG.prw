@@ -222,7 +222,7 @@ WSMETHOD mtdGrvFornecedor WSRECEIVE o_Empresa, o_Seguranca, o_Fornecedor WSSEND 
 	If Findfunction("U_FCOMA004")
 
 		c_Codigo	:= U_FCOMA006() //GETSXENUM("SA2","A2_COD")
-	
+
 		aadd(a_Vetor,{"A2_COD"		,c_Codigo													  ,NIL})
 		aadd(a_Vetor,{"A2_LOJA"		,"01"														  ,NIL})
 		aadd(a_Vetor,{"A2_NOME"		,PADR(ALLTRIM(o_Fornecedor:c_Nome),TAMSX3("A2_NOME")[1]) 	  ,NIL})
@@ -244,33 +244,33 @@ WSMETHOD mtdGrvFornecedor WSRECEIVE o_Empresa, o_Seguranca, o_Fornecedor WSSEND 
 		aadd(a_Vetor,{"A2_FSPBQPH"	,o_Fornecedor:c_Pbqp										  ,NIL})
 		aadd(a_Vetor,{"A2_FSRDB"	,o_Fornecedor:c_Rdb											  ,NIL})
 		aadd(a_Vetor,{"A2_FSFLUIG"	,o_Fornecedor:n_NumFluig									  ,NIL})
-	
+
 		If SA2->(FieldPos("A2_MSBLQL")) > 0
-	
+
 			aadd(a_Vetor,{"A2_MSBLQL"	,"1"									,NIL})
-	
+
 		EndIf
-	
+
 		BEGIN TRANSACTION
-	
+
 			MSExecAuto({|x,y| mata020(x,y)},a_Vetor,3)
-	
+
 			If lMsErroAuto
-	
+
 				::o_Retorno:l_Status	:= .F.
 				::o_Retorno:c_Mensagem	:= MostraErro()
 				DisarmTransaction()
 				//RollBackSX8()
 				//break
-	
+
 			Else
-	
+
 				::o_Retorno:l_Status		:= .T.
 				::o_Retorno:c_Mensagem	:= "Fornecedor " + Alltrim( c_Codigo ) + " cadastrado com sucesso!!!"
 				//ConfirmSX8()
-	
+
 			EndIf
-	
+
 		END TRANSACTION
 	Else
 		::o_Retorno:l_Status	:= .F.
@@ -291,7 +291,7 @@ WSMETHOD mtdLibPedido WSRECEIVE o_Empresa, o_Seguranca, o_LibPedido WSSEND o_Ret
 		aAdd(a_Ret, .F.)
 		aAdd(a_Ret, "Fonte FCOMW001 nao compilado. liberacao de pedido nao executada!")
 	Endif
-	
+
 	::o_Retorno:l_Status	:= a_Ret[ 1 ]
 	::o_Retorno:c_Mensagem	:= a_Ret[ 2 ]
 
@@ -357,13 +357,15 @@ WSMETHOD mtdGrvProduto WSRECEIVE o_Empresa, o_Seguranca, o_Produto WSSEND o_Reto
 		cCod := AllTrim(o_Produto:c_Codigo) + StrZero((Val(SubStr(QRY->B1_COD,7,3))+1),3)
 	Endif
 
-	Conout( "Cod=> " + cCod )
+	cBMLog := "Cod=> " + cCod
+	FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 
 	dbSelectArea("QRY")
 	dbCloseArea()
 
 	If Len( o_Produto:c_Grupo ) > 4
-		Conout( "O grupo está maior que o campo " + o_Produto:c_Grupo )
+		cBMLog := "O grupo está maior que o campo " + o_Produto:c_Grupo
+		FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 	EndIf
 
 	/*//Prod
@@ -531,30 +533,30 @@ WSMETHOD mtdGrvSC WSRECEIVE o_Empresa, o_Seguranca, o_SC WSSEND o_Retorno WSSERV
 		SX6->X6_CONTEUD	:= StrZero(Val(SX6->X6_CONTEUD)+1,5)
 		MsUnlock()
 	endif*/
-	
-	c_Doc := GetSXENum("SC1","C1_NUM")           
-	SC1->(dbSetOrder(1))           
-	While SC1->(dbSeek(xFilial("SC1")+c_Doc))                
-	     ConfirmSX8()                
-	     c_Doc := GetSXENum("SC1","C1_NUM")           
-	EndDo  
+
+	c_Doc := GetSXENum("SC1","C1_NUM")
+	SC1->(dbSetOrder(1))
+	While SC1->(dbSeek(xFilial("SC1")+c_Doc))
+		ConfirmSX8()
+		c_Doc := GetSXENum("SC1","C1_NUM")
+	EndDo
 
 	a_Login 	:= f_wsLogin(::o_SC:C1_FSUSRF)
 	c_Login 	:= Iif(Valtype(a_Login) == "A" .And. !Empty(a_Login),a_Login[3],"")
-	c_IdUsr		:= Iif(Valtype(a_Login) == "A" .And. !Empty(a_Login),a_Login[2],"")	 
-	c_usr		:= Iif(Valtype(a_Login) == "A" .And. !Empty(a_Login),"******"+Padr(c_Login,15)+"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSNSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSNNNNNNNNNNSNSNNSNNSNSSNNSSSSSSSSNNNNNSSSSNNNSSSSSSSSSSSNNNNNNSNNNSNNSSSSSSSSSNNSSSNSSSSSSSSSSSSNSSNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","")	
-	
+	c_IdUsr		:= Iif(Valtype(a_Login) == "A" .And. !Empty(a_Login),a_Login[2],"")
+	c_usr		:= Iif(Valtype(a_Login) == "A" .And. !Empty(a_Login),"******"+Padr(c_Login,15)+"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSNSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSNNNNNNNNNNSNSNNSNNSNSSNNSSSSSSSSNNNNNSSSSNNNSSSSSSSSSSSNNNNNNSNNNSNNSSSSSSSSSNNSSSNSSSSSSSSSSSSNSSNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","")
+
 	a_UsrAutoOld:=	{}
 	aAdd(a_UsrAutoOld,CUSUARIO)
 	aAdd(a_UsrAutoOld,__CUSERID)
 	aAdd(a_UsrAutoOld,CUSERNAME)
-	
+
 	CUSUARIO 	:= Iif(Empty(CUSUARIO)  .And. !Empty(a_Login),c_usr,CUSUARIO)
 	__CUSERID	:= Iif(Empty(__CUSERID) .And. !Empty(a_Login),a_Login[2],__CUSERID)
 	CUSERNAME	:= Alltrim(Iif(Empty(CUSERNAME) .And. Valtype(a_Login) == "A" .And. !Empty(a_Login),a_Login[3],""))
-	
-	Conout("RetCodUsr: "+RetCodUsr())
 
+	cBMLog := "RetCodUsr: "+RetCodUsr()
+	FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 
 	aadd(a_Cabec,{"C1_NUM"    ,c_Doc})
 	aadd(a_Cabec,{"C1_SOLICIT",::o_SC:C1_SOLICIT})
@@ -580,34 +582,34 @@ WSMETHOD mtdGrvSC WSRECEIVE o_Empresa, o_Seguranca, o_SC WSSEND o_Retorno WSSERV
 		aadd(a_Linha,{"C1_CONTA"  	,SB1->B1_CONTA		,Nil})
 		aadd(a_Linha,{"C1_DATPRF"	,PADR(ALLTRIM(::o_SC:C1_ITENS[nX]:c_DTNEC), TAMSX3("C1_DATPRF")[1])		,Nil})
 		aadd(a_Linha,{"C1_DESCRI"	,PADR(ALLTRIM(::o_SC:C1_ITENS[nX]:C1_DESCRI), TAMSX3("C1_DESCRI")[1])		,Nil})
-		
+
 		If SC1->(FieldPos("C1_FSFLUIG")) > 0
 			aadd(a_Linha,{"C1_FSFLUIG"	,::o_SC:n_NumFluig															,Nil})
 		Endif
-		
+
 		If SC1->(FieldPos("C1_FSUSRF")) > 0
 			aadd(a_Linha,{"C1_FSUSRF"	,::o_SC:C1_FSUSRF															,Nil})
 		Endif
-		
+
 		aadd(a_Linha,{"C1_OBS"		,::o_SC:C1_ITENS[nX]:c_Obs													,Nil})
 		//aadd(a_Linha,{"C1_FSEND"	,::o_SC:C1_ITENS[nX]:c_End													,Nil})
-		
+
 		If SC1->(FieldPos("C1_FSJUS")) > 0
 			aadd(a_Linha,{"C1_FSJUS"	,::o_SC:C1_ITENS[nX]:c_Just												,Nil})
 		Endif
-		
+
 		If SC1->(FieldPos("C1_FSMARC")) > 0
 			aadd(a_Linha,{"C1_FSMARC"	,::o_SC:C1_ITENS[nX]:c_Marca											,Nil})
 		Endif
-		
+
 		If SC1->(FieldPos("C1_FSTPEM")) > 0
 			aadd(a_Linha,{"C1_FSTPEM"	,::o_SC:C1_ITENS[nX]:c_Emerg											,Nil})
 		Endif
-		
+
 		If SC1->(FieldPos("C1_FSCDEM")) > 0
 			aadd(a_Linha,{"C1_FSCDEM"	,::o_SC:C1_ITENS[nX]:c_JEmerg											,Nil})
 		Endif
-		
+
 		If SC1->(FieldPos("C1_URGENTE")) > 0
 			aadd(a_Linha,{"C1_URGENTE"	,::o_SC:C1_ITENS[nX]:c_JEmerg											,Nil})
 		Endif
@@ -641,19 +643,19 @@ WSMETHOD mtdGrvSC WSRECEIVE o_Empresa, o_Seguranca, o_SC WSSEND o_Retorno WSSERV
 			Return( .T. )
 		ENDIF
 	EndIf
-	
+
 	Private lAutoErrNoFile	:=	.T.
 	lMsErroAuto	:=	.F.
-	
+
 	BEGIN TRANSACTION
 
 		MSExecAuto({|x,y| mata110(x,y)},a_Cabec,a_Itens,3)
 
 		If lMsErroAuto
-	
+
 			a_LogErr := GetAutoGRLog()
 			c_Motivo := "Erro na inclusao do registro de solicitacao de compras. "+ENTER
-	
+
 			For n_i := 1 to Len(a_LogErr)
 				c_Motivo += a_LogErr[n_i] +ENTER
 			Next
@@ -662,11 +664,11 @@ WSMETHOD mtdGrvSC WSRECEIVE o_Empresa, o_Seguranca, o_SC WSSEND o_Retorno WSSERV
 				c_Motivo:=  NoAcento(c_Motivo)
 			EndIf
 
-			//c_Mensagem	:=	c_Motivo 
-	
-			
+			//c_Mensagem	:=	c_Motivo
+
+
 			//c_Mensagem		:= 	MostraErro()
-			
+
 			::o_Retorno:l_Status		:= 	.F.
 			::o_Retorno:c_Mensagem		:=	c_Motivo
 			DisarmTransaction()
@@ -684,16 +686,16 @@ WSMETHOD mtdGrvSC WSRECEIVE o_Empresa, o_Seguranca, o_SC WSSEND o_Retorno WSSERV
 					SC1->C1_FILIAL	:= 	::o_Empresa:c_Filial
 					SC1->C1_FILENT	:= 	::o_Empresa:c_Filial
 					SC1->C1_CC		:= 	a_ItCC[nY][3]
-					SC1->C1_SOLICIT	:= 	::o_SC:C1_SOLICIT   
+					SC1->C1_SOLICIT	:= 	::o_SC:C1_SOLICIT
 					If SC1->(FieldPos("C1_FSMARC")) > 0
 						SC1->C1_FSMARC	:= 	a_ItCC[nY][4]
-					Endif  
+					Endif
 					If SC1->(FieldPos("C1_FSTPEM")) > 0
 						SC1->C1_FSTPEM	:= 	a_ItCC[nY][5]
-					Endif  
+					Endif
 					If SC1->(FieldPos("C1_FSCDEM")) > 0
 						SC1->C1_FSCDEM	:= 	a_ItCC[nY][6]
-					Endif  
+					Endif
 					If SC1->(FieldPos("C1_URGENTE")) > 0
 						SC1->C1_URGENTE	:=	a_ItCC[nY][6]
 					Endif
@@ -732,7 +734,7 @@ WSMETHOD mtdGrvSC WSRECEIVE o_Empresa, o_Seguranca, o_SC WSSEND o_Retorno WSSERV
 
 	END TRANSACTION
 
-	CUSUARIO 	:=	a_UsrAutoOld[1] 
+	CUSUARIO 	:=	a_UsrAutoOld[1]
 	__CUSERID	:= 	a_UsrAutoOld[2]
 	CUSERNAME	:=	a_UsrAutoOld[3]
 
@@ -771,13 +773,13 @@ WSMETHOD mtdEnvCot WSRECEIVE o_Empresa, o_Seguranca, c_numCot, c_Fornece, c_Loja
 		Return(.T.)
 
 	ENDIF
-	
+
 	dbSelectArea("SA2")
 	dbSetorder(1)
 	if dbSeek(xFilial("SA2") + Padr( c_Fornece, TamSX3("A2_COD")[1] ) + Padr( c_Loja, TamSX3("A2_LOJA")[1] ), .T. )
 
 		c_Subj	:= "Cotação "+c_numCot+" atualizada - "+Alltrim(SA2->A2_NREDUZ)+"."
-		
+
 		c_Msg += '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">''
 		c_Msg += '<html xmlns="http://www.w3.org/1999/xhtml">'
 		c_Msg += '<head>'
@@ -802,11 +804,11 @@ WSMETHOD mtdEnvCot WSRECEIVE o_Empresa, o_Seguranca, c_numCot, c_Fornece, c_Loja
 		c_Msg += '<body>'
 		c_Msg += '</body>'
 		c_Msg += '</html>'
-		
-		
+
+
 		c_To := SUPERGETMV("FS_MAILCOM",,"compras@bomix.com.br")
-		
-		
+
+
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Chama a função que envia email:                                 ³
 		//³                                                                ³
@@ -816,7 +818,7 @@ WSMETHOD mtdEnvCot WSRECEIVE o_Empresa, o_Seguranca, c_numCot, c_Fornece, c_Loja
 		//³4º Parâmetro: Se exibe a tela informando que o email foi enviado³
 		//³5º Parâmetro: Anexo                                             ³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-		
+
 		U_TBSENDMAIL(c_To, c_Msg, c_Subj, .F., c_Anexo)
 	ENDIF
 
@@ -854,9 +856,15 @@ WSMETHOD mtdRetTipo WSRECEIVE o_Empresa, o_Seguranca WSSEND o_RetGeral WSSERVICE
 	ENDIF
 
 	BEGINSQL ALIAS "QRY"
-
-		SELECT X5_CHAVE, X5_DESCRI FROM %TABLE:SX5% SX5 WHERE X5_FILIAL= %xfilial:SX5% AND X5_TABELA = %EXP:'02'% AND SX5.%NOTDEL%
-
+		SELECT
+			X5_CHAVE,
+			X5_DESCRI
+		FROM
+			%TABLE:SX5% SX5
+		WHERE
+			X5_FILIAL = %xfilial:SX5%
+			AND X5_TABELA = %EXP:'02'%
+			AND SX5.%NOTDEL%
 	ENDSQL
 
 	DBSELECTAREA("QRY")
@@ -913,9 +921,16 @@ WSMETHOD mtdRetProduto WSRECEIVE o_Empresa, o_Seguranca WSSEND o_Retorno WSSERVI
 	ENDIF
 
 	BEGINSQL ALIAS "QRY"
-
-		SELECT TOP 5000 B1_COD, B1_DESC, B1_TIPO, B1_GRUPO FROM %TABLE:SB1% SB1 WHERE B1_FILIAL= %xfilial:SB1% AND SB1.%NOTDEL%
-
+		SELECT
+			TOP 5000 B1_COD,
+			B1_DESC,
+			B1_TIPO,
+			B1_GRUPO
+		FROM
+			%TABLE:SB1% SB1
+		WHERE
+			B1_FILIAL = %xfilial:SB1%
+			AND SB1.%NOTDEL%
 	ENDSQL
 
 	DBSELECTAREA("QRY")
@@ -972,9 +987,14 @@ WSMETHOD mtdRetUM WSRECEIVE o_Empresa, o_Seguranca WSSEND o_RetGeral WSSERVICE W
 	ENDIF
 
 	BEGINSQL ALIAS "QRY"
-
-		SELECT AH_UNIMED, AH_DESCPO FROM %TABLE:SAH% SAH WHERE AH_FILIAL= %xfilial:SAH% AND SAH.%NOTDEL%
-
+		SELECT
+			AH_UNIMED,
+			AH_DESCPO
+		FROM
+			%TABLE:SAH% SAH
+		WHERE
+			AH_FILIAL = %xfilial:SAH%
+			AND SAH.%NOTDEL%
 	ENDSQL
 
 	DBSELECTAREA("QRY")
@@ -1031,9 +1051,14 @@ WSMETHOD mtdRetGrupo WSRECEIVE o_Empresa, o_Seguranca WSSEND o_RetGeral WSSERVIC
 	ENDIF
 
 	BEGINSQL ALIAS "QRY"
-
-		SELECT BM_GRUPO, BM_DESC FROM %TABLE:SBM% SBM WHERE BM_FILIAL= %xfilial:SBM% AND SBM.%NOTDEL%
-
+		SELECT
+			BM_GRUPO,
+			BM_DESC
+		FROM
+			%TABLE:SBM% SBM
+		WHERE
+			BM_FILIAL = %xfilial:SBM%
+			AND SBM.%NOTDEL%
 	ENDSQL
 
 	DBSELECTAREA("QRY")
@@ -1151,7 +1176,7 @@ WSMETHOD mtdGrvSA WSRECEIVE o_Empresa, o_Seguranca, o_SA WSSEND o_Retorno WSSERV
 	Private lMsErroAuto	:= .F. //necessario a criacao
 
 	::o_Retorno	:= WSCLASSNEW("strRetorno")
-	
+
 	RpcClearEnv()
 
 	RpcSetType(3)
@@ -1169,12 +1194,12 @@ WSMETHOD mtdGrvSA WSRECEIVE o_Empresa, o_Seguranca, o_SA WSSEND o_Retorno WSSERV
 
 	ENDIF
 
-	c_Doc := GetSXENum("SCP","CP_NUM")           
-	SCP->(dbSetOrder(1))           
-	While SCP->(dbSeek(xFilial("SCP")+c_Doc))                
-	     ConfirmSX8()                
-	     c_Doc := GetSXENum("SCP","CP_NUM")           
-	EndDo  
+	c_Doc := GetSXENum("SCP","CP_NUM")
+	SCP->(dbSetOrder(1))
+	While SCP->(dbSeek(xFilial("SCP")+c_Doc))
+		ConfirmSX8()
+		c_Doc := GetSXENum("SCP","CP_NUM")
+	EndDo
 
 	/*
 	a_Login - Array com dados do os usuário solicitante enviado pelo fluig no protheus
@@ -1185,31 +1210,32 @@ WSMETHOD mtdGrvSA WSRECEIVE o_Empresa, o_Seguranca, o_SA WSSEND o_Retorno WSSERV
 	[n][5] email do usuário
 	[n][6] departamento do usuário
 	[n][7] cargo do usuário
-	*/	
+	*/
 	a_Login 	:= f_wsLogin(::o_SA:CP_FSUSRF)
 	c_Login 	:= Iif(Valtype(a_Login) == "A" .And. !Empty(a_Login),a_Login[3],"")
-	c_IdUsr		:= Iif(Valtype(a_Login) == "A" .And. !Empty(a_Login),a_Login[2],"")	 
-	c_usr		:= Iif(Valtype(a_Login) == "A" .And. !Empty(a_Login),"******"+Padr(c_Login,15)+"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSNSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSNNNNNNNNNNSNSNNSNNSNSSNNSSSSSSSSNNNNNSSSSNNNSSSSSSSSSSSNNNNNNSNNNSNNSSSSSSSSSNNSSSNSSSSSSSSSSSSNSSNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","")	
-	
+	c_IdUsr		:= Iif(Valtype(a_Login) == "A" .And. !Empty(a_Login),a_Login[2],"")
+	c_usr		:= Iif(Valtype(a_Login) == "A" .And. !Empty(a_Login),"******"+Padr(c_Login,15)+"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSNSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSNNNNNNNNNNSNSNNSNNSNSSNNSSSSSSSSNNNNNSSSSNNNSSSSSSSSSSSNNNNNNSNNNSNNSSSSSSSSSNNSSSNSSSSSSSSSSSSNSSNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","")
+
 	a_UsrAutoOld:=	{}
 	aAdd(a_UsrAutoOld,CUSUARIO)
 	aAdd(a_UsrAutoOld,__CUSERID)
 	aAdd(a_UsrAutoOld,CUSERNAME)
-	
+
 	CUSUARIO 	:= Iif(Empty(CUSUARIO)  .And. !Empty(a_Login),c_usr,CUSUARIO)
 	__CUSERID	:= Iif(Empty(__CUSERID) .And. !Empty(a_Login),a_Login[2],__CUSERID)
 	CUSERNAME	:= Alltrim(Iif(Empty(CUSERNAME) .And. Valtype(a_Login) == "A" .And. !Empty(a_Login),a_Login[3],""))
-	
-	Conout("RetCodUsr: "+RetCodUsr())
-	
+
+	cBMLog := "RetCodUsr: "+RetCodUsr()
+	FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+
 	aadd(a_Cabec,{"CP_NUM"    	,c_Doc												, NIL})
 	aadd(a_Cabec,{"CP_SOLICIT"	,c_Login											, NIL})
 	aadd(a_Cabec,{"CP_EMISSAO"	,dDataBase											, NIL})
 	//aadd(a_Cabec,{"CP_CODSOLI"	,PADR(::o_SA:CP_CODSOLI, TAMSX3("CP_CODSOLI")[1])	, NIL})
-	
+
 	l_Continua := (!Empty(c_Login))
-	
-	
+
+
 	FOR nX:=1 TO LEN(::o_SA:CP_ITENS)
 
 		a_Linha := {}
@@ -1218,9 +1244,9 @@ WSMETHOD mtdGrvSA WSRECEIVE o_Empresa, o_Seguranca, o_SA WSSEND o_Retorno WSSERV
 		dbSetOrder(1)
 		c_ChaveB1	:=	xFilial("SB1") + PADR(::o_SA:CP_ITENS[nX]:CP_PRODUTO, TAMSX3("CP_PRODUTO")[1])
 		If dbSeek( c_ChaveB1 , .T. )
-		
+
 			c_CC	:=	PADR(::o_SA:CP_ITENS[nX]:CP_CC, TAMSX3("CP_CC")[1])
-			
+
 			aadd(a_Linha,{"CP_FILIAL"   ,PADR( xFilial("SCP"), TAMSX3( "CP_FILIAL" )[ 1 ] )							,Nil})
 			aadd(a_Linha,{"CP_ITEM"   	,StrZero( nX, TAMSX3( "CP_ITEM" )[ 1 ] )									,Nil})
 			aadd(a_Linha,{"CP_PRODUTO"	,Alltrim(SB1->B1_COD)														,Nil})
@@ -1230,37 +1256,37 @@ WSMETHOD mtdGrvSA WSRECEIVE o_Empresa, o_Seguranca, o_SA WSSEND o_Retorno WSSERV
 			aadd(a_Linha,{"CP_CC"  		,c_CC																		,Nil})
 			aadd(a_Linha,{"CP_CONTA"  	,SB1->B1_CONTA																,Nil})
 			aadd(a_Linha,{"CP_DESCRI"	,SB1->B1_DESC																,Nil})
-			
+
 			If SCP->(FieldPos("CP_FSFLUIG")) > 0
 				aadd(a_Linha,{"CP_FSFLUIG"	,::o_SA:n_NumFluig														,Nil})
 			Endif
-			
+
 			If SCP->(FieldPos("CP_FSUSRF")) > 0
 				aadd(a_Linha,{"CP_FSUSRF"	,::o_SA:CP_FSUSRF														,Nil})
 			Endif
-			
+
 			aadd(a_Linha,{"CP_OBS"		,::o_SA:CP_ITENS[nX]:c_Obs													,Nil})
-			
+
 			If SCP->(FieldPos("CP_FSJUS")) > 0
 				aadd(a_Linha,{"CP_FSJUS"	,::o_SA:CP_ITENS[nX]:c_Just												,Nil})
 			Endif
-			
+
 			If SCP->(FieldPos("CP_FSTPEM")) > 0
 				aadd(a_Linha,{"CP_FSTPEM"	,::o_SA:CP_ITENS[nX]:c_Emerg											,Nil})
 			Endif
-			
+
 			If SCP->(FieldPos("CP_FSCDEM")) > 0
 				aadd(a_Linha,{"CP_FSCDEM"	,::o_SA:CP_ITENS[nX]:c_JEmerg											,Nil})
 			Endif
-			
+
 			If SCP->(FieldPos("CP_URGENTE")) > 0
 				aadd(a_Linha,{"CP_URGENTE"	,::o_SA:CP_ITENS[nX]:c_JEmerg											,Nil})
 			Endif
-	
+
 			aadd(a_Itens,a_Linha)
-			//			   1      2                                        3                                                     4                            5          
+			//			   1      2                                        3                                                     4                            5
 			aadd(a_ItCP, { c_Doc, StrZero( nX, TAMSX3( "CP_ITEM" )[ 1 ] ), PADR(::o_SA:CP_ITENS[nX]:CP_CC, TAMSX3("CP_CC")[1]),::o_SA:CP_ITENS[nX]:c_Emerg,::o_SA:CP_ITENS[nX]:c_JEmerg })
-	
+
 			/*IF SUPERGETMV("FS_1CP",.F.,.F.)
 				DBSELECTAREA( "CTT" )
 				DBSETORDER(1)
@@ -1279,11 +1305,11 @@ WSMETHOD mtdGrvSA WSRECEIVE o_Empresa, o_Seguranca, o_SA WSSEND o_Retorno WSSERV
 			EndIF*/
 		Else
 			l_Continua := .F.
-			
+
 		Endif
 	NEXT
 
-	If l_Continua 
+	If l_Continua
 		IF SUPERGETMV("FS_1CP",.F.,.F.)
 			IF Len(  a_GrpAprv) >= 2
 				::o_Retorno:l_Status		:= .F.
@@ -1291,21 +1317,21 @@ WSMETHOD mtdGrvSA WSRECEIVE o_Empresa, o_Seguranca, o_SA WSSEND o_Retorno WSSERV
 				Return( .T. )
 			ENDIF
 		EndIf
-		
+
 		Private lAutoErrNoFile	:=	.T.
 		lMsErroAuto	:=	.F.
 		//SetFunName("MATA105")
-		
+
 		BEGIN TRANSACTION
-	
-	//		MsExecAuto( { | x, y, z | Mata105( x, y , z ) }, aCab, aItens , nOpcx )
+
+			//		MsExecAuto( { | x, y, z | Mata105( x, y , z ) }, aCab, aItens , nOpcx )
 			MsExecAuto( { | x, y, z | Mata105( x, y , z ) },a_Cabec, a_Itens ,3)
-			
+
 			If lMsErroAuto
-		
+
 				a_LogErr := GetAutoGRLog()
 				c_Motivo := "Erro na inclusao do registro de solicitacao de armazem. "+ENTER
-		
+
 				For n_i := 1 to Len(a_LogErr)
 					c_Motivo += a_LogErr[n_i] +ENTER
 				Next
@@ -1313,62 +1339,62 @@ WSMETHOD mtdGrvSA WSRECEIVE o_Empresa, o_Seguranca, o_SA WSSEND o_Retorno WSSERV
 				If (GetVersao(.F.) == "12")
 					c_Motivo:=  NoAcento(c_Motivo)
 				EndIf
-	
+
 				::o_Retorno:l_Status		:= 	.F.
 				::o_Retorno:c_Mensagem		:=	c_Motivo
 				DisarmTransaction()
-	
+
 			Else
-	
+
 				For nY:=1 To Len( a_ItCP )
-	
+
 					dbSelectArea("SCP")
 					dbSetorder(1)
 					if dbSeek(xFilial("SCP") + a_ItCP[nY][1] + a_ItCP[nY][2], .T. )
 						RecLock("SCP",.F.)
-	
+
 						SCP->CP_FILIAL	:= 	::o_Empresa:c_Filial
 						SCP->CP_CC		:= 	a_ItCP[nY][3]
-						SCP->CP_SOLICIT	:= 	c_Login    
+						SCP->CP_SOLICIT	:= 	c_Login
 						If SCP->(FieldPos("CP_FSTPEM")) > 0
 							SCP->CP_FSTPEM	:= 	a_ItCP[nY][4]
-						Endif  
+						Endif
 						If SCP->(FieldPos("CP_FSCDEM")) > 0
 							SCP->CP_FSCDEM	:= 	a_ItCP[nY][5]
-						Endif  
+						Endif
 						If SCP->(FieldPos("CP_URGENTE")) > 0
 							SCP->CP_URGENTE	:=	a_ItCP[nY][5]
 						Endif
-	
+
 						If SCP->(FieldPos("CP_FSFLUIG")) > 0
 							If SCP->CP_FSFLUIG == 0
 								SCP->CP_FSFLUIG	:=	::o_SA:n_NumFluig
 							Endif
 						Endif
-	
+
 						If SCP->(FieldPos("CP_FSUSRF")) > 0
 							SCP->CP_FSUSRF	:=	::o_SA:CP_FSUSRF
 						Endif
-	
+
 						MsUnlock()
 					endif
-	
+
 				Next
-	
+
 				::o_Retorno:l_Status		:= .T.
 				::o_Retorno:c_Mensagem	:= Alltrim( c_Doc )
-	
+
 			EndIf
-	
+
 		END TRANSACTION
-	
+
 	Else
 		::o_Retorno:l_Status		:= .F.
 		::o_Retorno:c_Mensagem	:= "Inconsistência na linha de itens da solicitação ao armazem. Produto chave: ["+c_ChaveB1+"] nao encontrado na filial "+cFilAnt
 
 	Endif
 
-	CUSUARIO 	:=	a_UsrAutoOld[1] 
+	CUSUARIO 	:=	a_UsrAutoOld[1]
 	__CUSERID	:= 	a_UsrAutoOld[2]
 	CUSERNAME	:=	a_UsrAutoOld[3]
 
@@ -1384,25 +1410,25 @@ Return(.T.)
 @type function
 /*/
 Static Function f_UserFluig(c_Chave)
-Local c_UsrFluig	:=	""
-Local c_Qry			:=	""
-Local c_AliasFl		:=	GetNextAlias()
+	Local c_UsrFluig	:=	""
+	Local c_Qry			:=	""
+	Local c_AliasFl		:=	GetNextAlias()
 
-Default c_Chave		:=	""
+	Default c_Chave		:=	""
 
-If !Empty(c_Chave)
+	If !Empty(c_Chave)
 
-	c_Qry	:=	"SELECT USER_CODE FROM fluigdb.dbo.FDN_USERTENANT WHERE LOGIN = '"+c_Chave+"'"
-	DbUseArea(.T., "TOPCONN", TcGenQry(,,c_Qry), c_AliasFl, .T., .T.)
-	(c_AliasFl)->(dbGoTop())
-	If (c_AliasFl)->(!Eof())
-		c_UsrFluig := (c_AliasFl)->USER_CODE 
+		c_Qry	:=	"SELECT USER_CODE FROM fluigdb.dbo.FDN_USERTENANT WHERE LOGIN = '"+c_Chave+"'"
+		DbUseArea(.T., "TOPCONN", TcGenQry(,,c_Qry), c_AliasFl, .T., .T.)
+		(c_AliasFl)->(dbGoTop())
+		If (c_AliasFl)->(!Eof())
+			c_UsrFluig := (c_AliasFl)->USER_CODE
+		Endif
+		(c_AliasFl)->(dbCloseArea())
+	Else
+		msgInfo("Matricula nao cadastrada no fluig para o usuario "+c_Chave)
+
 	Endif
-	(c_AliasFl)->(dbCloseArea())
-Else
-	msgInfo("Matricula nao cadastrada no fluig para o usuario "+c_Chave)
-
-Endif	
 
 Return(c_UsrFluig)
 
@@ -1421,24 +1447,24 @@ aUsers - Array com os usuários do sistema no seguinte formato:
 */
 //-------------------------
 Static Function f_wsLogin(c_Login)
-Local n_x
-Local a_Allusers 	:= 	FWSFALLUSERS()
-Local a_Login		:=	{}
+	Local n_x
+	Local a_Allusers 	:= 	FWSFALLUSERS()
+	Local a_Login		:=	{}
 
-Default c_Login		:=	""
+	Default c_Login		:=	""
 
-If valtype(c_Login) == "C"
+	If valtype(c_Login) == "C"
 
-	For n_x := 1 To Len(a_Allusers)
-	    If Alltrim(c_Login) == Alltrim(a_Allusers[n_x][3])
-	    	a_Login	:=	a_Allusers[n_x]
-	    	Exit
-	    Endif
-	Next
+		For n_x := 1 To Len(a_Allusers)
+			If Alltrim(c_Login) == Alltrim(a_Allusers[n_x][3])
+				a_Login	:=	a_Allusers[n_x]
+				Exit
+			Endif
+		Next
 
-Else
-	Conout("Id do usuario nao esta no formato correto para busca no protheus, favor passar o id do usuario no protheus.")
-
-Endif
+	Else
+		cBMLog := "Id do usuario nao esta no formato correto para busca no protheus, favor passar o id do usuario no protheus."
+		FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+	Endif
 
 Return(a_Login)

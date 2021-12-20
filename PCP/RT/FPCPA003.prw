@@ -82,7 +82,7 @@ Static Function f_Importa()
 	Private lMsErroAuto := .F.
 	Private n_Pos       := 1     //Numero da linha do arquivo
 	Private n_QtdInc    := 0    	//Conta quantas linhas foram importadas
-	Private n_QtdErr    := 0    	//Conta quantas linhas não foram importadas	
+	Private n_QtdErr    := 0    	//Conta quantas linhas não foram importadas
 	Private c_Obs       := ""
 
 	Private c_Bord   := ""   //Borda da tabela temporária
@@ -103,14 +103,22 @@ Static Function f_Importa()
 		Aadd(a_Bord,{"TB_DETALHE" ,"C",50,0})
 		Aadd(a_Bord,{"TB_OBS"     ,"C",250,0})
 
-		c_Bord := CriaTrab(a_Bord,.t.)
-		Use &c_Bord Shared Alias TRC New
-		Index On TB_POS To &c_Bord
+		oELT := FWTemporaryTable():New("TRC")
+		oELT:SetFields(a_Bord)
+		oELT:AddIndex("01",{"TB_POS"})
+		oELT:Create()
 
-		SET INDEX TO &c_Bord
 
 		BeginSql Alias c_Alias
-			SELECT * FROM Sigma_Monitor.dbo.INTEGRA_PROTHEUS WHERE (STATUS_INTEGRA <> 'S' OR STATUS_INTEGRA IS NULL ) AND CODIGO = '162712'
+			SELECT *
+			FROM
+				Sigma_Monitor.dbo.INTEGRA_PROTHEUS
+			WHERE
+				(
+					STATUS_INTEGRA <> 'S'
+					OR STATUS_INTEGRA IS NULL
+				)
+				AND CODIGO = '162712'
 		EndSql
 
 		dbSelectArea(c_Alias)
@@ -127,30 +135,30 @@ Static Function f_Importa()
 						c_Obs := "REGISTRO INVÁLIDO PARA IMPORTAÇÃO, POIS ESTÁ COM DATA INICIAL IGUAL A DATA FINAL E HORA INICIAL IGUAL A HORA FINAL"
 					ELSE
 						a_Vetor := {{"H6_RECURSO", PADR((c_Alias)->OBJ_CODIGO, TamSX3("H6_RECURSO")[1]), NIL},;
-								   {"H6_FILIAL", XFILIAL("SH6"), NIL},;
-								   {"H6_FSTURNO", PADR((c_Alias)->TURNO, TAMSX3("H6_FSTURNO")[1]), NIL},;
-								   {"H6_DETALHE", (c_Alias)->DETALHES, NIL},;
-								   {"H6_MOTIVO",  PADR((c_Alias)->MOT_CODIGO, TAMSX3("H6_FSTURNO")[1]), NIL},;
-								   {"H6_DTAPONT", dDataBase, NIL},;
-								   {"H6_DATAINI", STOD((c_Alias)->DATA_INI), NIL},;
-								   {"H6_DATAFIN", STOD((c_Alias)->DATA_FIM), NIL},;
-								   {"H6_HORAINI", (c_Alias)->HORA_INI, NIL},;
-								   {"H6_OPERADO", UPPER((c_Alias)->USUARIO), NIL},;
-								   {"H6_HORAFIN", (c_Alias)->HORA_FIM, NIL}}
+							{"H6_FILIAL", XFILIAL("SH6"), NIL},;
+							{"H6_FSTURNO", PADR((c_Alias)->TURNO, TAMSX3("H6_FSTURNO")[1]), NIL},;
+							{"H6_DETALHE", (c_Alias)->DETALHES, NIL},;
+							{"H6_MOTIVO",  PADR((c_Alias)->MOT_CODIGO, TAMSX3("H6_FSTURNO")[1]), NIL},;
+							{"H6_DTAPONT", dDataBase, NIL},;
+							{"H6_DATAINI", STOD((c_Alias)->DATA_INI), NIL},;
+							{"H6_DATAFIN", STOD((c_Alias)->DATA_FIM), NIL},;
+							{"H6_HORAINI", (c_Alias)->HORA_INI, NIL},;
+							{"H6_OPERADO", UPPER((c_Alias)->USUARIO), NIL},;
+							{"H6_HORAFIN", (c_Alias)->HORA_FIM, NIL}}
 
 						MSExecAuto({|x,y| Mata682(x,y)}, a_Vetor, 3)
-	
+
 						If lMsErroAuto
 							n_QtdErr++
 							MostraErro()
 							c_Obs := "ERRO NA IMPORTAÇÃO DO REGISTRO"
 						Else
 							c_Query := " UPDATE Sigma_Monitor.dbo.INTEGRA_PROTHEUS SET STATUS_INTEGRA = 'S' WHERE CODIGO = " + cValToChar((c_Alias)->CODIGO)
-				
+
 							While TcSqlExec(c_Query) < 0
 								TcSqlExec(c_Query)
 							End
-							
+
 							n_QtdInc++
 							c_Obs := "REGISTRO IMPORTADO COM SUCESSO"
 						Endif
@@ -158,7 +166,7 @@ Static Function f_Importa()
 
 
 				End Transaction
-				
+
 				RECLOCK("TRC",.T.)
 				TRC->TB_POS     := n_Pos //LINHA DO ARQUIVO
 				TRC->TB_TURNO   := (c_Alias)->TURNO
@@ -177,14 +185,14 @@ Static Function f_Importa()
 				IncProc()
 				(c_Alias)->(dbSkip())
 			End
-			
+
 			AVISO(SM0->M0_NOMECOM,"O programa processou " + ALLTRIM(STR(n_QtdInc+n_QtdErr)) + " registros. Foram efetuadas " + ALLTRIM(STR(n_QtdInc)) + " importações e " + ALLTRIM(STR(n_QtdErr)) + " importações não foram realizadas.",{"OK"},2,"Aviso")
 
 			//SE HOUVE PRODUTOS ATUALIZADOS, MOSTRA NA TELA.
 			DBSELECTAREA("TRC")
 			TRC->(DBGOTOP())
 
-		 	Aadd(a_Campos,{"TB_POS"     ,,'Linha'      	,'@!'})
+			Aadd(a_Campos,{"TB_POS"     ,,'Linha'      	,'@!'})
 			Aadd(a_Campos,{"TB_TURNO"   ,,'Turno'     	,'@!'})
 			Aadd(a_Campos,{"TB_RECURSO" ,,'Recurso'		,'@!'})
 			Aadd(a_Campos,{"TB_DATAINI" ,,'Data Inicial','@D'})
@@ -192,8 +200,8 @@ Static Function f_Importa()
 			Aadd(a_Campos,{"TB_DATAFIN" ,,'Data Final' 	,'@D'})
 			Aadd(a_Campos,{"TB_HORAFIN" ,,'Hora Final' 	,'@!'})
 			Aadd(a_Campos,{"TB_MOTIVO"  ,,'Motivo'	 	,'@!'})
-			Aadd(a_Campos,{"TB_OPERADO" ,,'Operador' 	,'@!'})		
-			Aadd(a_Campos,{"TB_DETALHE" ,,'Detalhamento','@!'})				
+			Aadd(a_Campos,{"TB_OPERADO" ,,'Operador' 	,'@!'})
+			Aadd(a_Campos,{"TB_DETALHE" ,,'Detalhamento','@!'})
 			Aadd(a_Campos,{"TB_OBS"     ,,'Observação' 	,'@!'})
 
 			o_Dlg:= MSDialog():New( 091,232,637,1240,"Log de Importações",,,.F.,,,,,,.T.,,,.T. )
@@ -243,26 +251,26 @@ Static Function f_ExpLog()
 		// TESTA A CRIAÇÃO DO ARQUIVO DE DESTINO
 		IF c_Destino == -1
 			MsgStop('Erro ao criar arquivo destino. Erro: '+str(ferror(),4),'Erro')
-		 	RETURN
+			RETURN
 		ENDIF
-	
+
 		c_Linha:= "REGISTRO;TURNO;RECURSO;DATA INICIAL;HORA INICIAL;DATA FINAL;HORA FINAL;MOTIVO;OPERADOR;DETALHAMENTO;OBSERVAÇÃO" + CHR(13)+CHR(10)
-	
+
 		IF FWRITE(c_Destino,c_Linha,LEN(c_Linha)) != LEN(c_Linha)
 			IF !MSGALERT("Ocorreu um erro na gravação do arquivo destino. Continuar?","Atenção")
 				FCLOSE(c_Destino)
 				DBSELECTAREA("TRC")
 				DBGOTOP()
-	   	   		Return
+				Return
 			ENDIF
-	 	ENDIF
-	
+		ENDIF
+
 		DBSELECTAREA("TRC")
 		TRC->(DBGOTOP())
-		
+
 		Count To n_Reg
 		ProcRegua(n_Reg)
-	
+
 		TRC->(DBGOTOP())
 		WHILE !(TRC->(EOF()))
 			c_Linha:= STRZERO(TRC->TB_POS,6)+";"+TRC->TB_TURNO+";"+TRC->TB_RECURSO+";"+DTOC(TRC->TB_DATAINI)+";"+TRC->TB_HORAINI+";"+DTOC(TRC->TB_DATAFIN)+";"+TRC->TB_HORAFIN+";"+TRC->TB_MOTIVO+";"+TRC->TB_OPERADO+";"+TRC->TB_DETALHE+";"+TRC->TB_OBS + CHR(13)+CHR(10)
@@ -272,14 +280,14 @@ Static Function f_ExpLog()
 					FCLOSE(c_Destino)
 					DBSELECTAREA("TRC")
 					DBGOTOP()
-		   	   		Return
+					Return
 				ENDIF
-		 	ENDIF
-		 	
-		 	IncProc()
-		 	TRC->(DBSKIP())
-		ENDDO 
-	
+			ENDIF
+
+			IncProc()
+			TRC->(DBSKIP())
+		ENDDO
+
 		AVISO(SM0->M0_NOMECOM,"Arquivo exportado para " + c_Dir + c_File,{"Ok"},2,"Atenção")
 		FCLOSE(c_Destino)
 		DBSELECTAREA("TRC")

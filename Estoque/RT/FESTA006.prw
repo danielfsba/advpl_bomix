@@ -29,14 +29,14 @@ User Function FESTA006()
 
 	Private c_File := Space(500)	//Arquivo
 	Private c_Perg := "FESTA006"
-	
+
 	SetPrvt("oDlg1","oSay1","oSay2","oGet1","oBtn1","oBtn2","oBtn3","oGrp1")
 
 	/*ÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ±±
 	±± Definicao do Dialog e todos os seus componentes.                        ±±
 	Ù±±ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ*/
 	oDlg1      := MSDialog():New( 090,230,198,670,SM0->M0_NOME,,,.F.,,,,,,.T.,,,.T. )
-	
+
 	oSay1      := TSay():New( 006,004,{||"Arquivo:"},oDlg1,,,.F.,.F.,.F.,.T.,CLR_BLACK,CLR_WHITE,040,008)
 	oGet1      := TGet():New( 004,025,{|u| if( Pcount( )>0, c_File := u, u := c_File) },oDlg1,151,010,'',,CLR_BLACK,CLR_WHITE,,,,.T.,"",,,.F.,.F.,,.T.,.F.,"","",,)
 
@@ -46,7 +46,7 @@ User Function FESTA006()
 
 	oGrp1      := TGroup():New( 018,004,050,176,"Descrição",oDlg1,CLR_BLACK,CLR_WHITE,.T.,.F. )
 	oSay2      := TSay():New( 026,016,{||c_Texto},oGrp1,,,.F.,.F.,.F.,.T.,CLR_BLACK,CLR_WHITE,160,036)
-	
+
 	oDlg1:Activate(,,,.T.)
 Return()
 
@@ -86,7 +86,7 @@ Static Function f_Importa()
 	Private n_Pos      := 1      //Numero da linha do arquivo
 	Private n_QtdInc   := 0    //Conta quantas linhas foram importadas
 	Private n_QtdUpd   := 0    //Conta quantas linhas foram atualizadas
-	Private n_QtdErr   := 0    //Conta quantas linhas não foram importadas	
+	Private n_QtdErr   := 0    //Conta quantas linhas não foram importadas
 	Private c_Buffer   := ""   //Buffer do arquivo
 	Private a_Buffer   := {}   //Array com o Buffer do arquivo
 	Private c_Linha    := ""
@@ -116,7 +116,7 @@ Static Function f_Importa()
 		Else
 			If Empty(MV_PAR01)
 				ShowHelpDlg(SM0->M0_NOME, {"O Documento está em branco."},5,;
-	                           			  {"Informe o número do Documento para efetuar a importação."},5)
+					{"Informe o número do Documento para efetuar a importação."},5)
 				Return
 			Endif
 		EndIf
@@ -135,29 +135,28 @@ Static Function f_Importa()
 			Aadd(a_Bord,{"TB_QUANT"   ,"N",17,5})
 			Aadd(a_Bord,{"TB_OBS"     ,"C",100,0})
 
-			c_Bord := CriaTrab(a_Bord,.t.)
-			Use &c_Bord Shared Alias TRC New
-			Index On TB_POS To &c_Bord
+			oELT := FWTemporaryTable():New("TRC")
+			oELT:SetFields(a_Bord)
+			oELT:AddIndex("01",{"TB_POS"})
+			oELT:Create()
 
-			SET INDEX TO &c_Bord
-
-			l_CriaTb:= .T.	 
-		ENDIF	
+			l_CriaTb:= .T.
+		ENDIF
 
 		IF FT_FUSE(ALLTRIM(c_File)) == -1
-	  		ShowHelpDlg("Validação de Arquivo",;
-	  		{"O arquivo "+ALLTRIM(c_File)+" não foi encontrado."},5,;
-		  	{"Verifique se o caminho está correto ou se o arquivo ainda se encontra no local indicado."},5)
+			ShowHelpDlg("Validação de Arquivo",;
+				{"O arquivo "+ALLTRIM(c_File)+" não foi encontrado."},5,;
+				{"Verifique se o caminho está correto ou se o arquivo ainda se encontra no local indicado."},5)
 			Return()
 		Endif
-	 
+
 		ProcRegua(FT_FLastRec())
 		FT_FGoTop()
 		WHILE !FT_FEOF()
 			c_Buffer := FT_FREADLN()
-			
+
 			//+chr(13)+chr(10)
-			
+
 			c_Buffer := StrTran(c_Buffer, ";;", "; ;")+ chr(13)
 			a_Invent := StrTokArr(c_Buffer, ";")
 
@@ -183,18 +182,18 @@ Static Function f_Importa()
 				If dbSeek(xFilial("SZ1") + c_Local)
 					If f_Mata270()
 						c_Obs += "Inventário importado pela rotina."
-				    	n_QtdInc++
+						n_QtdInc++
 					Else
-					    c_Obs := "Erro de inclusão do Inventário."
-				   		n_QtdErr++
+						c_Obs := "Erro de inclusão do Inventário."
+						n_QtdErr++
 					Endif
 				Else
-				    c_Obs := "Código do Armazém inválido."
-			   		n_QtdErr++			
+					c_Obs := "Código do Armazém inválido."
+					n_QtdErr++
 				Endif
 			Else
-			    c_Obs := "Código do Produto inválido."
-		   		n_QtdErr++			
+				c_Obs := "Código do Produto inválido."
+				n_QtdErr++
 			Endif
 
 			RECLOCK("TRC",.T.)
@@ -208,7 +207,7 @@ Static Function f_Importa()
 			TRC->TB_LOCALIZ := c_Endereco
 			TRC->TB_QUANT   := n_Quant
 			TRC->TB_OBS     := c_Obs
-			MSUNLOCK()			
+			MSUNLOCK()
 
 			FT_FSKIP()
 			n_Pos++
@@ -222,7 +221,7 @@ Static Function f_Importa()
 		DBSELECTAREA("TRC")
 		TRC->(DBGOTOP())
 
-	 	Aadd(a_Campos,{"TB_POS"     ,,'Linha'      	,'@!'})
+		Aadd(a_Campos,{"TB_POS"     ,,'Linha'      	,'@!'})
 		Aadd(a_Campos,{"TB_FILIAL"  ,,'Filial'     	,'@!'})
 		Aadd(a_Campos,{"TB_PRODUTO" ,,'Produto'  	,'@!'})
 		Aadd(a_Campos,{"TB_DESC"    ,,'Descrição'  	,'@!'})
@@ -244,7 +243,7 @@ Static Function f_Importa()
 		DBSELECTAREA("TRC")
 		TRC->(DBCLOSEAREA())
 	ENDIF
-Return() 
+Return()
 
 /*/
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
@@ -271,7 +270,7 @@ Static Function f_ExpLog()
 	// TESTA A CRIAÇÃO DO ARQUIVO DE DESTINO
 	IF c_Destino == -1
 		MsgStop('Erro ao criar arquivo destino. Erro: '+str(ferror(),4),'Erro')
-	 	RETURN
+		RETURN
 	ENDIF
 
 	c_Linha:= "REGISTRO;FILIAL;PRODUTO;DESCRIÇÃO;LOCAL;LOTE;DATA DE VALIDADE;ENDEREÇO;QUANTIDADE;OBSERVAÇÃO" + CHR(13)+CHR(10)
@@ -281,13 +280,13 @@ Static Function f_ExpLog()
 			FCLOSE(c_Destino)
 			DBSELECTAREA("TRC")
 			DBGOTOP()
-   	   		Return
+			Return
 		ENDIF
- 	ENDIF
+	ENDIF
 
 	DBSELECTAREA("TRC")
 	TRC->(DBGOTOP())
-	
+
 	Count To n_Reg
 	ProcRegua(n_Reg)
 
@@ -300,13 +299,13 @@ Static Function f_ExpLog()
 				FCLOSE(c_Destino)
 				DBSELECTAREA("TRC")
 				DBGOTOP()
-	   	   		Return
+				Return
 			ENDIF
-	 	ENDIF
-	 	
-	 	IncProc()
-	 	TRC->(DBSKIP())
-	ENDDO 
+		ENDIF
+
+		IncProc()
+		TRC->(DBSKIP())
+	ENDDO
 
 	AVISO(SM0->M0_NOMECOM,"Arquivo exportado para C:\TEMP\LOG_IMPORTAÇÃO_INVENTÁRIO_" + AllTrim(c_Doc) + ".CSV",{"Ok"},2,"Atenção")
 	FCLOSE(c_Destino)
@@ -316,39 +315,39 @@ Return
 
 
 
- 
+
 Static Function f_Mata270
-Local aVetor        := {}
-Local lRet          := .T.
-Private lMsErroAuto := .F.
+	Local aVetor        := {}
+	Local lRet          := .T.
+	Private lMsErroAuto := .F.
 
-aVetor :=   {;
-            {"B7_FILIAL", 	xFilial("SB7"),	Nil},;
-            {"B7_COD",		c_Produto,		Nil},;
-            {"B7_DOC",		c_Doc,	Nil},;
-            {"B7_LOTECTL",	c_Lote,			Nil},;            
-            {"B7_QUANT",	n_Quant,		Nil},;
-            {"B7_LOCAL",	c_Local,		Nil},;
-            {"B7_DATA",		d_Data,			Nil} }
+	aVetor :=   {;
+		{"B7_FILIAL", 	xFilial("SB7"),	Nil},;
+		{"B7_COD",		c_Produto,		Nil},;
+		{"B7_DOC",		c_Doc,	Nil},;
+		{"B7_LOTECTL",	c_Lote,			Nil},;
+		{"B7_QUANT",	n_Quant,		Nil},;
+		{"B7_LOCAL",	c_Local,		Nil},;
+		{"B7_DATA",		d_Data,			Nil} }
 
-If !Empty(c_Lote)
-	If Empty(c_DtValid)
-		c_DtValid := Dtoc(DaySum(DDATABASE, IIF(n_PrValid > 0, n_PrValid, 365)))
+	If !Empty(c_Lote)
+		If Empty(c_DtValid)
+			c_DtValid := Dtoc(DaySum(DDATABASE, IIF(n_PrValid > 0, n_PrValid, 365)))
+		Endif
+
+		AADD(aVetor, {"B7_DTVALID",	Ctod(c_DtValid),		Nil})
 	Endif
 
-	AADD(aVetor, {"B7_DTVALID",	Ctod(c_DtValid),		Nil})
-Endif
+	If !Empty(c_Endereco)
+		AADD(aVetor, {"B7_LOCALIZ",	Padr(c_Endereco, TamSX3("B7_LOCALIZ")[1]),		Nil})
+	Endif
 
-If !Empty(c_Endereco)
-	AADD(aVetor, {"B7_LOCALIZ",	Padr(c_Endereco, TamSX3("B7_LOCALIZ")[1]),		Nil})
-Endif
+	MSExecAuto({|x,y,z| mata270(x,y,z)}, aVetor, .T., 3)
 
-MSExecAuto({|x,y,z| mata270(x,y,z)}, aVetor, .T., 3)
-
-If lMsErroAuto
-    MostraErro()
-    lRet := .F.
-EndIf
+	If lMsErroAuto
+		MostraErro()
+		lRet := .F.
+	EndIf
 
 Return lRet
 

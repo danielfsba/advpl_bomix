@@ -1,4 +1,4 @@
-	#INCLUDE "PROTHEUS.CH"
+#INCLUDE "PROTHEUS.CH"
 #INCLUDE "TBICONN.CH"
 #INCLUDE "TOPCONN.CH"
 #INCLUDE "DBSTRUCT.CH"
@@ -113,7 +113,8 @@ User Function PCOMR001(c_NumCot, c_Arquivo, c_PRoot, c_PComp, l_Ret, lFluig)
 
 		Else
 			Alert("Parâmetros não informados")
-			Conout("ROTINA PCOMR001: Parâmetros não informados")
+			cBMLog := "ROTINA PCOMR001: Parâmetros não informados"
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 			Return
 		Endif
 	Else
@@ -210,7 +211,7 @@ Static Function Obt_Dados()
 	cQry += " AND C8_FILIAL = '"+c_Fil+"'"
 	cQry += " AND C8_NUM = '"+MV_PAR01+"'"
 	//Group By adicionado para impedir duplicação de itens no mapa de cotação gerado pela P12 na FJC. 13/11/2017 - inicio
-	cQry += " GROUP BY 
+	cQry += " GROUP BY
 	cQry += " 		C8_PRODUTO	"
 	cQry += " 		, C1_DESCRI	"
 	cQry += " 		, C8_QUANT	"
@@ -399,7 +400,7 @@ Static Function Planilha()
 		cQry += " AND CE_NUMPRO = '"+c_NUMPRO+"'"
 		cQry += " AND CE_QUANT <> 0 "
 
-		TCQUERY cQry NEW ALIAS "bQry" 
+		TCQUERY cQry NEW ALIAS "bQry"
 
 		DbSelectArea("bQry")
 		DbGoTop()
@@ -452,57 +453,57 @@ Static Function Planilha()
 				n_ValCTotal	:= IIF( n_ValCTotal < 0, 0, n_ValCTotal )
 
 				If (a_Forn[I,1]+a_Forn[I,2]+a_Forn[I,13]+c_ProdCot+c_ItemCot $ c_Menor)
-					n_ValMOferta	+=	n_ValCTotal	//menor oferta fornecedor
-					n_TGOferta		+=	n_ValCTotal	//TOTAL GERAL MELHOR OFERTA		=	TOTAL COM O MELHOR OFERTA DE TODAS AS FILIAIS
-				Endif
-
-				If	( (a_Forn[I,1]+a_Forn[I,2]+a_Forn[I,13]+c_ProdCot+c_ItemCot $ c_Menor) .And. Empty(Alltrim(bQRY->C8_NUMPED)) ) //Cotacao ainda não foi analisada neste ponto - 09/11/16 - ajuste
-					cTexto += '     <td bgcolor="#CCCCCC"><div align="right"><span style="color: #CCCCCC"></span><strong>'+Transform(n_ValCDesc,"@E 999,999.999999")+'</strong></div></td> '
-					cTexto += '     <td bgcolor="#CCCCCC"><div align="right"><span style="color: #CCCCCC"></span><strong>'+Transform(n_ValCTotal,"@E 99,999,999.99")+'</strong></div></td> '
-					//n_Menor += n_ValCTotal
-					//Adicionando novas variaveis para totalizaçoes - 08/11/16
-					//n_TGOferta		+=	n_ValCTotal	//TOTAL GERAL MELHOR OFERTA		=	TOTAL COM O MELHOR OFERTA DE TODAS AS FILIAIS
-					//n_ValMOferta	+=	n_ValCTotal	//menor oferta fornecedor
-					n_TSelec		+=	n_ValCTotal	//total dos itens selecionados na cotacao
-				ElseIf	( (a_Forn[I,1]+a_Forn[I,2]+a_Forn[I,13]+c_ProdCot+c_ItemCot $ c_Menor) .And. Alltrim(bQRY->C8_NUMPED) <> "XXXXXX" .And. !Empty(Alltrim(bQRY->C8_NUMPED)) ) //Cotacao foi analisada neste ponto - 09/11/16 - ajuste
-					cTexto += '     <td bgcolor="#CCCCCC"><div align="right"><span style="color: #CCCCCC"></span><strong>'+Transform(n_ValCDesc,"@E 999,999.999999")+'</strong></div></td> '
-					cTexto += '     <td bgcolor="#CCCCCC"><div align="right"><span style="color: #CCCCCC"></span><strong>'+Transform(n_ValCTotal,"@E 99,999,999.99")+'</strong></div></td> '
-					//n_Menor += n_ValCTotal
-					//Adicionando novas variaveis para totalizaçoes - 08/11/16
-					//n_TGOferta		+=	n_ValCTotal	//TOTAL GERAL MELHOR OFERTA		=	TOTAL COM O MELHOR OFERTA DE TODAS AS FILIAIS
-					//n_ValMOferta	+=	n_ValCTotal	//menor oferta fornecedor
-					n_TSelec		+=	n_ValCTotal	//total dos itens selecionados na cotacao
-
-				ElseIf  (a_Forn[I,1]+a_Forn[I,2]+a_Forn[I,13]+c_ProdCot+c_ItemCot $ c_Selecionado) .And. Alltrim(bQRY->C8_NUMPED) <> "XXXXXX" .And. !Empty(Alltrim(bQRY->C8_NUMPED))//Adicionando cor vermelha em precos que não sejam o menor valor. - 08/11/16
-					cTexto += '     <td bgcolor="RED"><div align="right"><span style="color: WHITE"></span><strong>'+Transform(n_ValCDesc,"@E 999,999.999999")+'</strong></div></td> '
-					cTexto += '     <td bgcolor="RED"><div align="right"><span style="color: WHITE"></span><strong>'+Transform(n_ValCTotal,"@E 99,999,999.99")+'</strong></div></td> '
-					//Adicionando novas variaveis para totalizaçoes - 08/11/16
-					//n_TGOferta		+=	n_ValCTotal	//TOTAL GERAL MELHOR OFERTA		=	TOTAL COM O MELHOR OFERTA DE TODAS AS FILIAIS
-					n_TSelec		+=	n_ValCTotal	//total dos itens selecionados na cotacao
-
-				Else
-					cTexto += '     <td><div align="right"><span style="color: #FFFFFF"></span>'+Transform(n_ValCDesc,"@E 999,999.999999")+'</div></td> '
-					cTexto += '     <td><div align="right"><span style="color: #FFFFFF"></span>'+Transform(n_ValCTotal,"@E 99,999,999.99")+'</div></td> '
-
-				Endif
-				cTexto += '     <td><div align="right">'+Transform(bQRY->C8_PRAZO,"@E 999")+'</div></td> '
-				cTexto += '     <td><div align="center">&nbsp;</div></td> '
-
-				n_ValCDesc := 0
+				n_ValMOferta	+=	n_ValCTotal	//menor oferta fornecedor
+				n_TGOferta		+=	n_ValCTotal	//TOTAL GERAL MELHOR OFERTA		=	TOTAL COM O MELHOR OFERTA DE TODAS AS FILIAIS
 			Endif
-			a_Forn[I,4] += n_ValCTotal
-			a_Forn[I,5] := IIF(bQRY->C8_TPFRETE="C","CIF","FOB")
-			a_Forn[I,6] := bQRY->E4_DESCRI
-			a_Forn[I,7] := IIF( bQRY->C8_DESC = 0 , bQRY->C8_VLDESC, bQRY->C8_DESC )
-			a_Forn[I,8] := bQRY->C8_VALIPI
-			//a_Forn[I,9] += Alltrim(c_Motivo)               //Observacao
-			a_Forn[I,10] := bQRY->C8_CONTATO
-			a_Forn[I,11] := "("+Alltrim(bQRY->A2_DDD)+")"+Alltrim(A2_TEL)
-			a_Forn[I,15] += n_ValMOferta
-			a_Forn[I,16] += bQRY->C8_VALFRE 
-			a_Forn[I,17] += bQRY->C8_DESPESA
 
-			DbCloseArea("bQry")
+			If	( (a_Forn[I,1]+a_Forn[I,2]+a_Forn[I,13]+c_ProdCot+c_ItemCot $ c_Menor) .And. Empty(Alltrim(bQRY->C8_NUMPED)) ) //Cotacao ainda não foi analisada neste ponto - 09/11/16 - ajuste
+				cTexto += '     <td bgcolor="#CCCCCC"><div align="right"><span style="color: #CCCCCC"></span><strong>'+Transform(n_ValCDesc,"@E 999,999.999999")+'</strong></div></td> '
+				cTexto += '     <td bgcolor="#CCCCCC"><div align="right"><span style="color: #CCCCCC"></span><strong>'+Transform(n_ValCTotal,"@E 99,999,999.99")+'</strong></div></td> '
+				//n_Menor += n_ValCTotal
+				//Adicionando novas variaveis para totalizaçoes - 08/11/16
+				//n_TGOferta		+=	n_ValCTotal	//TOTAL GERAL MELHOR OFERTA		=	TOTAL COM O MELHOR OFERTA DE TODAS AS FILIAIS
+				//n_ValMOferta	+=	n_ValCTotal	//menor oferta fornecedor
+				n_TSelec		+=	n_ValCTotal	//total dos itens selecionados na cotacao
+			ElseIf	( (a_Forn[I,1]+a_Forn[I,2]+a_Forn[I,13]+c_ProdCot+c_ItemCot $ c_Menor) .And. Alltrim(bQRY->C8_NUMPED) <> "XXXXXX" .And. !Empty(Alltrim(bQRY->C8_NUMPED)) ) //Cotacao foi analisada neste ponto - 09/11/16 - ajuste
+				cTexto += '     <td bgcolor="#CCCCCC"><div align="right"><span style="color: #CCCCCC"></span><strong>'+Transform(n_ValCDesc,"@E 999,999.999999")+'</strong></div></td> '
+				cTexto += '     <td bgcolor="#CCCCCC"><div align="right"><span style="color: #CCCCCC"></span><strong>'+Transform(n_ValCTotal,"@E 99,999,999.99")+'</strong></div></td> '
+				//n_Menor += n_ValCTotal
+				//Adicionando novas variaveis para totalizaçoes - 08/11/16
+				//n_TGOferta		+=	n_ValCTotal	//TOTAL GERAL MELHOR OFERTA		=	TOTAL COM O MELHOR OFERTA DE TODAS AS FILIAIS
+				//n_ValMOferta	+=	n_ValCTotal	//menor oferta fornecedor
+				n_TSelec		+=	n_ValCTotal	//total dos itens selecionados na cotacao
+
+			ElseIf  (a_Forn[I,1]+a_Forn[I,2]+a_Forn[I,13]+c_ProdCot+c_ItemCot $ c_Selecionado) .And. Alltrim(bQRY->C8_NUMPED) <> "XXXXXX" .And. !Empty(Alltrim(bQRY->C8_NUMPED))//Adicionando cor vermelha em precos que não sejam o menor valor. - 08/11/16
+				cTexto += '     <td bgcolor="RED"><div align="right"><span style="color: WHITE"></span><strong>'+Transform(n_ValCDesc,"@E 999,999.999999")+'</strong></div></td> '
+				cTexto += '     <td bgcolor="RED"><div align="right"><span style="color: WHITE"></span><strong>'+Transform(n_ValCTotal,"@E 99,999,999.99")+'</strong></div></td> '
+				//Adicionando novas variaveis para totalizaçoes - 08/11/16
+				//n_TGOferta		+=	n_ValCTotal	//TOTAL GERAL MELHOR OFERTA		=	TOTAL COM O MELHOR OFERTA DE TODAS AS FILIAIS
+				n_TSelec		+=	n_ValCTotal	//total dos itens selecionados na cotacao
+
+			Else
+				cTexto += '     <td><div align="right"><span style="color: #FFFFFF"></span>'+Transform(n_ValCDesc,"@E 999,999.999999")+'</div></td> '
+				cTexto += '     <td><div align="right"><span style="color: #FFFFFF"></span>'+Transform(n_ValCTotal,"@E 99,999,999.99")+'</div></td> '
+
+			Endif
+			cTexto += '     <td><div align="right">'+Transform(bQRY->C8_PRAZO,"@E 999")+'</div></td> '
+			cTexto += '     <td><div align="center">&nbsp;</div></td> '
+
+			n_ValCDesc := 0
+		Endif
+		a_Forn[I,4] += n_ValCTotal
+		a_Forn[I,5] := IIF(bQRY->C8_TPFRETE="C","CIF","FOB")
+		a_Forn[I,6] := bQRY->E4_DESCRI
+		a_Forn[I,7] := IIF( bQRY->C8_DESC = 0 , bQRY->C8_VLDESC, bQRY->C8_DESC )
+		a_Forn[I,8] := bQRY->C8_VALIPI
+		//a_Forn[I,9] += Alltrim(c_Motivo)               //Observacao
+		a_Forn[I,10] := bQRY->C8_CONTATO
+		a_Forn[I,11] := "("+Alltrim(bQRY->A2_DDD)+")"+Alltrim(A2_TEL)
+		a_Forn[I,15] += n_ValMOferta
+		a_Forn[I,16] += bQRY->C8_VALFRE
+		a_Forn[I,17] += bQRY->C8_DESPESA
+
+		DbCloseArea("bQry")
 		Next
 		//	cTexto += '     <td><div align="center">'+aQRY->C1_FSSTAT+'</div></td> '
 
@@ -542,14 +543,14 @@ Static Function Planilha()
 		cTexto += '     <td colspan="4"><p align="center">'+a_Forn[I,5]+'</strong></td> '
 	Next
 	cTexto += '   </tr> '
-	
+
 	cTexto += '   <tr> '
 	cTexto += '     <td><strong>Vl. Frete</strong></td> '
 	For	I = 1 to Len(a_Forn)
 		cTexto += '     <td colspan="4"><p align="center">'+Transform(a_Forn[I,16],"@E 99,999.99")+'</strong></td> '
 	Next
 	cTexto += '   </tr> '
-	
+
 	cTexto += '   <tr> '
 	cTexto += '     <td><strong>Despesas</strong></td> '
 	For	I = 1 to Len(a_Forn)
@@ -621,19 +622,24 @@ Static Function Planilha()
 	//Query para coletar dados dos Pedidos gerados a partir desta cotação
 	c_SC7Alias := GetNextAlias()
 	BEGINSQL ALIAS c_SC7Alias
-
-	SELECT
-		TgerPC	= SUM(C7_TOTAL + C7_VALIPI + C7_VALFRE + C7_DESPESA + C7_SEGURO)
-		,TdescPC = SUM(C7_VLDESC)
-		,TGdescPC = SUM((C7_TOTAL + C7_VALIPI + C7_VALFRE + C7_DESPESA + C7_SEGURO) - C7_VLDESC)
-		FROM %TABLE:SC7% SC7
+		SELECT
+			TgerPC = SUM(
+				C7_TOTAL + C7_VALIPI + C7_VALFRE + C7_DESPESA + C7_SEGURO
+			),
+			TdescPC = SUM(C7_VLDESC),
+			TGdescPC = SUM(
+				(
+					C7_TOTAL + C7_VALIPI + C7_VALFRE + C7_DESPESA + C7_SEGURO
+				) - C7_VLDESC
+			)
+		FROM
+			%TABLE:SC7% SC7
 		WHERE
 			SC7.C7_FILIAL = %XFILIAL:SC7%
 			AND SC7.%NOTDEL%
-			AND	SC7.C7_NUMCOT = %EXP:MV_PAR01%
-
+			AND SC7.C7_NUMCOT = %EXP:MV_PAR01%
 	ENDSQL
-    n_TgerPC		:=	(c_SC7Alias)->TgerPC
+	n_TgerPC		:=	(c_SC7Alias)->TgerPC
 	n_TdescPC		:=	(c_SC7Alias)->TdescPC
 	n_TGdescPC		:=	(c_SC7Alias)->TGdescPC
 
@@ -726,20 +732,17 @@ Static Function Planilha()
 		//PsExecute( cNewExcelFile )
 
 	Else
-		//c_Caminho		:=	"C:\TOTVS\"
-		//cNewExcelFile := c_Caminho+c_Arq
-		//conout("gravacao da cotacao: "+cNewExcelFile)
-		//Conout(len(cTexto))
-		//Memowrite(cNewExcelFile,cTexto) // Salva codigo HTML num arquivo EXCEL
 		Memowrite(c_Arq,cTexto)
-		conout("Arquivo de Cotacao: "+c_Arq+" gravado com successo.")
+		cBMLog := "Arquivo de Cotacao: "+c_Arq+" gravado com successo."
+		FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 	Endif
 
 	//alert(cValToChar(l_RetArray))
 	If !l_RetArray
 		a_ArrayRet	:=	{}
 	Else
-		Conout("Gravacao cotacao")
+		cBMLog := "Gravacao cotacao"
+		FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 	Endif
 
 	//alert(a_ArrayRet[1])

@@ -206,12 +206,13 @@ Static Function f_QryAlt()
 
 					IF ( TcSqlExec( c_Qry ) < 0 )
 						cTCSqlError := TCSQLError()
-						ConOut( cMsgOut += ( "[ProcName: " + ProcName() + "]" ) )
+						cMsgOut += ( "[ProcName: " + ProcName() + "]" )
 						cMsgOut += cCRLF
-						ConOut( cMsgOut += ( "[ProcLine:" + Str(ProcLine()) + "]" ) )
+						cMsgOut += ( "[ProcLine:" + Str(ProcLine()) + "]" )
 						cMsgOut += cCRLF
-						ConOut( cMsgOut += ( "[TcSqlError:" + cTCSqlError + "]" ) )
+						cMsgOut += ( "[TcSqlError:" + cTCSqlError + "]" )
 						cMsgOut += cCRLF
+						FWLogMsg("ERROR", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cMsgOut, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 						UserException( cMsgOut )
 					EndIF
 
@@ -254,9 +255,10 @@ Static Function f_OpsApt()
 	Aadd(a_Strut,{"TB_PEDIDO"	,"C",TamSX3("C2_PEDIDO")[1]	,0})
 	Aadd(a_Strut,{"TB_ITEMPV"	,"C",TamSX3("C2_ITEMPV")[1]	,0})
 
-	c_Pro := CriaTrab(a_Strut, .T.)
-	Use &c_Pro Shared Alias TRB New
-	Index on TB_NUM To &c_Pro
+	oELT := FWTemporaryTable():New("TRB")
+	oELT:SetFields(a_Strut)
+	oELT:AddIndex("01",{"TB_NUM"})
+	oELT:Create()
 
 	Aadd(a_Campos,{"TB_NUM"		,,'Ord. Prod.'  	,'@!'})
 	Aadd(a_Campos,{"TB_ITEM"	,,'Item'			,'@!'})

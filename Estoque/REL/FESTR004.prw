@@ -58,7 +58,7 @@ Static Function ReportDef(nRegImp)
 	Local c_Perg    := "FESTR004"
 	Local a_Tables  := {"SD3", "SZW"}
 
-	CriaPerg(c_Perg)
+	//CriaPerg(c_Perg)
 
 	Pergunte(c_Perg,.F.)
 
@@ -182,6 +182,7 @@ Static Function f_SelectDados(oReport, nOrdem)
 	oReport:Section(1):EndQuery(/*Array com os parametros do tipo Range*/)
 Return()
 
+/*
 Static Function CriaPerg(c_Perg)
 	//PutSx1(cGrupo,cOrdem,cPergunt,cPerSpa,cPerEng,cVar,cTipo ,nTamanho,nDecimal,nPresel,cGSC,cValid,cF3, cGrpSxg,cPyme,cVar01,cDef01,cDefSpa1,cDefEng1,cCnt01, cDef02,cDefSpa2,cDefEng2,cDef03,cDefSpa3,cDefEng3, cDef04,cDefSpa4,cDefEng4, cDef05,cDefSpa5,cDefEng5, aHelpPor,aHelpEng,aHelpSpa,cHelp)
  	fPutSx1(c_Perg,"01","OP de?"  	    ,"","","mv_ch1","C",TamSX3("D3_OP")[1],0,0,"G","","SC2","","","mv_par01","","","","","","","","","","","","","","","","")
@@ -197,6 +198,7 @@ Static Function CriaPerg(c_Perg)
 // 	PutSx1(c_Perg,"11","Documento de?" 	,"","","mv_chb","C",TamSX3("D3_DOC")[1],0,0,"G","",""   	  ,"","","mv_par11","","","","","","","","","","","","","","","","")
 // 	PutSx1(c_Perg,"12","Documento até?"	,"","","mv_chc","C",TamSX3("D3_DOC")[1],0,0,"G","",""   	  ,"","","mv_par12","","","","","","","","","","","","","","","","")
 Return Nil
+
 
 Static Function fPutSX1(cGrupo,cOrdem,cPergunt,cPerSpa,cPerEng,cVar,cTipo ,nTamanho,nDecimal,nPresel,cGSC,cValid,cF3, cGrpSxg,cPyme,cVar01,cDef01,cDefSpa1,cDefEng1,cCnt01, cDef02,cDefSpa2,cDefEng2,cDef03,cDefSpa3,cDefEng3, cDef04,cDefSpa4,cDefEng4, cDef05,cDefSpa5,cDefEng5, aHelpPor,aHelpEng,aHelpSpa,cHelp)
 	Local aArea       := GetArea()
@@ -301,12 +303,14 @@ Static Function fPutSX1(cGrupo,cOrdem,cPergunt,cPerSpa,cPerEng,cVar,cTipo ,nTama
 					fPutHelp(cChaveHelp, cHelp)
 				EndIf
 				*/
+			/*
 			SX1->(MsUnlock())
 		EndIf
 	EndIf
 	
 	RestArea(aArea)
 Return
+*/
 
 /*---------------------------------------------------*
  | Função: fPutHelp                                  |

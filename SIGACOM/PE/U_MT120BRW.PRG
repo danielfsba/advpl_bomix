@@ -1,8 +1,8 @@
 #INCLUDE "PROTHEUS.CH"
-#INCLUDE "TRYEXCEPTION.CH"   
+#INCLUDE "TRYEXCEPTION.CH"
 
 
-/*/                       
+/*/
 #	Funcao: 	MT120BRW
 	Autor:		Marinaldo de Jesus
 	Data:		22/12/2010
@@ -11,21 +11,21 @@
 User Function MT120BRW()
 
 	Local aMnuPopUP
-	
+
 	Local cMsgHelp
 
 	Local nIndex
 
 	Local oException
-	
+
 	If Findfunction("u_FCOMA005")
 		aAdd(aRotina,{  'Alt.Pedido s/Apr(c)', 	"u_FCOMA005()"	,0,6,0,NIL}) //
 	Endif
-	
+
 	If Findfunction("u_FCOMA006")
 		aAdd(aRotina,{'Enviar E-mail PC(c)', 	"u_FCOMA006()"	,0,6,0,NIL}) //
 	Endif
-	
+
 	If Findfunction("u_FCOMA007")
 		aAdd(aRotina,{ 'Fluig Pedido(c)'	, 	'u_FCOMA007("PC")'	,0,6,0,NIL}) //
 	Endif
@@ -38,7 +38,7 @@ User Function MT120BRW()
 		EndIF
 
 		PUBLIC __cSC7FMbr	//Ira armazenar o Filtro Atual
-        /*
+		/*
 		//Adiciono Novo Sub-Menu ao Menu aRotina
 		aMenuPopUp	:= {}
 
@@ -48,7 +48,7 @@ User Function MT120BRW()
 		aMenuPopUp[nIndex][1]	:= OemToAnsi( "Filtrar Legenda" )
 		aMenuPopUp[nIndex][2]	:= "StaticCall( U_MT120BRW , SC7FiltLeg )"
 		aMenuPopUp[nIndex][3]	:= 0
-		aMenuPopUp[nIndex][4]	:= 2 
+		aMenuPopUp[nIndex][4]	:= 2
 
 		aAdd( aMenuPopUp , Array( 4 ) )
 		nIndex 		:= Len( aMenuPopUp )
@@ -56,7 +56,7 @@ User Function MT120BRW()
 		aMenuPopUp[nIndex][1]	:= OemToAnsi( "Limpar Filtro" )
 		aMenuPopUp[nIndex][2]	:= "StaticCall( U_MT120BRW , MbrRstFilter )"
 		aMenuPopUp[nIndex][3]	:= 0
-		aMenuPopUp[nIndex][4]	:= 2  
+		aMenuPopUp[nIndex][4]	:= 2
 
 
 		//Adiciono uma nova Opcao no Menu aRotina
@@ -72,7 +72,8 @@ User Function MT120BRW()
 		IF ( ValType( oException ) == "O" )
 			cMsgHelp := oException:Description
 			Help( "" , 1 , ProcName() , NIL , OemToAnsi( cMsgHelp ) , 1 , 0 )
-			ConOut( CaptureError() )
+			cBMLog := CaptureError()
+			FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 		EndIF
 
 	ENDEXCEPTION
@@ -108,10 +109,10 @@ Return( cSvExprFilTop )
 	Descricao:	Restaura o Filtro de Browse
 /*/
 Static Function MbrRstFilter()
-Return( StaticCall( u_mBrowseLFilter , MbrRstFilter , "SC7" , "__cSC7FMbr" ) )  
+Return( StaticCall( u_mBrowseLFilter , MbrRstFilter , "SC7" , "__cSC7FMbr" ) )
 
 Static Function TestePab()
-  	Set Filter To C7_QUJE<>0.And.C7_QUJE<C7_QUANT
+	Set Filter To C7_QUJE<>0.And.C7_QUJE<C7_QUANT
 	dbGotop()
 Return
 

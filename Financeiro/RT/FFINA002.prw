@@ -1,7 +1,7 @@
 #INCLUDE "rwmake.ch"
-#INCLUDE "topconn.ch" 
+#INCLUDE "topconn.ch"
 #INCLUDE "PROTHEUS.CH"
-#INCLUDE "TRYEXCEPTION.CH"  
+#INCLUDE "TRYEXCEPTION.CH"
 
 
 /*/
@@ -20,7 +20,7 @@
 /*/
 
 
-User Function FFINA002           
+User Function FFINA002
 
 
 	// alterado wellington  13/09/2018 desabilitado
@@ -111,12 +111,12 @@ Static Function RunReport(Cabec1,Cabec2,Titulo,nLin)
 	Local n_TotDia   	:= 0
 	Local n_Total    	:= 0
 	Local d_Dia      	:= Stod("  /  /  ")
-	Local a_Titulos  	:= {}  
+	Local a_Titulos  	:= {}
 	Local a_Parcelas  	:= {}
 	Local a_1Parcelas 	:= {}
 	Local i
 
-	c_Qry 				:= f_Qry() 
+	c_Qry 				:= f_Qry()
 	c_Historico 		:= ""
 
 	TCQUERY c_Qry NEW ALIAS QRY
@@ -139,8 +139,8 @@ Static Function RunReport(Cabec1,Cabec2,Titulo,nLin)
 
 			For i:=1 To Len(a_Parcelas)
 				If (a_Parcelas[i][1] >= MV_PAR05) .And. (a_Parcelas[i][1] <= MV_PAR06)
-					//Fornecedor              Observação                                                     Num.        Pc       Emissão    Vencimento               Valor           			
-					AADD( a_Titulos, {QRY->FORNECE, QRY->OBS, QRY->EMISSAO, QRY->PEDIDO, DTOS(STOD(QRY->EMISSAO)+mv_par09), Dtos(DataValida(a_1Parcelas[i][1], .T.)), a_1Parcelas[i][2], QRY->TIPO}) 
+					//Fornecedor              Observação                                                     Num.        Pc       Emissão    Vencimento               Valor
+					AADD( a_Titulos, {QRY->FORNECE, QRY->OBS, QRY->EMISSAO, QRY->PEDIDO, DTOS(STOD(QRY->EMISSAO)+mv_par09), Dtos(DataValida(a_1Parcelas[i][1], .T.)), a_1Parcelas[i][2], QRY->TIPO})
 					f_AtuSC7(QRY->PEDIDO, DTOS(STOD(QRY->EMISSAO)+mv_par09))
 				Endif
 			Next
@@ -157,7 +157,7 @@ Static Function RunReport(Cabec1,Cabec2,Titulo,nLin)
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 
 	// 	SetRegua(RecCount())
-	SetRegua(Len(a_Titulos))  
+	SetRegua(Len(a_Titulos))
 
 	i:=1
 
@@ -203,8 +203,8 @@ Static Function RunReport(Cabec1,Cabec2,Titulo,nLin)
 				Endif
 
 				// Coloque aqui a logica da impressao do seu programa...
-				// Utilize PSAY para saida na impressora. Por exemplo: 
-				//Fornecedor              Observação                               EMISSAO ANT        Pc       Emissão    Vencimento            Valor         
+				// Utilize PSAY para saida na impressora. Por exemplo:
+				//Fornecedor              Observação                               EMISSAO ANT        Pc       Emissão    Vencimento            Valor
 				//0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
 				//         10        20        30        40        50        60        70        80        90        00        10        20        30        40        50        60        70        80        90        00        10
 				@nLin,000 PSAY PADR(a_Titulos[i][1], 70)
@@ -223,25 +223,25 @@ Static Function RunReport(Cabec1,Cabec2,Titulo,nLin)
 				IncRegua()
 			End
 
-			@nLin,000 PSAY Replicate("-",limite)              
+			@nLin,000 PSAY Replicate("-",limite)
 			nLin := nLin + 1 // Avanca a linha de impressao
 			@nLin,000 PSAY "Total Títulos " + c_Tipo + " - "
 			@nLin,117 PSAY Transform(n_TotTipo,"@E 999,999,999.99")
 			nLin := nLin + 1 // Avanca a linha de impressao
-			@nLin,000 PSAY Replicate("-",limite)              
+			@nLin,000 PSAY Replicate("-",limite)
 			nLin := nLin + 1 // Avanca a linha de impressao
 		End
 
-		@nLin,000 PSAY Replicate("-",limite)              
+		@nLin,000 PSAY Replicate("-",limite)
 		nLin := nLin + 1 // Avanca a linha de impressao
 		@nLin,000 PSAY "Total a Pagar no dia " + Dtoc(d_Dia) + " - "
 		@nLin,117 PSAY Transform(n_TotDia,"@E 999,999,999.99")
 		nLin := nLin + 1 // Avanca a linha de impressao
-		@nLin,000 PSAY Replicate("-",limite)              
+		@nLin,000 PSAY Replicate("-",limite)
 		nLin := nLin + 1 // Avanca a linha de impressao
 	End
 
-	@nLin,000 PSAY Replicate("-",limite)              
+	@nLin,000 PSAY Replicate("-",limite)
 	nLin := nLin + 1 // Avanca a linha de impressao
 	@nLin,000 PSAY "Total a Pagar no Período - "
 	@nLin,117 PSAY Transform(n_Total,"@E 999,999,999.99")
@@ -299,7 +299,7 @@ Static Function CriaPerg(c_Perg)
 	PutSx1(c_Perg,"07","Pedido de?"  	 ,"","","mv_ch7","C",06,0,0,"G","","SC7","","","mv_par07","","","","","","","","","","","","","","","","")
 	PutSx1(c_Perg,"08","Pedido até?" 	 ,"","","mv_ch8","C",06,0,0,"G","","SC7","","","mv_par08","","","","","","","","","","","","","","","","")
 	PutSx1(c_Perg,"09","Dias      ?" 	 ,"","","mv_ch9","N",05,0,0,"G","",""   ,"","","mv_par09","","","","","","","","","","","","","","","","")
-Return Nil    
+Return Nil
 
 
 Static Function f_AtuSC7 (c_Pedido, c_Data)
@@ -322,7 +322,7 @@ Static Function f_AtuSC7 (c_Pedido, c_Data)
 	MsgStop("SQL Error: " + TcSqlError())
 	TcSqlExec("ROLLBACK")
 	Else
-	TcSqlExec("COMMIT")	
+	TcSqlExec("COMMIT")
 	Endif
 	*/
 
@@ -332,31 +332,32 @@ Static Function f_AtuSC7 (c_Pedido, c_Data)
 
 	TRYEXCEPTION
 
-	TcCommit(1,ProcName())    //Begin Transaction
+		TcCommit(1,ProcName())    //Begin Transaction
 
 
-	IF ( TcSqlExec( c_QryUp ) < 0 )
-		MsgStop("SQL Error: " + TcSqlError())
-		cTCSqlError := TCSQLError()
-		ConOut( cMsgOut += ( "[ProcName: " + ProcName() + "]" ) )
-		cMsgOut += cCRLF
-		ConOut( cMsgOut += ( "[ProcLine:" + Str(ProcLine()) + "]" ) )
-		cMsgOut += cCRLF
-		ConOut( cMsgOut += ( "[TcSqlError:" + cTCSqlError + "]" ) )
-		cMsgOut += cCRLF
-		UserException( cMsgOut )
-	EndIF
+		IF ( TcSqlExec( c_QryUp ) < 0 )
+			MsgStop("SQL Error: " + TcSqlError())
+			cTCSqlError := TCSQLError()
+			cMsgOut += ( "[ProcName: " + ProcName() + "]" )
+			cMsgOut += cCRLF
+			cMsgOut += ( "[ProcLine:" + Str(ProcLine()) + "]" )
+			cMsgOut += cCRLF
+			cMsgOut += ( "[TcSqlError:" + cTCSqlError + "]" )
+			cMsgOut += cCRLF
+			FWLogMsg("ERROR", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cMsgOut, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
+			UserException( cMsgOut )
+		EndIF
 
 
 
-	TcCommit(2,ProcName())    //Commit
-	TcCommit(4)                //End Transaction
+		TcCommit(2,ProcName())    //Commit
+		TcCommit(4)                //End Transaction
 
-	CATCHEXCEPTION   
+	CATCHEXCEPTION
 
 
-	TcCommit(3) //RollBack
-	TcCommit(4) //End Transaction
+		TcCommit(3) //RollBack
+		TcCommit(4) //End Transaction
 
 	ENDEXCEPTION
 
@@ -380,4 +381,4 @@ Static Function f_AtuSC7 (c_Pedido, c_Data)
 
 
 
-Return 
+Return

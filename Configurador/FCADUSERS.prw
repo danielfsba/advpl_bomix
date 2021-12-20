@@ -57,7 +57,7 @@ Static Function ATUSERS(c_Empresa,c_Filial)
 	cPatch	:= GetMV("MV_PATH_DI")
 	//aUsers	:= FWSFALLUSERS()
 	aGroups	:= AllGroups()
-	aUsers2	:= AllUsers()
+	aUsers2	:= FWSFALLUSERS()
 	aArray := PswRet()
 	agruposteste := FWSFAllGrps()
 

@@ -50,7 +50,7 @@ Aadd(aPergs,{"Sobrepoe N.Num?","","","mv_chb","N",01,0,2,"C","","MV_PAR11","Sim"
 Aadd(aPergs,{"De Vencimento?","","","mv_chc","D",08,0,0,"G","","MV_PAR12","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""}) 
 Aadd(aPergs,{"Ate Vencimento?","","","mv_chd","D",08,0,0,"G","","MV_PAR13","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""})
 
-AjustaSx1("BOLBBRASIL",aPergs)
+//AjustaSx1("BOLBBRASIL",aPergs)
 
 Pergunte (cPerg,.F.)
 
@@ -948,6 +948,7 @@ Return(str(auxi,1,0))
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 /*/
+/*
 Static Function AjustaSX1(cPerg, aPergs)
 
 Local _sAlias	:= Alias()
@@ -1017,3 +1018,4 @@ For nX:=1 to Len(aPergs)
 		PutSX1Help(cKey,aHelpPor,aHelpEng,aHelpSpa)
 	Endif
 Next
+*/

@@ -17,7 +17,7 @@ User Function BMULTCOM()
     Local cPerg	:=	"BMUCOM" 
     
     //Perguntas na tabela SX1
-    AjustaSX1(cPerg)    
+ //   AjustaSX1(cPerg)    
     //Gero a pergunta de modo oculto, ficando disponível no botão ações relacionadas
     Pergunte(cPerg,.F.)              
         
@@ -196,6 +196,7 @@ Static Function ReportPrint(oReport)
     Enddo
 Return
 
+/*
 Static function ajustaSx1(cPerg)
    
    local aRegs := {}
@@ -209,3 +210,4 @@ Static function ajustaSx1(cPerg)
 	aAdd(aRegs,{cPerg,"04","Ate Grupo ?"   ,"","","mv_ch4","C",04,00,0,"G","","mv_par04","","","","","","","","","","","","","","","","","","","","","","","","",""})
     	
 return
+*/

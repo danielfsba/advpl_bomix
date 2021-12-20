@@ -89,7 +89,7 @@ oReport:SetPortrait() //Define a orientacao default de pagina do relatorio como 
 //³ Cria a Pergunta Nova no Sx1                                  ³
 //³ Ajusta o SX1 para SIGAVEI, SIGAPEC e SIGAOFI                 ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-AjustaSX1(cPerg,lVeic,aSB1Cod,aSB1Ite)
+//AjustaSX1(cPerg,lVeic,aSB1Cod,aSB1Ite)
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Verifica as perguntas selecionadas                           ³
@@ -1313,7 +1313,7 @@ EndIf
 //³ Cria a Pergunta Nova no Sx1                                  ³
 //³ Ajusta o SX1 para SIGAVEI, SIGAPEC e SIGAOFI                 ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-AjustaSX1(cPerg,lVeic,aSB1Cod,aSB1Ite)
+//AjustaSX1(cPerg,lVeic,aSB1Cod,aSB1Ite)
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Verifica as perguntas selecionadas                           ³
@@ -2588,6 +2588,7 @@ Return Nil
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
+/*
 Static Function AjustaSX1(cPerg,lVeic,aSB1Cod,aSB1Ite)
 
 Local aArea1	:= Getarea()
@@ -2596,10 +2597,10 @@ Local aHelpEng :={}
 Local aHelpSpa :={}
 Local nTamSX1  :=Len(SX1->X1_GRUPO)
 
-/*-----------------------MV_PAR18--------------------------*/
+
 PutSx1("MTR240","18","QTDE. na 2a. U.M. ?","CTD. EN 2a. U.M. ?","QTTY. in 2a. U.M. ?", "mv_chi", "N", 1, 0, 2,"C", "", "", "", "","MV_PAR18","Sim","Si","Yes", "","Nao","No","No", "", "", "", "", "", "", "", "", "", "", "", "", "")
 
-/*-----------------------MV_PAR19--------------------------*/
+
 Aadd( aHelpPor, "Imprime descricao do Armazem. Sim ou Nao" )
 
 Aadd( aHelpEng, "Print warehouse description. Yes or No  " )
@@ -2652,3 +2653,4 @@ Endif
  
 RestArea(aArea1)
 Return Nil
+*/

@@ -19,7 +19,7 @@ Private cTpHr     := GetMV("MV_TPHR")
 Private cAliasSH6 := "SH6"
 Private bConv     := {|x| A680ConvHora(x,"C",cTpHr) }
                                                          
-AjustaSX1()
+//AjustaSX1()
 
 If FindFunction("TRepInUse") .And. TRepInUse()
 	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
@@ -704,8 +704,8 @@ Do While !Eof()
 		cabec(titulo,cabec1,cabec2,wnrel,Tamanho,nTipo)
 	EndIf
 	@ li,00 PSay STR0020+cMens	//"Total "
-	@ li,26 PSay STR0021+A680ConvHora(cTotProd, "C", GetMV("MV_TPHR"))	//"Horas Produtivas - "
-	@ li,77 PSay STR0022+A680ConvHora(cTotImProd, "C", GetMV("MV_TPHR"))	//"Horas Improdutivas - "
+	@ li,26 PSay STR0021+A680ConvHora(cTotProd, "C", cTpHr)	//"Horas Produtivas - "
+	@ li,77 PSay STR0022+A680ConvHora(cTotImProd, "C", cTpHr)	//"Horas Improdutivas - "
 	li++;li++
 EndDo
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
@@ -721,7 +721,7 @@ If Len(aMotivos) > 0
 		If dbSeek(xFilial("SX5")+"44"+aMotivos[i,1])
 			@ li,00 PSay Substr(X5Descri(),1,35)
 		EndIf
-		@ li,36 PSay " - "+A680ConvHora(aMotivos[i,2], "C", GetMV("MV_TPHR"))	//"Horas Improdutivas - "
+		@ li,36 PSay " - "+A680ConvHora(aMotivos[i,2], "C", cTpHr)	//"Horas Improdutivas - "
 		li++
 	Next i
 EndIf
@@ -791,18 +791,21 @@ Return(cHoraDest)
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
+/*
 Static Function AjustaSX1()
 Local aHlpP := {}
 Local aHlpS := {}
 Local aHlpE := {}     
 
-/*---------------Parametro ---------------*/
+/*---------------Parametro ---------------
 Aadd( aHlpP, "Considerar as horas improdutivas que não" )
 Aadd( aHlpP, "possuem ordem de produção relacionada?" ) 
 
 PutSx1( "MTR826","12","Cons. horas improd sem OP?","","","mv_chc",;
 		"N",1,0,1,"C","","","","","mv_par12","Sim","","","","Nao","","","","","","","","","","","",;
 		aHlpP,aHlpE,aHlpS)
-/*----------------------------------------*/			
+/*----------------------------------------
 
 Return Nil
+
+*/

@@ -364,15 +364,10 @@ User Function FCOMA002( l_Flag, c_GrpAprv )
 				c_Msg += '  	<td align="center" width="10%">CC</td>'
 				c_Msg += '  </tr>'
 				
-				
-				Conout("c_Docto 1 =>"+c_Num)
-				
 				DBSELECTAREA("SC1")
 				DBSETORDER(1)
 				DBSEEK(XFILIAL("SC1")+ Padr( c_Solic, TamSX3("C1_NUM")[1] ))
 				IF FOUND()
-				
-				Conout("Entrou 1 =>")
 				
 					a_To		:= {}
 					a_Usu		:= {}
@@ -385,8 +380,7 @@ User Function FCOMA002( l_Flag, c_GrpAprv )
 						AADD(a_To,Alltrim(a_Usu[1][14]))
 					ENDIF
 					
-					Conout("c_Docto 1 =>"+SC1->C1_USER)
-					
+	
 					If Empty(c_To)
 						c_To := a_To[1] //EMAIL DO SOLICITANTE
 					Else

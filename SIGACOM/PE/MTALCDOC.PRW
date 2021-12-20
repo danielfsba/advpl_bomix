@@ -57,12 +57,17 @@ If l_Ret
 		U_FCOMA003()
 
 	ENDIF
-	
-	Conout("C7_NUM =>"+SC7->C7_NUM)
-	Conout("C7_FSFLUIG =>"+cvaltochar(SC7->C7_FSFLUIG))
-	Conout("OPERACAO =>"+cvaltochar(PARAMIXB[3]))
-	Conout("DATA =>"+cDataUTC)
-	Conout("FUNNAME=>"+FUNNAME())
+	cBMLog := "C7_NUM =>"+SC7->C7_NUM
+	cBMLog += CRLF	
+	cBMLog += "C7_FSFLUIG =>"+cvaltochar(SC7->C7_FSFLUIG)
+	cBMLog += CRLF	
+	cBMLog += "OPERACAO =>"+cvaltochar(PARAMIXB[3])
+	cBMLog += CRLF	
+	cBMLog += "DATA =>"+cDataUTC
+	cBMLog += CRLF	
+	cBMLog += "FUNNAME=>"+FUNNAME()
+	cBMLog += CRLF	
+	FWLogMsg("INFO", /*cTransactionId*/, "BOMIX", /*cCategory*/, /*cStep*/, /*cMsgId*/, cBMLog, /*nMensure*/, /*nElapseTime*/, /*aMessage*/)
 Endif
 
 

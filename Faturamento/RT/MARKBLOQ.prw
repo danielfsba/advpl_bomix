@@ -59,13 +59,10 @@ User Function MARKBLQ1
 	dbUseArea(.T.,, _cArq, cString, .F.,.F.)
 	*/
 	
-	_cArq := CriaTrab(aStru,.T.)
-	
-	cIndA := substr(_cArq,1,7) + "A"
-	cIndB := substr(_cArq,1,7) + "B"
-	
-	USE &_cArq Shared ALIAS TRB NEW
-
+	oELT := FWTemporaryTable():New("TRB")
+	oELT:SetFields(aStru)
+	oELT:AddIndex("01",{"A1_OK", "A1_COD"})
+	oELT:Create()
 	//Set Key VK_F12 To TPerg()
 	//Set Key VK_F5  To CarregaDados()
 
