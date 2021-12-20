@@ -20,42 +20,42 @@
 ±±ÈÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¼±±
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
-*/ 
+*/
 
 User Function BXZOFO
 
 	Local cTitulo:="Formatos"
 	Local MvPar
 	Local MvParDef:=""
-	
+	Local nX := 0
+	Local aRetSX5 := {}
 	Private aSit:={}
-	
+
 	l1Elem  := .F.
-//	VAR_IXB := "************   "
-	
+	//	VAR_IXB := "************   "
+
 	cAlias := Alias() 					 // Salva Alias Anterior
 
 	MvPar   := &(Alltrim(ReadVar()))		 // Carrega Nome da Variavel do Get em Questao
 	MvRet   := Alltrim(ReadVar())			 // Iguala Nome da Variavel ao Nome variavel de Retorno
-  //	VAR_IXB := MvPar
-	
-	dbSelectArea("SX5")
-	dbSetOrder(1)
-	dbSEEK(xFilial("SX5")+"XF")
-	CursorWait()
-		While !Eof() .AND. TRIM(SX5->X5_TABELA) == "XF"
-				Aadd(aSit, TRIM(SX5->X5_CHAVE) + " - " + Alltrim(SX5->X5_DESCRI))
-				MvParDef += TRIM(SX5->X5_CHAVE)
+	//	VAR_IXB := MvPar
 
-			dbSkip()
-		EndDo
-	CursorArrow()
-	DBGOTOP()
+	aRetSX5:=FWGetSX5( "XF")
+	If ValType(aRetSX5) == "A" .AND. Len(aRetSX5) >= 1
+		CursorWait()
+
+		for nX :=  1 to len(aRetSX5)
+			Aadd(aSit, TRIM(aRetSX5[3]) + " - " + Alltrim(aRetSX5[4]))
+			MvParDef += TRIM(aRetSX5[3])
+		NEXT nX
+		CursorArrow()
+	ENDIF
+
 	IF f_Opcoes(@MvPar,cTitulo,aSit,MvParDef,12,49,l1Elem,2)  // Chama funcao f_Opcoes
 		VAR_IXB := MvPar
 		//&MvRet := MvPar                                                                          // Devolve Resultado
-	EndIF	
+	EndIF
 
 	dbSelectArea(cAlias) 								 // Retorna Alias
-	
-Return .T.    
+
+Return .T.

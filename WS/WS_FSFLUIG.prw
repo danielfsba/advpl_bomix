@@ -855,37 +855,21 @@ WSMETHOD mtdRetTipo WSRECEIVE o_Empresa, o_Seguranca WSSEND o_RetGeral WSSERVICE
 
 	ENDIF
 
-	BEGINSQL ALIAS "QRY"
-		SELECT
-			X5_CHAVE,
-			X5_DESCRI
-		FROM
-			%TABLE:SX5% SX5
-		WHERE
-			X5_FILIAL = %xfilial:SX5%
-			AND X5_TABELA = %EXP:'02'%
-			AND SX5.%NOTDEL%
-	ENDSQL
+	aRetSX5:=FWGetSX5("02")
+	If ValType(aRetSX5) == "A" .AND. Len(aRetSX5) >= 1
+		CursorWait()
+		for nX :=  1 to len(aRetSX5)
+			o_Result := WSCLASSNEW("strRetGeral")
+			o_Result:c_Codigo		:= aRetSX5[3]
+			o_Result:c_Descricao	:= aRetSX5[4]
+			o_Result:c_Tipo			:= ""
+			o_Result:c_Grupo		:= ""
+			o_Result:l_Tipo			:= .T.
 
-	DBSELECTAREA("QRY")
-	QRY->(DBGOTOP())
-
-	WHILE QRY->(!EOF())
-
-		o_Result := WSCLASSNEW("strRetGeral")
-
-		o_Result:c_Codigo		:= QRY->X5_CHAVE
-		o_Result:c_Descricao	:= QRY->X5_DESCRI
-		o_Result:c_Tipo			:= ""
-		o_Result:c_Grupo		:= ""
-		o_Result:l_Tipo			:= .T.
-
-		AADD( ::o_RetGeral, o_Result )
-
-		QRY->(DBSKIP())
-
-	ENDDO
-	QRY->(dbCloseArea())
+			AADD( ::o_RetGeral, o_Result )
+		NEXT nX
+		CursorArrow()
+	ENDIF
 
 Return(.T.)
 

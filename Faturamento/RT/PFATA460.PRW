@@ -1155,6 +1155,7 @@ Static Function f_GeraNota(c_NumPed, c_Doc, c_SerDoc)
 	Local cTes			:= ""
 	Local cCondPag	:= ""
 	Local cNota		:= ""
+	Local aRetSX5:={}
 	Private cSerie	:= c_SerDoc
 	Private cNumero	:= c_Doc
 
@@ -1163,18 +1164,13 @@ Static Function f_GeraNota(c_NumPed, c_Doc, c_SerDoc)
 	//Funcao automatica para pegar a serie e o numero da nota fiscal.
 	//lRet := Sx5NumNota()
 
-	DbSelectArea("SX5")
-	DbSetOrder(1)
-	If !DbSeek(xFilial("SX5")+"01"+cSerie)
+	aRetSX5:=FWGetSX5( "01",cSerie)
+	If ValType(aRetSX5) == "A" .AND. Len(aRetSX5) >= 1
+		FWPutSX5(,"01",cSerie,cNumero,cNumero,cNumero)
+	else
 		MsgInfo("Série Inválida!","Geração de NF")
 		Return()
-	Else
-		RecLock("SX5",.F.)
-		SX5->X5_DESCRI 	:= cNumero
-		SX5->X5_DESCSPA := cNumero
-		SX5->X5_DESCENG := cNumero
-		MsUnlock()
-	EndIF
+	EndIf
 
 	IncProc()
 	DbSelectArea("SC9")
