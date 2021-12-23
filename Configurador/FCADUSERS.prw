@@ -1,4 +1,5 @@
-#Include "Totvs.ch"
+#INCLUDE 'TOTVS.CH'
+#INCLUDE "TBICONN.CH"
 
 /*/{Protheus.doc} FCADUSERS
 A rotina FCADUSERS vai alimentar as tabelas de usuarios e grupos com informacoes do cadastro de usuarios.
@@ -29,7 +30,7 @@ Static Function ATUSERS(c_Empresa,c_Filial)
 
 	Local cPatch
 	Local aUsers
-	Local aGroups   
+	Local aGroups
 	Local aMenusuario
 	Local cQryDel
 	Local cHoras
@@ -38,21 +39,36 @@ Static Function ATUSERS(c_Empresa,c_Filial)
 	Local n_totusu
 	Local aArray
 	Local cGrupo
+	Local aRetSM0		:= {}
+	Local lFWLoadSM0	:= FindFunction( "FWLoadSM0" )
+
 	c_Empresa='01'
 	c_Filial='01'
 	cGrupo=""
 
 	RPCSetType(3)
-	
+
 	PREPARE ENVIRONMENT EMPRESA c_Empresa FILIAL c_Filial TABLES "ZAL","ZAQ","ZAT","ZAS"
 
-/*
-	IF SELECT("SM0") <> 0
-		SM0->(DbCloseArea())
-	ENDIF
+	If lFWLoadSM0
+		aRetSM0	:= FWLoadSM0()
+	ELSE
+		DbSelectArea( "SM0" )
+		SM0->( DbGoTop() )
+		While SM0->( !Eof() )
+			aAux := { 	SM0->M0_CODIGO,;
+				IIf( lFWCodFilSM0, FWGETCODFILIAL, SM0->M0_CODFIL ),;
+				"",;
+				"",;
+				"",;
+				SM0->M0_NOME,;
+				SM0->M0_FILIAL }
 
-	DbUseArea(.T.,"DBFCDX","\system\sigamat.emp","SM0", .T., .F.)
-*/
+			aAdd( aRetSM0, aClone( aAux ) )
+			SM0->( DbSkip() )
+		End
+	EndIf
+
 	//cPatch	:= GetMV("BO_SCHEDHR")
 	cPatch	:= GetMV("MV_PATH_DI")
 	//aUsers	:= FWSFALLUSERS()
@@ -109,7 +125,7 @@ Static Function ATUSERS(c_Empresa,c_Filial)
 			ZAL->ZAL_ALT 	:= aUsers2[n][1][16]				//Data da ultima alteracao
 			ZAL->ZAL_EMAIL	:= aUsers2[n][1][14]				//E-mail
 			ZAL->ZAL_ACESSO:= aUsers2[n][1][15]				//Numero de acessos simultaneos
-			ZAL->ZAL_BLQL   := IIF(aUsers2[n][1][17]=.T.,'1','2')				//Numero de acessos simultaneos 
+			ZAL->ZAL_BLQL   := IIF(aUsers2[n][1][17]=.T.,'1','2')				//Numero de acessos simultaneos
 			ZAL->ZAL_MAT 	:= Substr(aUsers2[n][1][22],7,8)	//Matricula
 			ZAL->ZAL_FILIAL	:= Substr(aUsers2[n][1][22],1,6)	//Filial do usuario
 		ENDIF
@@ -118,7 +134,7 @@ Static Function ATUSERS(c_Empresa,c_Filial)
 
 		//NEXT n
 
-		//"aUsers2[n][1][22]"	"01010101900005"	
+		//"aUsers2[n][1][22]"	"01010101900005"
 
 
 		FOR nX := 1 TO Len(aUsers2[n][1][10])
@@ -132,7 +148,7 @@ Static Function ATUSERS(c_Empresa,c_Filial)
 				ZAQ_GRUPO	:= aUsers2[n][1][10][nX]
 				ZAQ->ZAQ_FILIAL	:= Substr(aUsers2[n][1][22],1,6)
 
-				ZAQ->(MsUnlock())   
+				ZAQ->(MsUnlock())
 				//		cGrupo:=aUsers2[n][1][10][nX]
 				//		aMenusuario :=FWGrpMenu(cGrupo)
 			ENDIF
@@ -169,7 +185,7 @@ Static Function ATUSERS(c_Empresa,c_Filial)
 			ENDIF
 			nK++
 		ENDDO
-	NEXT nZ	
+	NEXT nZ
 	//NEXT nX
 	//NEXT n
 

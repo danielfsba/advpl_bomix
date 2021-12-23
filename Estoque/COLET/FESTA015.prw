@@ -162,6 +162,7 @@ User Function fInvent(cAlias, nReg, nOpc)
 	Local n_Quant    := 0
 	Local c_Obs      := ""
 	Local a_Endereco := {}
+	Local j := 0
 
 	If SZX->ZX_STATUS == "C"
 		dbSelectArea("SZX")
@@ -271,8 +272,9 @@ Static Function fGeraSB7
 	Local n_QtdInc   := 0
 	Local n_QtdErr   := 0
 	Local a_Recno    := {}
+	Local j			:= 0
 
-	Private a_Bord   := {}   //Array da tabela temporária
+	//Private a_Bord   := {}   //Array da tabela temporária
 	Private a_Campos := {}   //Campos da tabela temporária
 	Private oFont    := TFont():New( "Verdana",0,-11,,.F.,0,,400,.F.,.F.,,,,,, )
 

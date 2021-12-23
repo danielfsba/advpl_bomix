@@ -8,7 +8,7 @@
 /*/
 User Function MT120BRW()
 
- Local aMnuPopUP
+ //Local aMnuPopUP
  
  Local cMsgHelp
 

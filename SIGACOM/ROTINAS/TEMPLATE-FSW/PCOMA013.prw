@@ -1,6 +1,6 @@
 #Include "Protheus.ch"
 #INCLUDE "TOPCONN.CH"
-#INCLUDE "msobjects.ch"
+#INCLUDE "msobject.ch"
 #INCLUDE "ap5mail.ch"
 #INCLUDE "PCOMA013.ch"
 

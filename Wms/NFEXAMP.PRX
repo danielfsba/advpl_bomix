@@ -516,7 +516,7 @@ If mv_par04 == 2
          dbSkip()
       EndDo
 
-	  If Type("xTES") == "A" .And. Len(xTes) > 0
+	  If Len(xTes) > 0
 	      dbSelectArea("SF4")                   // * Tipos de Entrada e Saida
 	      DbSetOrder(1)
 	      dbSeek(xFilial()+xTES[1])
